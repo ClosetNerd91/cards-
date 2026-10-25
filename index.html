@@ -474,6 +474,80 @@ details.adv summary::-webkit-details-marker{display:none}
 @media (max-width:600px){ .grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
 @media (max-width:340px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr))} .stat span{font-size:8.5px} }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* ── Scan binder page ── */
+.modal.scan{width:min(1040px,100%);max-height:calc(100vh - 40px)}
+.scan-body{display:flex;flex-direction:column;gap:12px}
+.sc-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.sc-stage{position:relative;display:flex;justify-content:center;align-items:center;min-height:240px;background:repeating-conic-gradient(var(--bg2) 0 25%,var(--surface2) 0 50%) 0 0/22px 22px;border-radius:14px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.sc-stage canvas{display:block}
+.sc-stage svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:visible}
+.sc-shade{fill:rgba(8,10,20,.45)}
+.sc-quad{fill:transparent;stroke:var(--accent);cursor:move}
+.sc-grid line{stroke:#fff;stroke-dasharray:6 5;opacity:.9;filter:drop-shadow(0 0 1px rgba(0,0,0,.8));pointer-events:none}
+.sc-h{cursor:grab}.sc-h .hit{fill:transparent}.sc-h .dot{fill:var(--accent);stroke:#fff}
+.sc-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.sc-btns{display:flex;gap:6px;flex-wrap:wrap}
+.sc-btns .btn svg{width:16px;height:16px}
+.sh-note{margin:0 4px 8px;color:var(--muted);font-size:14px}
+.sc-prog{display:flex;flex-direction:column;gap:12px;padding:6px 0}
+.sc-pt{font-weight:600;font-variant-numeric:tabular-nums}
+.sc-bar{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden}.sc-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s var(--ease)}
+.sc-cells{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:10px;max-width:560px;margin:0 auto;width:100%}
+.sc-cell{position:relative;border-radius:8px;overflow:hidden;background:var(--surface2);aspect-ratio:var(--card-aspect);outline:3px solid transparent;transition:outline-color .2s}
+.sc-cell img{width:100%;height:100%;object-fit:cover;display:block;opacity:.55;transition:opacity .3s}
+.sc-cell span{position:absolute;left:0;right:0;bottom:0;padding:16px 6px 5px;font-size:11px;font-weight:600;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-cell.busy{outline-color:var(--accent)}.sc-cell.busy img{opacity:1}
+.sc-cell[class*=" c-"] img{opacity:1}
+.sc-cell.c-high{outline-color:#2f9e5b}.sc-cell.c-medium{outline-color:#c9a227}.sc-cell.c-low{outline-color:#e07b39}.sc-cell.c-none,.sc-cell.err{outline-color:#d0574b}
+.sc-cell.empty img{opacity:.25}
+.sc-off{text-align:center;padding:30px 10px;color:var(--muted)}.sc-off svg{width:40px;height:40px;color:var(--accent)}.sc-off h3{color:var(--text);margin:10px 0 4px;font-family:var(--title)}
+.sc-defs{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.sc-defs label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:600}
+.sc-defs select{height:38px;min-width:150px}
+.sc-defs .sc-chk{flex-direction:row;align-items:center;gap:8px;font-weight:500;color:var(--text);font-size:13.5px}
+.sc-list{display:flex;flex-direction:column}
+.sc-row{display:grid;grid-template-columns:28px 76px 76px minmax(0,1fr);gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--border)}
+.sc-row.off .sc-crop,.sc-row.off .sc-match,.sc-row.off .sc-info>*:not(.sc-find):not([data-find]){opacity:.45}
+.sc-use{display:flex;align-items:center;justify-content:center;height:44px}.sc-use input{width:20px;height:20px;accent-color:var(--accent)}
+.sc-crop,.sc-match img,.sc-noimg{width:76px;aspect-ratio:var(--card-aspect);object-fit:cover;border-radius:5px;box-shadow:var(--shadow-sm);display:block;background:var(--surface2)}
+.sc-noimg{display:grid;place-items:center;color:var(--faint);font-size:12px;border:1px dashed var(--border2)}
+.sc-info{min-width:0;display:flex;flex-direction:column;gap:5px}
+.sc-top{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.sc-top b{font-size:15px;overflow:hidden;text-overflow:ellipsis}
+.sc-sub{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.sc-conf{flex:none;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--bg2);color:var(--muted)}
+.sc-conf.high{background:rgba(47,158,91,.14);color:#2f9e5b}.sc-conf.medium{background:rgba(201,162,39,.16);color:#a27f12}
+.sc-conf.low{background:rgba(224,123,57,.16);color:#c4621f}.sc-conf.none,.sc-conf.err{background:rgba(208,87,75,.14);color:#d0574b}
+.sc-ctl{display:flex;gap:8px;align-items:center}
+.sc-ctl select{flex:1;min-width:0;height:38px}
+.sc-qty{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}.sc-qty input{width:64px;height:38px}
+.linkbtn{align-self:flex-start;border:0;background:none;padding:4px 0;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer}
+.sc-find{display:flex;flex-direction:column;gap:8px}
+.sc-frow{display:flex;gap:8px}.sc-frow input{flex:1;min-width:0;height:38px}
+.sc-res{display:flex;flex-direction:column;gap:4px;max-height:280px;overflow:auto}
+.sc-hit{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:6px;color:var(--text);cursor:pointer}
+.sc-hit img{width:34px;aspect-ratio:var(--card-aspect);object-fit:cover;border-radius:3px}
+.sc-hit small{display:block;color:var(--muted);font-size:12px}
+@media (max-width:860px){
+  .modal.scan{max-height:96vh;max-height:96dvh}
+  .sc-stage{min-height:200px}
+  .sc-btns{width:100%}.sc-btns .btn{flex:1;justify-content:center;height:44px;padding:0 8px;min-width:0}
+  .sc-btns .btn span{font-size:13px}
+  .sc-layouts button{padding:0 4px;font-size:13px}
+  .sc-row{grid-template-columns:26px 64px 64px minmax(0,1fr);gap:10px}
+  .sc-crop,.sc-match img,.sc-noimg{width:64px}
+  .sc-row .sc-info{grid-column:2 / -1}
+  .sc-defs select{height:44px;font-size:16px;min-width:0;width:100%}
+  .sc-defs label:not(.sc-chk){flex:1 1 40%}
+  .sc-ctl select,.sc-qty input,.sc-frow input{height:44px;font-size:16px}
+  .sc-frow .btn{height:44px}
+  .linkbtn{min-height:44px}
+  .sc-use input{width:24px;height:24px}
+  .sc-hit{min-height:52px}
+}
+
+.sc-warn{font-size:12px;color:var(--warn,#b45309);margin:4px 0 0}
+.sc-find[hidden],.sc-warn[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -631,31 +705,272 @@ const CONFIG = {
     note: 'Looks up each card by name on db.ygoprodeck.com. Art is linked from YGOPRODeck, so it needs internet to display; your own photos are stored offline.',
     needs: c => !c.cardType || (!c.imageId && !c.imageUrl),
     async fetch(card) {
-      const api = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?';
-      let r = await fetch(api + 'name=' + encodeURIComponent(card.name));
-      if (!r.ok) r = await fetch(api + 'fname=' + encodeURIComponent(card.name));
-      if (!r.ok) return null;
-      const d = (await r.json()).data?.[0];
+      let d = await YGO.cardByName(card.name);
+      if (!d) { const r = await YGO.get('cardinfo.php?fname=' + encodeURIComponent(card.name)); d = r?.data?.[0]; }
       if (!d) return null;
-      const t = d.type || '';
-      const out = {};
-      out.cardType = /monster/i.test(t) ? 'Monster' : /^spell/i.test(t) ? 'Spell' : /^trap/i.test(t) ? 'Trap' : (t || '');
-      if (out.cardType === 'Monster') {
-        const ft = (d.frameType || '').replace(/_pendulum/, '');
-        out.subtype = /pendulum/i.test(t) ? 'Pendulum' : ({ normal: 'Normal', effect: 'Effect', fusion: 'Fusion', ritual: 'Ritual', synchro: 'Synchro', xyz: 'Xyz', link: 'Link', token: 'Token' })[ft] || '';
-      } else if (d.race) out.subtype = d.race;
-      if (d.card_images?.[0]) out.imageUrl = d.card_images[0].image_url_small || d.card_images[0].image_url;
+      const out = YGO.fields(d);
       const s = (d.card_sets || []).find(s => card.number && s.set_code.toLowerCase() === String(card.number).toLowerCase());
       if (s) { if (!card.set) out.set = s.set_name; if (!card.rarity) out.rarity = s.set_rarity; }
       return out;
     },
   },
 
+  /* "Scan binder page": photograph a binder page (or a few cards), the app reads each card's set code
+     (e.g. LOB-EN001, printed under the art on the right) and its name, and looks the exact printing up
+     on YGOPRODeck. Remove this block (or set scan: null) to turn the feature off. The engine (photo
+     framing, OCR, review screen) is generic; everything Yu-Gi-Oh!-specific is here and in YGO below. */
+  scan: {
+    label: 'Scan binder page',
+    note: 'Reads each card\'s set code and name with on-device text recognition, then finds the exact printing on db.ygoprodeck.com.',
+    /* Where text sits on a card, as fractions of the card (x, y, width, height). Tried in order. */
+    codeRegions: [
+      { x: .47, y: .69, w: .46, h: .075, line: .022, ink: [.010, .028] },          // standard: right side, just under the art
+      { x: .07, y: .69, w: .46, h: .075, line: .022, ink: [.010, .028] },          // Pendulum cards (and some others) print it on the left
+      { x: .36, y: .64, w: .62, h: .17, psm: 6 },             // looser box for photos that are off (the code is picked out of the text)
+    ],
+    nameRegion: { x: .05, y: .02, w: .76, h: .11, line: .045 },
+    codeChars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-',
+    /* Quick offline check: does this OCR text contain something that looks like a set code? */
+    looksLikeCode: t => YGO.codeCandidates(t).some(c => c.score <= 1),
+    prepare: () => YGO.prefixes(),                         // runs once per scan (needs internet the first time)
+    identify: r => YGO.identify(r),                        // ({ codeTexts, nameText }) → result (see YGO.identify)
+    search: q => YGO.search(q),                            // manual fix in the review screen
+    toCard: (m, p) => YGO.toCard(m, p),                    // match + chosen printing → binder fields
+  },
+
   /* Example data for the "Try sample data" button (clearly example, not real holdings). */
   sampleCSV: "Portfolio Name,Category,Set,Product Name,Card Number,Rarity,Variance,Grade,Card Condition,Average Cost Paid,Quantity,Market Price (As of 2026-10-24),Price Override,Watchlist,Date Added\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Blue-Eyes White Dragon,LOB-EN001,Ultra Rare,Unlimited,Ungraded,Lightly Played,45.00,1,62.40,70.00,false,2025-01-12\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Dark Magician,LOB-EN005,Ultra Rare,Unlimited,Ungraded,Moderately Played,20.00,1,28.75,,false,2025-01-12\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Red-Eyes B. Dragon,LOB-EN070,Ultra Rare,Unlimited,Ungraded,Near Mint,18.00,1,24.10,,false,2025-01-12\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Exodia the Forbidden One,LOB-EN124,Ultra Rare,Unlimited,Ungraded,Lightly Played,30.00,1,41.99,,false,2025-01-15\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Monster Reborn,LOB-EN118,Ultra Rare,Unlimited,Ungraded,Near Mint,6.50,2,9.80,,false,2025-01-15\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Pot of Greed,LOB-EN119,Rare,Unlimited,Ungraded,Near Mint,2.00,3,3.15,,false,2025-01-15\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Raigeki,LOB-EN053,Super Rare,Unlimited,Ungraded,Lightly Played,4.00,1,6.40,,false,2025-02-02\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Swords of Revealing Light,LOB-EN101,Super Rare,Unlimited,Ungraded,Near Mint,1.50,1,2.20,,false,2025-02-02\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Trap Hole,LOB-EN092,Common,1st Edition,Ungraded,Near Mint,3.00,2,4.50,,false,2025-02-02\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Summoned Skull,MRD-EN003,Ultra Rare,Unlimited,Ungraded,Lightly Played,10.00,1,14.30,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Mirror Force,MRD-EN138,Ultra Rare,Unlimited,Ungraded,Near Mint,25.00,1,33.50,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Time Wizard,MRD-EN065,Ultra Rare,Unlimited,Ungraded,Near Mint,8.00,1,11.25,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Kuriboh,MRD-EN071,Common,Unlimited,Ungraded,Near Mint,0.50,4,0.85,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Change of Heart,MRD-EN060,Ultra Rare,Unlimited,Ungraded,Lightly Played,7.00,1,9.60,,false,2025-03-01\nMain Binder,Yu-Gi-Oh!,Magician's Force,Dark Magician Girl,MFC-EN000,Secret Rare,Unlimited,Ungraded,Lightly Played,60.00,1,84.00,,false,2025-03-09\nMain Binder,Yu-Gi-Oh!,Magician's Force,Dark Magician Girl,MFC-EN000,Secret Rare,1st Edition,PSA 9,Near Mint,350.00,1,520.00,,true,2025-03-09\nMain Binder,Yu-Gi-Oh!,Magic Ruler,Mystical Space Typhoon,MRL-EN047,Ultra Rare,Unlimited,Ungraded,Near Mint,5.00,2,7.10,,false,2025-03-22\nMain Binder,Yu-Gi-Oh!,Invasion of Chaos,Chaos Emperor Dragon - Envoy of the End,IOC-EN000,Secret Rare,Unlimited,Ungraded,Lightly Played,22.00,1,29.40,,false,2025-04-05\nMain Binder,Yu-Gi-Oh!,Invasion of Chaos,Black Luster Soldier - Envoy of the Beginning,IOC-EN025,Ultra Rare,Unlimited,Ungraded,Near Mint,16.00,1,21.75,,false,2025-04-05\nMain Binder,Yu-Gi-Oh!,Cybernetic Revolution,Cyber End Dragon,CRV-EN036,Ultra Rare,1st Edition,Ungraded,Lightly Played,15.00,1,19.50,,false,2025-04-18\nMain Binder,Yu-Gi-Oh!,The Duelist Genesis,Stardust Dragon,TDGS-EN040,Ultra Rare,1st Edition,Ungraded,Near Mint,9.00,1,12.80,,false,2025-05-03\nMain Binder,Yu-Gi-Oh!,2016 Mega-Tins,Dark Magician,CT13-EN003,Ultra Rare,Limited,Ungraded,Near Mint,4.00,1,6.97,,false,2025-05-03\nMain Binder,Yu-Gi-Oh!,Maximum Crisis,Ash Blossom & Joyous Spring,MACR-EN036,Secret Rare,1st Edition,Ungraded,Near Mint,14.00,3,18.60,,true,2025-06-11\nMain Binder,Yu-Gi-Oh!,Flames of Destruction,Infinite Impermanence,FLOD-EN077,Secret Rare,1st Edition,Ungraded,Near Mint,12.00,2,15.40,,false,2025-06-11\nMain Binder,Yu-Gi-Oh!,Flames of Destruction,Called by the Grave,FLOD-EN065,Secret Rare,1st Edition,Ungraded,Near Mint,3.00,3,4.25,,false,2025-06-11\nMain Binder,Yu-Gi-Oh!,Eternity Code,Accesscode Talker,ETCO-EN046,Secret Rare,1st Edition,Ungraded,Near Mint,7.00,1,8.90,,false,2025-07-19\nMain Binder,Yu-Gi-Oh!,Age of Overlord,Snake-Eye Ash,AGOV-EN007,Ultra Rare,1st Edition,Ungraded,Near Mint,3.00,2,2.75,,false,2025-08-02\nTrade Binder,Yu-Gi-Oh!,Storm of Ragnarok,\"Maxx \"\"C\"\"\",STOR-EN032,Super Rare,1st Edition,Ungraded,Lightly Played,6.00,2,5.20,,false,2025-08-14\nTrade Binder,Yu-Gi-Oh!,2019 Gold Sarcophagus Tin,\"Nibiru, the Primal Being\",TN19-EN013,Prismatic Secret Rare,Limited,Ungraded,Near Mint,2.00,2,2.40,,false,2025-08-14\nTrade Binder,Yu-Gi-Oh!,Phantom Rage,Lightning Storm,PHRA-EN069,Secret Rare,1st Edition,Ungraded,Near Mint,4.50,1,3.80,,false,2025-09-01\nTrade Binder,Yu-Gi-Oh!,Structure Deck: Albaz Strike,Fallen of Albaz,SDAZ-EN001,Ultra Rare,1st Edition,Ungraded,Near Mint,0.50,3,0.35,,false,2025-09-01\nTrade Binder,Pokemon,Base Set,Charizard,4/102,Holo Rare,Unlimited,Ungraded,Lightly Played,250.00,1,340.00,,false,2025-09-10\n",
 };
-/* ═════════════════════════════ END CONFIG ═════════════════════════════ */
+/* ───── Yu-Gi-Oh! helpers for lookup + scanning (YGOPRODeck API, free, no key). Part of the config. ───── */
+const YGO = {
+  api: 'https://db.ygoprodeck.com/api/v7/',
+  memo: new Map(),
+  /** GET an API path; null when the API says "no match" (HTTP 400), throws when offline. Results are memoised. */
+  async get(path) {
+    if (this.memo.has(path)) return this.memo.get(path);
+    const p = fetch(this.api + path).then(async r => { if (r.status === 400 || r.status === 404) return null; if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    this.memo.set(path, p);
+    try { return await p; } catch (e) { this.memo.delete(path); throw e; }
+  },
+  /** Card info → binder fields (type, subtype, art). */
+  fields(d) {
+    const t = d.type || '', out = {};
+    out.cardType = /monster/i.test(t) ? 'Monster' : /^spell/i.test(t) ? 'Spell' : /^trap/i.test(t) ? 'Trap' : (t || '');
+    if (out.cardType === 'Monster') {
+      const ft = (d.frameType || '').replace(/_pendulum/, '');
+      out.subtype = /pendulum/i.test(t) ? 'Pendulum' : ({ normal: 'Normal', effect: 'Effect', fusion: 'Fusion', ritual: 'Ritual', synchro: 'Synchro', xyz: 'Xyz', link: 'Link', token: 'Token' })[ft] || '';
+    } else if (d.race) out.subtype = d.race;
+    if (d.card_images?.[0]) out.imageUrl = d.card_images[0].image_url_small || d.card_images[0].image_url;
+    return out;
+  },
+  /** Every set-code prefix (LOB, MP23, …) → set name. Cached on the device for a week. */
+  async prefixes() {
+    if (this.pre) return this.pre;
+    const key = 'ygo-setlist-v1'; let list = null;
+    try { const c = JSON.parse(localStorage.getItem(key) || 'null'); if (c && Date.now() - c.t < 7 * 864e5) list = c.d; } catch {}
+    if (!list) {
+      const d = await this.get('cardsets.php');
+      list = (Array.isArray(d) ? d : []).map(s => [String(s.set_code || '').toUpperCase(), s.set_name]).filter(x => x[0]);
+      try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: list })); } catch {}
+    }
+    this.pre = new Map(); for (const [c, n] of list) if (!this.pre.has(c)) this.pre.set(c, n);
+    return this.pre;
+  },
+  /* Characters OCR commonly mixes up: letters that are really digits and vice versa. */
+  toDigit: { O: '0', Q: '0', D: '0', U: '0', C: '0', I: '1', L: '1', J: '1', T: '7', Z: '2', S: '5', B: '8', G: '6', A: '4', E: '3', Y: '4' },
+  toAlpha: { 0: 'O', 1: 'I', 2: 'Z', 3: 'E', 4: 'A', 5: 'S', 6: 'G', 7: 'T', 8: 'B', 9: 'P' },
+  lookAlike: { C: 'GO', G: 'CO', O: 'DQCG', D: 'O', Q: 'O', E: 'F', F: 'E', P: 'R', R: 'PB', B: 'R', H: 'N', N: 'HM', M: 'N', U: 'VO', V: 'U', I: 'LT', L: 'I', T: 'I' },
+  regions: ['EN', 'DE', 'FR', 'IT', 'PT', 'SP', 'JP', 'KR', 'AE', 'E', ''],
+  /** OCR text → ranked list of plausible set codes { code, score } (0 = read exactly). Needs prefixes() for best results.
+      Thin print sometimes comes out with a character doubled ("EN0036", "BP0O1"): those are tried collapsed too. */
+  codeCandidates(raw) {
+    const T = String(raw || '').toUpperCase(), best = new Map(), d = ch => this.toDigit[ch] || ch;
+    const merge = (list, pen) => { for (const c of list) { const s2 = c.score + pen; if (!best.has(c.code) || best.get(c.code) > s2) best.set(c.code, s2); } };
+    merge(this._codeCandidates(T), 0);
+    const seen = new Set();
+    for (let i = 0; i + 1 < T.length; i++) if (/[A-Z0-9]/.test(T[i]) && d(T[i]) === d(T[i + 1])) { const v = T.slice(0, i) + T.slice(i + 1); if (!seen.has(v)) { seen.add(v); merge(this._codeCandidates(v), .75); } }
+    return [...best].map(([code, score]) => ({ code, score })).sort((a, b) => a.score - b.score);
+  },
+  _codeCandidates(raw) {
+    const pre = this.pre, out = new Map();
+    const add = (code, score) => { if (!out.has(code) || out.get(code) > score) out.set(code, score); };
+    const T = String(raw || '').toUpperCase().replace(/[—–_~=.,:;·•|/\\]/g, '-').replace(/[^A-Z0-9\-\s]/g, ' ');
+    const pieces = new Set();
+    for (const tok of T.split(/\s+/)) if (tok.replace(/-/g, '').length >= 5) pieces.add(tok);
+    const joined = T.replace(/\s+/g, ''); if (joined.length >= 5 && joined.length <= 16) pieces.add(joined);
+    const prefixOpts = p => {                  // p → [[PREFIX, cost]]
+      const res = [];
+      if (!p || p.length < 2 || p.length > 6) return res;
+      if (!pre) { if (/^[A-Z0-9]{2,5}$/.test(p)) res.push([p, 0]); return res; }
+      for (let cut = 0; cut <= Math.min(2, p.length - 2); cut++) {          // ignore up to 2 stray leading characters
+        const q = p.slice(cut); if (q.length > 5) continue;
+        if (pre.has(q)) { res.push([q, cut]); continue; }
+        // swap look-alike characters
+        let vars = [''];
+        for (const ch of q) { const alts = new Set([ch, this.toDigit[ch], this.toAlpha[ch], ...(this.lookAlike[ch] || '')].filter(Boolean)); vars = vars.flatMap(v => [...alts].map(a => v + a)); if (vars.length > 4096) break; }
+        const hits = vars.filter(v => pre.has(v)).map(v => [v, cut + 1 + [...v].filter((c, i) => c !== q[i]).length * .5]);
+        if (hits.length) { res.push(...hits); continue; }
+        if (q.length >= 3) for (const k of pre.keys()) { if (Math.abs(k.length - q.length) > 1) continue; const dd = YGO.lev(k, q); if (dd === 1) res.push([k, cut + 2.5]); else if (dd === 2 && q.length >= 4) res.push([k, cut + 3.5]); }
+      }
+      return res;
+    };
+    const numOpts = n => { const d = [...n].map(ch => /\d/.test(ch) ? ch : this.toDigit[ch] || '?').join(''); return /^\d{3}$/.test(d) ? [[d, [...n].filter(ch => !/\d/.test(ch)).length * .5]] : []; };
+    const regionOpts = r => {
+      if (this.regions.includes(r)) return [[r === 'E' ? 'EN' : r, 0]];
+      const fixed = [...r].map(ch => this.toAlpha[ch] || ch).join('');
+      if (this.regions.includes(fixed)) return [[fixed, .5]];
+      if (r.length <= 3 && (r[0] === 'E' || r[1] === 'N' || r[0] === 'F' && r[1] === 'N')) return [['EN', 1]];
+      return [];
+    };
+    for (const piece of pieces) {
+      const parts = piece.split('-').filter(Boolean);
+      const tries = [];
+      if (parts.length >= 2) for (let i = 0; i < parts.length - 1; i++) tries.push([parts[i], parts[i + 1], 0]);
+      const flat = piece.replace(/-/g, '');
+      for (let pl = 2; pl <= 5; pl++) if (flat.length - pl >= 3 && flat.length - pl <= 5) tries.push([flat.slice(0, pl), flat.slice(pl), 1]);
+      for (const [left, rightRaw, pen] of tries) {
+        const right = rightRaw.slice(0, 6);
+        for (let rl = Math.max(0, right.length - 3 - 0); rl >= 0; rl--) {
+          const num = right.slice(rl, rl + 3), reg = right.slice(0, rl);
+          if (num.length !== 3 || reg.length > 3) continue;
+          for (const [P, pc] of prefixOpts(left)) for (const [R, rc] of regionOpts(reg)) for (const [N, nc] of numOpts(num)) {
+            const extra = right.length - rl - 3;
+            add(`${P}-${R}${N}`, pen + pc + rc + nc + extra * .5 + (reg === '' ? .5 : 0));
+            if (R === '') add(`${P}-EN${N}`, pen + pc + nc + extra * .5 + 1);
+          }
+        }
+      }
+    }
+    return [...out].map(([code, score]) => ({ code, score })).sort((a, b) => a.score - b.score).slice(0, 12);
+  },
+  lev(a, b) {
+    if (a === b) return 0; const m = a.length, n = b.length; if (!m || !n) return m || n;
+    let prev = Array.from({ length: n + 1 }, (_, j) => j);
+    for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+    return prev[n];
+  },
+  /** 0..1 similarity of an OCR'd name with a real card name (forgiving about punctuation, case and spacing). */
+  sim(ocr, name) {
+    const a = String(ocr || '').toLowerCase().replace(/[^a-z0-9]/g, ''), b = String(name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (!a || !b) return 0;
+    const whole = 1 - YGO.lev(a, b) / Math.max(a.length, b.length);
+    const part = a.length >= 6 && b.length > a.length ? 1 - Math.min(...Array.from({ length: b.length - a.length + 1 }, (_, i) => YGO.lev(a, b.slice(i, i + a.length)))) / a.length : 0;
+    // OCR often adds junk after the name ("RAIGEKI EK"): also try the start of the text at the name's length
+    let head = 0; if (a.length > b.length) for (const dl of [-1, 0, 1]) { const h = a.slice(0, b.length + dl); if (h.length >= 4) head = Math.max(head, 1 - YGO.lev(h, b) / b.length); }
+    return Math.max(whole, part * .9, head * .95);
+  },
+  async cardByName(name) { const r = await this.get('cardinfo.php?name=' + encodeURIComponent(name)); return r?.data?.[0] || null; },
+  /** Build a match: the card, every printing (set code + rarity), and which printing is selected. */
+  match(d, code, rarity) {
+    const printings = (d.card_sets || []).map(s => ({ code: s.set_code, set: s.set_name, rarity: s.set_rarity, price: Number(s.set_price) || 0 }));
+    const pfx = c => String(c || '').split('-')[0];
+    printings.sort((a, b) => (b.code === code) - (a.code === code) || (pfx(b.code) === pfx(code)) - (pfx(a.code) === pfx(code)) || coll.compare(a.code, b.code));
+    let printing = printings.findIndex(p => p.code === code && (!rarity || p.rarity === rarity));
+    if (printing < 0) printing = printings.findIndex(p => p.code === code);
+    return { id: d.id, name: d.name, image: d.card_images?.[0]?.image_url_small || '', info: d, printings: printings.length ? printings : [{ code: code || '', set: '', rarity: '' }], printing: Math.max(0, printing), exact: printing >= 0 };
+  },
+  /** How well OCR'd code text fits a known set code (0..1), forgiving look-alike characters. */
+  codeSim(text, code) {
+    // with a hyphen, compare the set prefix (letters) and the number part (digits) separately: folding the prefix's
+    // letters into digits would make e.g. LOB look like DB1
+    const T = String(text || '').toUpperCase(), C = String(code || '').toUpperCase();
+    if (T.includes('-') && C.includes('-')) {
+      const fa = t => t.replace(/[^A-Z0-9]/g, '').replace(/0/g, 'O').replace(/[1L|J]/g, 'I').replace(/5/g, 'S').replace(/8/g, 'B').replace(/2/g, 'Z').replace(/6/g, 'G').replace(/[QD]/g, 'O');
+      const fd = t => t.replace(/[^A-Z0-9]/g, '').replace(/[OQDU]/g, '0').replace(/[IL|J]/g, '1').replace(/S/g, '5').replace(/B/g, '8').replace(/Z/g, '2').replace(/G/g, '6');
+      const [cp, ...cr] = C.split('-'), cn = cr.join('');
+      let best = 0;
+      const tp = T.split('-');
+      for (let i = 0; i + 1 < tp.length; i++) {
+        const a = fa(tp[i]).slice(-cp.length - 1), b = fd(tp.slice(i + 1).join('')), pa = fa(cp), nb = fd(cn);
+        const ps = a ? 1 - this.lev(a.slice(-pa.length) || a, pa) / Math.max(pa.length, 1) : 0, ns = b ? 1 - this.lev(b.slice(0, nb.length + 1), nb) / Math.max(nb.length, 1) : 0;
+        best = Math.max(best, .6 * Math.max(0, ps) + .4 * Math.max(0, ns));
+      }
+      return best;
+    }
+    const norm = t => String(t || '').toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/[OQDU]/g, '0').replace(/[IL|J]/g, '1').replace(/S/g, '5').replace(/B/g, '8').replace(/Z/g, '2').replace(/G/g, '6');
+    const c = norm(code), t = norm(text); if (!c || !t) return 0;
+    let best = 0;
+    for (let i = -2; i <= Math.max(0, t.length - c.length) + 2; i++) { const sub = t.slice(Math.max(0, i), Math.max(0, i) + c.length); if (sub.length < c.length * .6) continue; best = Math.max(best, 1 - YGO.lev(sub, c) / c.length); }
+    return best;
+  },
+  /** Among a card's printings, the one whose set code best fits what we read (or -1). */
+  bestPrinting(d, codeTexts) {
+    let best = -1, bs = 0;
+    (d.card_sets || []).forEach((p, i) => { for (const t of codeTexts) { const s = this.codeSim(t, p.set_code); if (s > bs) { bs = s; best = i; } } });
+    return bs >= .6 ? { i: best, s: bs, code: d.card_sets[best].set_code } : null;
+  },
+  /** Name OCR → best real card name via the API's fuzzy name search. */
+  async byName(nameText) {
+    const clean = String(nameText || '').replace(/[^A-Za-z0-9 &'\-:!.,"]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (clean.replace(/[^A-Za-z]/g, '').length < 4) return null;
+    const words = clean.split(' ').filter(w => w.replace(/[^A-Za-z]/g, '').length >= 4).sort((a, b) => b.length - a.length);
+    const queries = [clean, ...words.slice(0, 3)].map(q => q.replace(/[^A-Za-z0-9 &'\-]/g, ' ').trim()).filter((q, i, a) => q && a.indexOf(q) === i);
+    let best = null;
+    for (const q of queries) {
+      const r = await this.get('cardinfo.php?fname=' + encodeURIComponent(q) + '&num=80&offset=0');
+      for (const d of r?.data || []) { const s = YGO.sim(clean, d.name); if (!best || s > best.s) best = { d, s }; }
+      if (best && best.s >= .9) break;
+    }
+    return best;
+  },
+  /** One scanned card: OCR texts in → { match, confidence: high|medium|low|none, read, via } out.
+      1) set code → the exact printing (cardsetsinfo), 2) name → the card, then the printing whose code best fits
+      whatever code text was read, 3) the two cross-check each other. */
+  async identify({ codeTexts = [], nameText = '', nameTexts = [] }) {
+    await this.prefixes();
+    const names = [...new Set([...(nameTexts || []), nameText].filter(t => t && t.replace(/[^A-Za-z]/g, '').length >= 3))];
+    const nameFit = d => Math.max(0, ...names.map(t => this.sim(t, d.name)));
+    const cands = new Map();
+    for (const t of codeTexts) for (const c of this.codeCandidates(t)) if (!cands.has(c.code) || cands.get(c.code) > c.score) cands.set(c.code, c.score);
+    const ranked = [...cands].map(([code, score]) => ({ code, score })).sort((a, b) => a.score - b.score);
+    let hit = null;
+    for (const c of ranked.filter(c => c.score <= 4.5).slice(0, 6)) {
+      const r = await this.get('cardsetsinfo.php?setcode=' + encodeURIComponent(c.code));
+      if (r && r.name) { hit = { ...c, info: r }; break; }
+    }
+    const codeCard = hit ? await this.cardByName(hit.info.name) : null, cs = codeCard ? nameFit(codeCard) : 0;
+    let nameHit = null;
+    if (!codeCard || cs < .6) for (const t of names.slice(0, 3)) { const n = await this.byName(t); if (n && (!nameHit || n.s > nameHit.s)) nameHit = n; if (nameHit && nameHit.s >= .85) break; }
+    if (codeCard && (cs >= .6 || !nameHit || nameHit.s < .8 || nameHit.d.id === codeCard.id || hit.score <= .5)) {
+      const agree = cs >= .45 || nameHit?.d.id === codeCard.id;
+      const conflict = nameHit && nameHit.s >= .8 && nameHit.d.id !== codeCard.id;
+      if (conflict) {      // the name clearly says another card: trust it if one of its printings fits the code text too
+        const bp = this.bestPrinting(nameHit.d, codeTexts);
+        if (bp && bp.s >= .7) return { match: this.match(nameHit.d, bp.code), confidence: 'medium', read: bp.code, via: 'name+code', nameScore: nameHit.s };
+      }
+      const conf = conflict ? 'low' : hit.score <= .5 ? (agree ? 'high' : 'medium') : hit.score <= 1.5 ? (agree ? 'high' : 'low') : (agree ? 'medium' : 'low');
+      return { match: this.match(codeCard, hit.code, hit.info.set_rarity), confidence: conf, read: hit.code, via: 'code', nameScore: cs };
+    }
+    if (nameHit && nameHit.s >= .55) {
+      const bp = this.bestPrinting(nameHit.d, codeTexts), m = this.match(nameHit.d, bp?.code);
+      const conf = nameHit.s >= .8 ? (bp && bp.s >= .75 ? 'high' : 'medium') : 'low';
+      return { match: m, confidence: conf, read: bp?.code || ranked[0]?.code || '', via: bp ? 'name+code' : 'name', nameScore: nameHit.s, printingUnsure: !bp };
+    }
+    return { match: null, confidence: 'none', read: ranked[0]?.code || '', via: '' };
+  },
+  /** Manual search in the review screen: a set code (exact printing) or part of a name. */
+  async search(q) {
+    q = String(q || '').trim(); if (!q) return [];
+    await this.prefixes().catch(() => {});
+    if (/\d/.test(q) && /-/.test(q)) {
+      for (const c of this.codeCandidates(q).slice(0, 3)) {
+        const r = await this.get('cardsetsinfo.php?setcode=' + encodeURIComponent(c.code));
+        if (r?.name) { const d = await this.cardByName(r.name); if (d) return [this.match(d, c.code, r.set_rarity)]; }
+      }
+    }
+    const r = await this.get('cardinfo.php?fname=' + encodeURIComponent(q) + '&num=12&offset=0');
+    return (r?.data || []).sort((a, b) => this.sim(q, b.name) - this.sim(q, a.name)).map(d => this.match(d));
+  },
+  /** Match + chosen printing → the binder's card fields. */
+  toCard(m, p) {
+    const f = this.fields(m.info);
+    const out = { name: m.name, set: p.set || '', number: p.code || '', rarity: p.rarity || '', category: 'Yu-Gi-Oh!', ...f };
+    if (p.price > 0) out.marketPrice = p.price;
+    return out;
+  },
+};
 
+/* ═════════════════════════════ END CONFIG ═════════════════════════════ */
 </script>
 <script>
 /* ════════════════════════════ APP (generic; no game-specific code below) ════════════════════════════ */
@@ -701,6 +1016,7 @@ const ICON = {
   filter: SV('<path d="M4 6h16M7 12h10M10 18h4"/>'),
   camera: SV('<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/>'),
   phone: SV('<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/>'),
+  scan: SV('<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><rect x="8" y="7.5" width="8" height="9" rx="1"/><path d="M3 12h18"/>'),
   shareIOS: SV('<path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11v9h12v-9"/>', 'width="15" height="15" style="vertical-align:-2px"'),
 };
 /* Phone helpers */
@@ -744,6 +1060,56 @@ const DB = {
   delMany: (s, ks) => DB.tx(s, 'readwrite', st => { ks.forEach(k => st.delete(k)); }),
   clear: s => DB.tx(s, 'readwrite', st => st.clear()),
 };
+
+/* ───────────── Optional server sync ─────────────
+   Only active when a server sets window.BINDER_SERVER (the Deck Lab app serves this binder at /binder/ and does).
+   The server keeps one copy of the card list (no photos) so every browser and the deck builder see the same
+   collection. Opened as a plain file or from a static host, the binder works exactly as before (browser-only). */
+const Sync = {
+  api: window.BINDER_SERVER?.api && /^https?:$/.test(location.protocol) ? window.BINDER_SERVER.api : null,
+  key: CONFIG.id + '-sync', timer: 0, state: 'off',
+  meta() { try { return { last: 0, dirty: false, ...JSON.parse(localStorage.getItem(this.key) || '{}') }; } catch { return { last: 0, dirty: false }; } },
+  setMeta(m) { try { localStorage.setItem(this.key, JSON.stringify({ ...this.meta(), ...m })); } catch {} },
+  async pull() { const r = await fetch(this.api, { cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); },
+  changed() { if (!this.api) return; this.setMeta({ dirty: true }); clearTimeout(this.timer); this.timer = setTimeout(() => this.push(), 400); },
+  async push() {
+    if (!this.api) return;
+    try {
+      const cards = (await DB.all('cards')) || [], updated = Date.now();
+      const r = await fetch(this.api, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cards, updated }) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      this.setMeta({ last: updated, dirty: false }); this.state = 'synced';
+    } catch (e) { this.state = 'offline'; console.warn('binder sync: push failed, will retry', e); clearTimeout(this.timer); this.timer = setTimeout(() => this.push(), 15000); }
+  },
+  /** adopt the server's list when it is newer and this browser has no unsent edits; push local edits otherwise */
+  async reconcile(initial) {
+    if (!this.api) return false;
+    let s; try { s = await this.pull(); } catch (e) { this.state = 'offline'; return false; }
+    const m = this.meta();
+    if (!s.updated) { if (S.cards.length || m.dirty) await this.push(); else this.state = 'synced'; return false; }
+    if (m.dirty) { await this.push(); return false; }
+    if (s.updated === m.last && !initial) { this.state = 'synced'; return false; }
+    if (s.updated === m.last && S.cards.length === s.cards.length) { this.state = 'synced'; return false; }
+    // keep this browser's photos for cards that still exist
+    const local = new Map(S.cards.map(c => [c.id, c]));
+    const cards = s.cards.map(c => { const l = local.get(c.id); return l?.imageId && !c.imageId ? { ...c, imageId: l.imageId } : c; });
+    await DB.tx('cards', 'readwrite', st => { st.clear(); cards.forEach(c => st.put(c)); });
+    S.cards = cards; this.setMeta({ last: s.updated, dirty: false }); this.state = 'synced';
+    return true;
+  },
+  init() {
+    if (!this.api) return;
+    for (const fn of ['put', 'putMany', 'del', 'delMany', 'clear']) {
+      const orig = DB[fn];
+      DB[fn] = async (store, ...a) => { const r = await orig(store, ...a); if (store === 'cards') Sync.changed(); return r; };
+    }
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState !== 'visible' || !S.ready || S.openId) return;
+      if (await this.reconcile(false)) { renderToolbar(); renderMain(); toast('Binder updated from the server'); }
+    });
+  },
+};
+Sync.init();
 
 /* ───────────── State ───────────── */
 const S = {
@@ -915,10 +1281,11 @@ function renderEmpty() {
     <div class="stack">${demo.map(c => cardFace(c)).join('')}</div>
     <h2>Start your binder</h2>
     <p>${isPhone() ? 'Import a Collectr export or spreadsheet, or snap photos of your cards.' : 'Drop in a Collectr export, any CSV or Excel spreadsheet, or photos of your cards.'} Everything stays on this device.</p>
-    <div class="row"><button class="btn primary" id="emptyPick">${ICON.file}${isPhone() ? 'Import or take photos' : 'Choose files'}</button>${CONFIG.sampleCSV ? `<button class="btn" id="emptySample">${ICON.sparkle}Try sample data</button>` : ''}<button class="btn" id="emptyAdd">${ICON.plus}Add a card</button></div>
+    <div class="row"><button class="btn primary" id="emptyPick">${ICON.file}${isPhone() ? 'Import or take photos' : 'Choose files'}</button>${CONFIG.sampleCSV ? `<button class="btn" id="emptySample">${ICON.sparkle}Try sample data</button>` : ''}${CONFIG.scan ? `<button class="btn" id="emptyScan">${ICON.scan}${esc(CONFIG.scan.label || 'Scan binder page')}</button>` : ''}<button class="btn" id="emptyAdd">${ICON.plus}Add a card</button></div>
     <small>CSV · TSV · XLSX · JPG / PNG / WEBP · Backup JSON</small></div></div>`;
   $('#emptyPick').onclick = () => (isPhone() ? openImportSheet() : $('#filePick').click());
   $('#emptyAdd').onclick = () => addBlankCard();
+  $('#emptyScan') && ($('#emptyScan').onclick = () => openScan());
   $('#emptySample') && ($('#emptySample').onclick = () => importTable('sample-data.csv', parseCSV(CONFIG.sampleCSV)));
 }
 function renderGrid(groups) {
@@ -1449,18 +1816,20 @@ function pickFiles(accept) { const p = $('#filePick'), def = p.accept; p.accept 
 function openImportSheet() {
   const sh = sheet(`<div class="sh-head"><h3>Add to your binder</h3><button class="btn ghost" data-close>Cancel</button></div><div class="sh-list">
     <button data-i="cam">${ICON.camera}<span>Take a photo<small>Snap a card with the camera</small></span></button>
+    ${CONFIG.scan ? `<button data-i="scan">${ICON.scan}<span>${esc(CONFIG.scan.label || 'Scan binder page')}<small>Photograph a binder page or a few cards; the app finds each card</small></span></button>` : ''}
     <button data-i="photos">${ICON.image}<span>Choose photos<small>From your photo library</small></span></button>
     <button data-i="file">${ICON.file}<span>Import a file<small>Collectr export (CSV), spreadsheet (CSV / XLSX) or a backup (JSON)</small></span></button>
     <hr><button data-i="add">${ICON.plus}<span>Add a card by hand</span></button>
     ${!S.cards.length && CONFIG.sampleCSV ? `<button data-i="sample">${ICON.sparkle}<span>Try sample data</span></button>` : ''}</div>`);
   $$('[data-i]', sh.node).forEach(b => b.onclick = () => { const a = b.dataset.i; sh.close();
-    if (a === 'cam') $('#camPick').click(); if (a === 'photos') $('#photoPick').click(); if (a === 'file') $('#dataPick').click();
+    if (a === 'scan') openScan(); if (a === 'cam') $('#camPick').click(); if (a === 'photos') $('#photoPick').click(); if (a === 'file') $('#dataPick').click();
     if (a === 'add') addBlankCard(); if (a === 'sample') importTable('sample-data.csv', parseCSV(CONFIG.sampleCSV)); });
 }
 function menuItems() {
   const dark = document.documentElement.dataset.theme === 'dark', phone = isPhone();
   return [
     ['add', ICON.plus, 'Add a card manually'], ['photos', ICON.image, phone ? 'Add card photos' : 'Add card photos…'],
+    CONFIG.scan && ['scan', ICON.scan, (CONFIG.scan.label || 'Scan binder page') + (phone ? '' : '…')],
     CONFIG.lookup && ['lookup', ICON.sparkle, CONFIG.lookup.label], '-',
     ['csv', ICON.file, 'Export CSV'], ['backup', ICON.save, phone ? 'Back up / send to another device' : 'Back up (JSON, includes photos)'], ['restore', ICON.restore, 'Restore from backup…'], '-',
     phone && ['theme', dark ? ICON.sun : ICON.moon, dark ? 'Light mode' : 'Dark mode'],
@@ -1487,6 +1856,7 @@ async function runMenu(a) {
   if (a === 'add') addBlankCard();
   if (a === 'photos') isPhone() ? $('#photoPick').click() : pickFiles('image/*');
   if (a === 'lookup') lookupAll();
+  if (a === 'scan') openScan();
   if (a === 'csv') exportCSV();
   if (a === 'backup') exportBackup();
   if (a === 'restore') isPhone() ? $('#dataPick').click() : pickFiles('.json,application/json');
@@ -1553,6 +1923,7 @@ async function boot() {
     const keys = (await DB.keys('images')) || [];
     for (const k of keys) { const b = await DB.get('images', k); if (b) S.imgs.set(k, URL.createObjectURL(b)); }
   } catch (e) { console.error(e); toast('Could not load saved data: ' + esc(e.message)); }
+  await Sync.reconcile(true);
   if (!CONFIG.sortOptions.some(o => o.key === S.set.sort)) S.set.sort = CONFIG.sortOptions[0].key;
   if (!(CONFIG.groupOptions || []).some(o => o.key === S.set.group)) S.set.group = 'none';
   $('#btnImport').onclick = () => (isPhone() ? openImportSheet() : $('#filePick').click());
@@ -1581,8 +1952,627 @@ async function boot() {
   renderToolbar(); renderMain();
   S.ready = true;
 }
+/* ───────────── Scan binder page: photo → card regions → OCR → lookup → review ─────────────
+   Generic engine. Everything game-specific comes from CONFIG.scan (regions to read, how to identify a
+   card from the text, manual search, and how a match becomes binder fields). With CONFIG.scan = null the
+   feature is hidden. The OCR engine (Tesseract.js) is only downloaded when a scan is opened. */
+const SC = CONFIG.scan || null;
+const SCAN_LAYOUTS = (SC && SC.layouts) || [
+  { key: '3x3', label: '9-pocket', cols: 3, rows: 3 }, { key: '4x3', label: '12-pocket', cols: 4, rows: 3 },
+  { key: '2x2', label: '2 × 2', cols: 2, rows: 2 }, { key: '1', label: '1 card', cols: 1, rows: 1 },
+];
+const OCR_URLS = Object.assign({
+  js: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+  worker: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',
+  core: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1/',
+  lang: 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int',
+}, SC?.ocr || {});
+const CARD_W = 660;
+
+/* ── geometry: homographies between quads ── */
+function solveLin(A, b) {
+  const n = b.length, M = A.map((r, i) => [...r, b[i]]);
+  for (let c = 0; c < n; c++) {
+    let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+    [M[c], M[p]] = [M[p], M[c]]; if (Math.abs(M[c][c]) < 1e-12) return null;
+    for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c] / M[c][c]; for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; }
+  }
+  return M.map((r, i) => r[n] / r[i]);
+}
+function homography(src, dst) {     // 3×3 (row-major, h33 = 1) mapping src[i] → dst[i]
+  const A = [], b = [];
+  for (let i = 0; i < 4; i++) { const [x, y] = src[i], [u, v] = dst[i]; A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.push(u); A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); b.push(v); }
+  const h = solveLin(A, b); return h ? [...h, 1] : null;
+}
+const applyH = (H, x, y) => { const w = H[6] * x + H[7] * y + H[8]; return [(H[0] * x + H[1] * y + H[2]) / w, (H[3] * x + H[4] * y + H[5]) / w]; };
+const UNIT = [[0, 0], [1, 0], [1, 1], [0, 1]];
+/** The quad of grid cell (r, c), optionally grown by `pad` (fraction of a cell) on every side. */
+function cellQuad(quad, L, r, c, pad = 0) {
+  const H = homography(UNIT, quad), u0 = (c - pad) / L.cols, u1 = (c + 1 + pad) / L.cols, v0 = (r - pad) / L.rows, v1 = (r + 1 + pad) / L.rows;
+  return [[u0, v0], [u1, v0], [u1, v1], [u0, v1]].map(([u, v]) => applyH(H, u, v));
+}
+/** Perspective-correct crop of `quad` from the source pixels into a W×H canvas (bilinear sampling). */
+function warpQuad(src, quad, W, H) {
+  const M = homography([[0, 0], [W, 0], [W, H], [0, H]], quad); const out = new ImageData(W, H); const o = out.data, s = src.data, sw = src.width, sh = src.height;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const w = M[6] * x + M[7] * y + M[8], i = (y * W + x) * 4;
+    // outside the photo: repeat its edge (a white fill would look like a card edge to the pocket finder)
+    const fx = Math.min(sw - 1.001, Math.max(0, (M[0] * x + M[1] * y + M[2]) / w)), fy = Math.min(sh - 1.001, Math.max(0, (M[3] * x + M[4] * y + M[5]) / w));
+    const x0 = fx | 0, y0 = fy | 0, ax = fx - x0, ay = fy - y0, j = (y0 * sw + x0) * 4, j2 = j + sw * 4;
+    for (let k = 0; k < 3; k++) o[i + k] = (s[j + k] * (1 - ax) + s[j + 4 + k] * ax) * (1 - ay) + (s[j2 + k] * (1 - ax) + s[j2 + 4 + k] * ax) * ay;
+    o[i + 3] = 255;
+  }
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.getContext('2d').putImageData(out, 0, 0); return cv;
+}
+const ctx2d = cv => cv.getContext('2d', { willReadFrequently: true });
+function grayOf(cv) { const d = ctx2d(cv).getImageData(0, 0, cv.width, cv.height).data, g = new Float32Array(cv.width * cv.height); for (let i = 0; i < g.length; i++) g[i] = d[i * 4] * .299 + d[i * 4 + 1] * .587 + d[i * 4 + 2] * .114; return g; }
+
+/** Card inside a padded pocket crop, by colour. Background = the (near-neutral) pocket/sleeve colour in a band just
+    inside the crop's edge. Columns: the widest run of mostly-card columns. Rows: a run start/end pair whose distance
+    matches the card's height for that width (else one side anchored), so a pale text box or a hazy gap can't break it. */
+function refineByColor(cv) {
+  const W = cv.width, H = cv.height, d = ctx2d(cv).getImageData(0, 0, W, H).data, band = [], neu = [], b1 = Math.max(3, Math.round(W * .06)), b0 = Math.round(W * .008);
+  for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) { const e = Math.min(x, y, W - 1 - x, H - 1 - y); if (e >= b0 && e < b1) { const i = (y * W + x) * 4; band.push(i); if (Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) < 28) neu.push(i); } }
+  // the most common brightness among those pixels (a card's dark blurred edge can't drag the estimate)
+  const ref0 = neu.length > band.length * .1 ? neu : band, lv = i => ((d[i] + d[i + 1] + d[i + 2]) / 36) | 0, hist = new Uint32Array(23);
+  for (const i of ref0) hist[lv(i)]++; const mode = hist.indexOf(Math.max(...hist)), ref = ref0.filter(i => Math.abs(lv(i) - mode) <= 1);
+  const med = k => { const v = ref.map(i => d[i + k]).sort((a, b) => a - b); return v[v.length >> 1]; };
+  const bg = [med(0), med(1), med(2)], dist = i => Math.abs(d[i] - bg[0]) + Math.abs(d[i + 1] - bg[1]) + Math.abs(d[i + 2] - bg[2]);
+  const thr = 60, rows = new Float32Array(H), cols = new Float32Array(W);
+  for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) if (dist((y * W + x) * 4) > thr) { rows[y] += 2 / W; cols[x] += 2 / H; }
+  for (let y = 0; y + 1 < H; y += 2) rows[y + 1] = rows[y]; for (let x = 0; x + 1 < W; x += 2) cols[x + 1] = cols[x];
+  const segs = (a, gap) => { const out = []; let st = -1, last = -1;     // runs of "card" lines, bridging tiny breaks
+    for (let i = 0; i <= a.length; i++) { const on = i < a.length && a[i] > .45;
+      if (on) { if (st < 0) st = i; else if (i - last > gap + 1) { out.push([st, last + 1]); st = i; } last = i; } }
+    if (st >= 0) out.push([st, last + 1]); return out; };
+  const cs = segs(cols, Math.max(4, Math.round(W * .006))).filter(([a, b]) => b - a >= W * .7 && b - a <= W * .97);
+  if (!cs.length) return null;
+  const [l, r] = cs.reduce((p, c) => (c[1] - c[0] > p[1] - p[0] ? c : p)), h = (r - l) * 86 / 59;
+  const rs = segs(rows, Math.max(4, Math.round(H * .006))), cover = (t, b) => { let n = 0; for (let y = t; y < b; y++) n += rows[y] > .2; return n / Math.max(1, b - t); };
+  let best = null;
+  for (const s of rs) for (const e of rs) { const t = s[0], b = e[1]; if (b <= t) continue; const err = Math.abs(b - t - h) / h; if (err < .04) { const sc = cover(t, b) - err * 3 - (t <= 1 ? .15 : 0) - (b >= H - 1 ? .15 : 0); if (!best || sc > best[0]) best = [sc, t, b]; } }
+  if (!best) for (const s of rs) for (let [t, b] of [[s[0], s[0] + h], [s[1] - h, s[1]]]) {
+    t = Math.round(t); b = Math.round(b); if (t < -H * .01 || b > H * 1.01) continue; t = Math.max(0, t); b = Math.min(H, b);
+    const sc = cover(t, b) - .1; if (!best || sc > best[0]) best = [sc, t, b]; }
+  if (!best || best[0] < .6) return null;
+  return [l, r, best[1], best[2]];
+}
+/** Find the card's edges inside a padded pocket crop; returns a tight, upright card canvas (or null if unsure).
+    Picks the left/right and top/bottom edge pairs with the strongest contrast whose box has the card's shape,
+    so frame lines inside the card and neighbouring cards don't win. */
+function refineCard(cv) {
+  const byColor = refineByColor(cv);
+  if (byColor) { const [l, r, t, b] = byColor, out = document.createElement('canvas'); out.width = CARD_W; out.height = Math.round(CARD_W * 86 / 59);
+    const x = ctx2d(out); x.imageSmoothingQuality = 'high'; x.drawImage(cv, l, t, r - l, b - t, 0, 0, out.width, out.height); out.box = [l, r, t, b]; return out; }
+  const W = cv.width, H = cv.height, g = grayOf(cv), at = (x, y) => g[y * W + x];
+  const col = new Float32Array(W), row = new Float32Array(H);
+  for (let x = 3; x < W - 3; x++) { let s = 0, n = 0; for (let y = (H * .15) | 0; y < H * .85; y += 2) { s += Math.abs(at(x + 2, y) - at(x - 2, y)); n++; } col[x] = s / n; }
+  for (let y = 3; y < H - 3; y++) { let s = 0, n = 0; for (let x = (W * .15) | 0; x < W * .85; x += 2) { s += Math.abs(at(x, y + 2) - at(x, y - 2)); n++; } row[y] = s / n; }
+  const aspect = 59 / 86, CH = Math.round(CARD_W / aspect);
+  const lo = (a, f, t) => { const r = []; for (let i = Math.max(3, f | 0); i < Math.min(a.length - 3, t); i++) r.push(i); return r; };
+  const Ls = lo(col, 0, W * .22), Rs = lo(col, W * .78, W), Ts = lo(row, 0, H * .2), Bs = lo(row, H * .8, H);
+  // best top/bottom pair for every height
+  const bestTB = new Map();
+  for (const t of Ts) for (const b of Bs) { const h = b - t, sc = row[t] + row[b], cur = bestTB.get(h); if (!cur || sc > cur[0]) bestTB.set(h, [sc, t, b]); }
+  const cands = [];
+  for (const l of Ls) for (const r of Rs) {
+    const w = r - l; if (w < W * .7) continue;
+    const want = w / aspect, tol = Math.max(3, want * .05);
+    let pick = null; for (let h = Math.round(want - tol); h <= want + tol; h++) { const tb = bestTB.get(h); if (tb && (!pick || tb[0] > pick[0])) pick = tb; }
+    if (pick) cands.push([col[l] + col[r] + pick[0], l, r, pick[1], pick[2]]);
+  }
+  if (!cands.length) return null;
+  // the outer card edge and the frame line just inside it are both strong: among near-best boxes take the biggest
+  const top = Math.max(...cands.map(c => c[0])), near = cands.filter(c => c[0] >= top * .85);
+  const best = near.reduce((a, c) => (c[2] - c[1] > a[2] - a[1] ? c : a));
+  if (!best) return null;
+  const [, l, r, t, b] = best;
+  const out = document.createElement('canvas'); out.width = CARD_W; out.height = CH;
+  const x = ctx2d(out); x.imageSmoothingQuality = 'high'; x.drawImage(cv, l, t, r - l, b - t, 0, 0, out.width, out.height); out.box = [l, r, t, b]; return out;
+}
+/** Foreground mask: pixels that clearly differ from the colour around the photo's border (table, page or sleeve). */
+function fgMask(cv, maxSide = 360) {
+  const sc = Math.min(1, maxSide / Math.max(cv.width, cv.height)), W = Math.max(8, Math.round(cv.width * sc)), H = Math.max(8, Math.round(cv.height * sc));
+  const small = document.createElement('canvas'); small.width = W; small.height = H; ctx2d(small).drawImage(cv, 0, 0, W, H);
+  const d = ctx2d(small).getImageData(0, 0, W, H).data, ring = [];
+  const bw = Math.max(2, Math.round(Math.min(W, H) * .012));
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (x < bw || y < bw || x >= W - bw || y >= H - bw) ring.push((y * W + x) * 4);
+  const med = k => { const v = ring.map(i => d[i + k]).sort((a, b) => a - b); return v[v.length >> 1]; };
+  const bg = [med(0), med(1), med(2)];
+  const dist = i => Math.abs(d[i] - bg[0]) + Math.abs(d[i + 1] - bg[1]) + Math.abs(d[i + 2] - bg[2]);
+  const rd = ring.map(dist).sort((a, b) => a - b), thr = Math.max(45, rd[(rd.length * .6) | 0] * 2.5 + 20);
+  const m = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) m[i] = dist(i * 4) > thr ? 1 : 0;
+  const k = 2, mm = new Uint8Array(W * H); let n = 0;     // 5×5 majority: drop specks and texture
+  for (let y = k; y < H - k; y++) for (let x = k; x < W - k; x++) { let s = 0; for (let dy = -k; dy <= k; dy++) for (let dx = -k; dx <= k; dx++) s += m[(y + dy) * W + x + dx]; if (s >= 13) { mm[y * W + x] = 1; n++; } }
+  return { m: mm, W, H, sc, frac: n / (W * H), uniform: rd[(rd.length * .6) | 0] < 40 };
+}
+/** Page on a table: the four extreme corners of the foreground (handles rotation and perspective). */
+function detectQuad(cv) {
+  const { m, W, H, sc, frac, uniform } = fgMask(cv);
+  if (!uniform || frac < .08 || frac > .95) return null;
+  let tl = [0, 0, Infinity], tr = [0, 0, -Infinity], br = [0, 0, -Infinity], bl = [0, 0, Infinity];
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (m[y * W + x]) {
+    if (x + y < tl[2]) tl = [x, y, x + y]; if (x + y > br[2]) br = [x, y, x + y]; if (x - y > tr[2]) tr = [x, y, x - y]; if (x - y < bl[2]) bl = [x, y, x - y];
+  }
+  return [tl, tr, br, bl].map(([x, y]) => [x / sc, y / sc]);
+}
+/** Upright image: bounding box of the rows/columns that are mostly cards (empty pockets don't shrink it). */
+function detectBox(cv) {
+  const { m, W, H, sc, frac, uniform } = fgMask(cv);
+  if (!uniform || frac < .05) return null;
+  const rows = new Float32Array(H), cols = new Float32Array(W);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (m[y * W + x]) { rows[y]++; cols[x]++; }
+  const span = (a, len) => { let lo = 0, hi = a.length - 1; while (lo < hi && a[lo] < len * .18) lo++; while (hi > lo && a[hi] < len * .18) hi--; return [lo, hi + 1]; };
+  const [y0, y1] = span(rows, W), [x0, x1] = span(cols, H);
+  if (x1 - x0 < W * .2 || y1 - y0 < H * .2) return null;
+  return [x0 / sc, y0 / sc, x1 / sc, y1 / sc];
+}
+function autoQuad(cv) {
+  const box = (c, b) => [[b[0], b[1]], [b[2], b[1]], [b[2], b[3]], [b[0], b[3]]];
+  const inset = f => box(cv, [cv.width * f, cv.height * f, cv.width * (1 - f), cv.height * (1 - f)]);
+  try {
+    const q1 = detectQuad(cv);
+    if (!q1) { const b = detectBox(cv); return b ? { quad: box(cv, b), auto: true } : { quad: inset(.02), auto: false }; }
+    // second pass on the straightened page: trims the page/sleeve margin around the pockets
+    const w1 = Math.hypot(q1[1][0] - q1[0][0], q1[1][1] - q1[0][1]), h1 = Math.hypot(q1[3][0] - q1[0][0], q1[3][1] - q1[0][1]);
+    const W = 420, H = Math.round(W * h1 / Math.max(1, w1));
+    if (H > 40 && H < 3000) {
+      const page = warpQuad(ctx2d(cv).getImageData(0, 0, cv.width, cv.height), q1, W, H), b = detectBox(page);
+      if (b && (b[2] - b[0]) * (b[3] - b[1]) > W * H * .5) { const Hm = homography([[0, 0], [W, 0], [W, H], [0, H]], q1); return { quad: box(page, b).map(([x, y]) => applyH(Hm, x, y)), auto: true }; }
+    }
+    return { quad: q1, auto: true };
+  } catch (e) { console.warn('auto-detect', e); return { quad: inset(.02), auto: false }; }
+}
+
+/* ── OCR (Tesseract.js, lazily loaded) ── */
+const OCR = { worker: null, loading: null };
+async function fetchCached(url, onProg) {     // through the service worker when installed; else kept in IndexedDB
+  const key = 'ocr:' + url;
+  if (!navigator.serviceWorker?.controller) { try { const b = await DB.get('meta', key); if (b instanceof Blob) return b; } catch {} }
+  const r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
+  const total = +r.headers.get('content-length') || 0; let blob;
+  if (r.body && total && onProg) {
+    const rd = r.body.getReader(), parts = []; let got = 0;
+    for (;;) { const { done, value } = await rd.read(); if (done) break; parts.push(value); got += value.length; onProg(got, total); }
+    blob = new Blob(parts, { type: r.headers.get('content-type') || 'application/javascript' });
+  } else blob = await r.blob();
+  if (!navigator.serviceWorker?.controller) DB.put('meta', blob, key).catch(() => {});
+  return blob;
+}
+const SIMD_TEST = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11]);
+function loadOCR(progress = () => {}) {
+  if (OCR.worker) return Promise.resolve(OCR.worker);
+  if (OCR.loading) return OCR.loading;
+  OCR.loading = (async () => {
+    const simd = (() => { try { return WebAssembly.validate(SIMD_TEST); } catch { return false; } })();
+    const coreUrl = OCR_URLS.core.replace(/\/?$/, '/') + (simd ? 'tesseract-core-simd-lstm.wasm.js' : 'tesseract-core-lstm.wasm.js');
+    const sizes = {}, prog = k => (got, tot) => { sizes[k] = [got, tot]; const g = Object.values(sizes).reduce((a, v) => a + v[0], 0), t = Object.values(sizes).reduce((a, v) => a + v[1], 0); progress(`Downloading the text reader… ${(g / 1e6).toFixed(1)} / ${(t / 1e6).toFixed(1)} MB (first time only)`, g / t); };
+    const [lib, wk, core] = await Promise.all([fetchCached(OCR_URLS.js, prog('js')), fetchCached(OCR_URLS.worker, prog('w')), fetchCached(coreUrl, prog('c'))]);
+    if (!window.Tesseract) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = URL.createObjectURL(lib); s.onload = res; s.onerror = () => rej(new Error('Could not start the text reader')); document.head.append(s); });
+    progress('Starting the text reader…', 1);
+    const w = await window.Tesseract.createWorker('eng', 1, {
+      workerPath: URL.createObjectURL(wk), workerBlobURL: false,
+      // "#…js" tells Tesseract this is the file itself. Opened as a local file (file://) a worker can't import blob
+      // scripts, so it loads the core straight from the CDN there (no offline reuse in that mode).
+      corePath: location.protocol === 'file:' ? coreUrl : URL.createObjectURL(new Blob([core], { type: 'application/javascript' })) + '#core.js',
+      langPath: OCR_URLS.lang, gzip: true,
+      logger: m => { if (/language/.test(m.status) && m.progress < 1) progress('Loading language data… (first time only)', m.progress); },
+      errorHandler: e => console.warn('OCR worker', e),
+    });
+    OCR.worker = w; return w;
+  })();
+  OCR.loading.catch(() => { OCR.loading = null; });
+  return OCR.loading;
+}
+/** Crop a region of the card, upscale, grayscale, stretch contrast and (optionally) binarise with Otsu; text ends
+    up dark on white. With `line` (expected text height as a fraction of the card), the band is narrowed to the row
+    with the most black/white transitions, i.e. the line of text, so frame borders and art don't confuse the OCR. */
+function prepRegion(card, r, { scale = 3, bin = true, line = 0, k = 0, invert = 'auto' } = {}) {
+  const sx = r.x * card.width, sy = r.y * card.height, sw = r.w * card.width, sh = r.h * card.height, W = Math.round(sw * scale), H = Math.round(sh * scale), pad = 16;
+  const tmp = document.createElement('canvas'); tmp.width = W; tmp.height = H; const tx = ctx2d(tmp);
+  tx.imageSmoothingQuality = 'high'; tx.drawImage(card, sx, sy, sw, sh, 0, 0, W, H);
+  const id = tx.getImageData(0, 0, W, H), d = id.data, n = W * H, g = new Float32Array(n);
+  for (let i = 0; i < n; i++) g[i] = d[i * 4] * .299 + d[i * 4 + 1] * .587 + d[i * 4 + 2] * .114;
+  const stretch = (y0, y1) => {          // contrast stretch + Otsu over rows y0..y1
+    const m = (y1 - y0) * W, hist = new Uint32Array(256); for (let i = y0 * W; i < y1 * W; i++) hist[g[i] | 0]++;
+    let lo = 0, hi = 255, acc = 0; for (; lo < 255; lo++) { acc += hist[lo]; if (acc > m * .02) break; } acc = 0; for (; hi > 0; hi--) { acc += hist[hi]; if (acc > m * .02) break; }
+    const span = Math.max(1, hi - lo), out = new Float32Array(m);
+    for (let i = 0; i < m; i++) out[i] = Math.min(255, Math.max(0, (g[y0 * W + i] - lo) * 255 / span));
+    const h2 = new Uint32Array(256); for (let i = 0; i < m; i++) h2[out[i] | 0]++;
+    let sum = 0; for (let t = 0; t < 256; t++) sum += t * h2[t];
+    let sB = 0, wB = 0, best = 0, thr = 128; for (let t = 0; t < 256; t++) { wB += h2[t]; if (!wB) continue; const wF = m - wB; if (!wF) break; sB += t * h2[t]; const mB = sB / wB, mF = (sum - sB) / wF, v = wB * wF * (mB - mF) ** 2; if (v > best) { best = v; thr = t; } }
+    let dark = 0; for (let i = 0; i < m; i++) if (out[i] < thr) dark++;
+    return { out, thr, inv: dark > m * .5 };
+  };
+  let y0 = 0, y1 = H;
+  if (line) {
+    const { out, thr } = stretch(0, H), lh = Math.max(6, Math.round(line * card.height * scale)), tr = new Float32Array(H);
+    for (let y = 0; y < H; y++) { let c = 0, prev = out[y * W] < thr; for (let x = 1; x < W; x++) { const b = out[y * W + x] < thr; if (b !== prev) c++; prev = b; } tr[y] = c; }
+    const win = []; for (let y = 0; y + lh <= H; y++) { let sc = 0; for (let q = y; q < y + lh; q++) sc += tr[q]; win.push(sc); }
+    // the k-th best text line (lines don't overlap); null when there is no such line
+    const picks = [], top = Math.max(...win);
+    for (let it = 0; it <= k; it++) {
+      let bi = -1; for (let y = 0; y < win.length; y++) if (!picks.some(p => Math.abs(p - y) < lh) && (bi < 0 || win[y] > win[bi])) bi = y;
+      if (bi < 0 || win[bi] < top * .3) return null; picks.push(bi);
+    }
+    const bestY = picks[k];
+    y0 = Math.max(0, Math.round(bestY - lh * .75)); y1 = Math.min(H, Math.round(bestY + lh * 1.75));
+  }
+  const st = stretch(y0, y1), { out, thr } = st, h = y1 - y0, inv = invert === 'auto' ? st.inv : invert === 'flip' ? !st.inv : invert;
+  const cv = document.createElement('canvas'); cv.width = W + pad * 2; cv.height = h + pad * 2; const x = ctx2d(cv);
+  x.fillStyle = '#fff'; x.fillRect(0, 0, cv.width, cv.height);
+  const o = x.createImageData(W, h);
+  for (let i = 0; i < W * h; i++) { let v = bin ? (out[i] < thr ? 0 : 255) : out[i]; if (inv) v = 255 - v; o.data[i * 4] = o.data[i * 4 + 1] = o.data[i * 4 + 2] = v; o.data[i * 4 + 3] = 255; }
+  if (bin && line) {        // drop blobs and rules that aren't letters: wider than half the band, taller than 1.6 lines, or specks
+    const lh = line * card.height * scale, lab = new Int32Array(W * h).fill(-1), px = o.data, stack = [];
+    for (let i = 0; i < W * h; i++) if (px[i * 4] === 0 && lab[i] < 0) {
+      let minx = W, maxx = 0, miny = h, maxy = 0, cnt = 0, members = []; stack.push(i); lab[i] = i;
+      while (stack.length) { const j = stack.pop(), jx = j % W, jy = (j / W) | 0; members.push(j); cnt++; if (jx < minx) minx = jx; if (jx > maxx) maxx = jx; if (jy < miny) miny = jy; if (jy > maxy) maxy = jy;
+        for (const nb of [j - 1, j + 1, j - W, j + W]) { if (nb < 0 || nb >= W * h || (nb % W === 0 && j % W === W - 1) || (j % W === 0 && nb % W === W - 1)) continue; if (px[nb * 4] === 0 && lab[nb] < 0) { lab[nb] = i; stack.push(nb); } } }
+      const bw = maxx - minx + 1, bh = maxy - miny + 1;
+      const edge = (miny === 0 || maxy === h - 1) && bw > lh * 1.2;      // art / text-box edges cut by the crop
+      if (edge || bh > lh * 1.9 || cnt < 8 || (bw > lh * 2.5 && bh < lh * .35)) for (const j of members) px[j * 4] = px[j * 4 + 1] = px[j * 4 + 2] = 255;
+    }
+  }
+  x.putImageData(o, pad, pad); return cv;
+}
+/** Text line by local contrast: ink = pixels clearly darker (or lighter) than their neighbourhood, kept only when they
+    form letter-sized pieces lined up on one row. Works on any frame colour and ignores art edges, glare and rules.
+    r.ink = [min, max] letter height as a fraction of the card height. Returns { cv, n } or null. */
+function textLine(card, r, { scale = 3, k = 0, dark = true } = {}) {
+  const sx = r.x * card.width, sy = r.y * card.height, sw = r.w * card.width, sh = r.h * card.height, W = Math.round(sw * scale), H = Math.round(sh * scale);
+  const tmp = document.createElement('canvas'); tmp.width = W; tmp.height = H; const tx = ctx2d(tmp);
+  tx.imageSmoothingQuality = 'high'; tx.drawImage(card, sx, sy, sw, sh, 0, 0, W, H);
+  const d = tx.getImageData(0, 0, W, H).data, n = W * H, g = new Float32Array(n);
+  for (let i = 0; i < n; i++) g[i] = d[i * 4] * .299 + d[i * 4 + 1] * .587 + d[i * 4 + 2] * .114;
+  const hMin = r.ink[0] * card.height * scale, hMax = r.ink[1] * card.height * scale;
+  // ink = thin strokes darker (black-hat) or lighter (top-hat) than their surroundings; wide dark/light areas
+  // (art borders, shadows, glare, the frame colour) are not thin, so they drop out
+  const S = Math.max(2, Math.round(hMin * .25)), minMax = (src, isMax) => {         // separable square min/max filter
+    const t = new Float32Array(n), o = new Float32Array(n), f = isMax ? Math.max : Math.min;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let v = src[y * W + x]; for (let q = Math.max(0, x - S); q <= Math.min(W - 1, x + S); q++) v = f(v, src[y * W + q]); t[y * W + x] = v; }
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let v = t[y * W + x]; for (let q = Math.max(0, y - S); q <= Math.min(H - 1, y + S); q++) v = f(v, t[q * W + x]); o[y * W + x] = v; }
+    return o; };
+  const close = dark ? minMax(minMax(g, true), false) : minMax(minMax(g, false), true), hat = new Float32Array(n);
+  for (let i = 0; i < n; i++) hat[i] = dark ? close[i] - g[i] : g[i] - close[i];
+  const sorted = Float32Array.from(hat).sort(), cut = Math.max(12, sorted[Math.floor(n * .99)] * .25), m = new Uint8Array(n);
+  for (let i = 0; i < n; i++) m[i] = hat[i] > cut;
+  // connected pieces of letter size
+  const lab = new Int32Array(n).fill(-1), comps = [], stack = [];
+  for (let i = 0; i < n; i++) if (m[i] && lab[i] < 0) {
+    let minx = W, maxx = 0, miny = H, maxy = 0, cnt = 0; const mem = []; stack.push(i); lab[i] = comps.length;
+    while (stack.length) { const j = stack.pop(), jx = j % W, jy = (j / W) | 0; mem.push(j); cnt++; if (jx < minx) minx = jx; if (jx > maxx) maxx = jx; if (jy < miny) miny = jy; if (jy > maxy) maxy = jy;
+      if (jx > 0 && m[j - 1] && lab[j - 1] < 0) { lab[j - 1] = comps.length; stack.push(j - 1); } if (jx < W - 1 && m[j + 1] && lab[j + 1] < 0) { lab[j + 1] = comps.length; stack.push(j + 1); }
+      if (jy > 0 && m[j - W] && lab[j - W] < 0) { lab[j - W] = comps.length; stack.push(j - W); } if (jy < H - 1 && m[j + W] && lab[j + W] < 0) { lab[j + W] = comps.length; stack.push(j + W); } }
+    comps.push({ minx, maxx, miny, maxy, cnt, mem, h: maxy - miny + 1, w: maxx - minx + 1 });
+  }
+  const letters = comps.filter(c => c.h >= hMin && c.h <= hMax && c.w <= hMax * 1.6 && c.cnt >= hMin * 1.5 && c.miny > 0 && c.maxy < H - 1);
+  if (letters.length < 3) return null;
+  // rows of letters: group by bottom line (letters share a baseline), best k-th group by count
+  const groups = [];
+  for (const c of letters.sort((a, b) => a.maxy - b.maxy)) { const gp = groups.find(gq => Math.abs(gq.base - c.maxy) <= hMin * .45 && Math.abs(gq.hh - c.h) <= hMax * .5); if (gp) { gp.items.push(c); gp.base = (gp.base * (gp.items.length - 1) + c.maxy) / gp.items.length; } else groups.push({ base: c.maxy, hh: c.h, items: [c] }); }
+  // within a row keep the longest chain of letters with small gaps (a code is one word)
+  const chains = [];
+  for (const gp of groups) { const it = gp.items.sort((a, b) => a.minx - b.minx); let cur = [it[0]];
+    for (let i = 1; i < it.length; i++) { if (it[i].minx - cur[cur.length - 1].maxx < hMax * 1.3) cur.push(it[i]); else { chains.push(cur); cur = [it[i]]; } } chains.push(cur); }
+  chains.sort((a, b) => b.length - a.length);
+  const ch = chains[k]; if (!ch || ch.length < 3) return null;
+  const x0 = Math.min(...ch.map(c => c.minx)), x1 = Math.max(...ch.map(c => c.maxx)), y0 = Math.min(...ch.map(c => c.miny)), y1 = Math.max(...ch.map(c => c.maxy));
+  // keep anything letter-ish inside the chain's box too (hyphens, dots of broken letters)
+  const keep = comps.filter(c => c.minx >= x0 - 2 && c.maxx <= x1 + 2 && c.miny >= y0 - hMax * .3 && c.maxy <= y1 + hMax * .3 && c.h <= hMax * 1.1 && c.cnt >= 3);
+  const pad = Math.round(hMax * .8), cw = x1 - x0 + 1 + pad * 2, chh = y1 - y0 + 1 + pad * 2;
+  const cv = document.createElement('canvas'); cv.width = cw; cv.height = chh; const cx = ctx2d(cv); const o = cx.createImageData(cw, chh); o.data.fill(255);
+  for (const c of keep) for (const j of c.mem) { const px = j % W - x0 + pad, py = ((j / W) | 0) - y0 + pad; if (px >= 0 && py >= 0 && px < cw && py < chh) { const q = (py * cw + px) * 4; o.data[q] = o.data[q + 1] = o.data[q + 2] = 0; } }
+  cx.putImageData(o, 0, 0); return { cv, n: ch.length };
+}
+async function ocr(cv, psm, chars) {
+  const w = OCR.worker;
+  await w.setParameters({ tessedit_pageseg_mode: String(psm), tessedit_char_whitelist: chars || '', user_defined_dpi: '300' });
+  const { data } = await w.recognize(cv);
+  return { text: (data.text || '').trim(), conf: data.confidence || 0 };
+}
+function rotate180(cv) { const o = document.createElement('canvas'); o.width = cv.width; o.height = cv.height; const x = o.getContext('2d'); x.translate(o.width, o.height); x.rotate(Math.PI); x.drawImage(cv, 0, 0); return o; }
+/** Read one card: set code first (several regions / preprocessings, stopping as soon as one looks right), then the name. */
+async function readCard(card, deep) {
+  const codeTexts = [], tries = [];
+  const regs = SC.codeRegions || [];
+  // best: letter-sized pieces on one baseline, by local contrast (both polarities, best-looking first)
+  for (const r of regs) if (r.ink) {
+    const c = [true, false].map(dark => ({ dark, t: textLine(card, r, { dark }) })).filter(c => c.t).sort((a, b) => b.t.n - a.t.n);
+    for (const { t } of c) { const { text } = await ocr(t.cv, 7, SC.codeChars); if (text) codeTexts.push(text); if (text && SC.looksLikeCode && SC.looksLikeCode(text)) return finishName(card, codeTexts, deep); }
+    if (deep) for (const dark of [true, false]) { const t = textLine(card, r, { dark, k: 1 }); if (t) { const { text } = await ocr(t.cv, 7, SC.codeChars); if (text) codeTexts.push(text); if (text && SC.looksLikeCode?.(text)) return finishName(card, codeTexts, deep); } }
+  }
+  // fallback: thresholded bands
+  for (const r of regs) if (r.line) for (const invert of ['auto', 'flip']) tries.push([r, { scale: 3, bin: true, line: r.line, k: 0, invert }, r.psm || 7]);
+  const quick = tries.length;
+  for (const r of regs) {
+    if (r.line) { for (let k = 1; k < 3; k++) for (const invert of ['auto', 'flip']) tries.push([r, { scale: 3, bin: true, line: r.line, k, invert }, r.psm || 7]); tries.push([r, { scale: 3, bin: false, line: r.line }, r.psm || 7]); }
+    else tries.push([r, { scale: 3, bin: true }, r.psm || 7]);
+  }
+  for (const [r, opt, psm] of tries.slice(0, deep ? tries.length : quick + 1)) {
+    const cv = prepRegion(card, r, opt); if (!cv) continue;
+    const { text } = await ocr(cv, psm, SC.codeChars);
+    if (text) codeTexts.push(text);
+    if (text && SC.looksLikeCode && SC.looksLikeCode(text)) break;
+  }
+  return finishName(card, codeTexts, deep);
+}
+async function finishName(card, codeTexts, deep) {
+  const names = [];
+  const NR = SC.nameRegion;
+  if (NR) {
+    for (const opt of [{ scale: 2, bin: true, line: NR.line || 0 }, { scale: 2, bin: false, line: NR.line || 0 }, { scale: 2, bin: true, line: NR.line || 0, invert: 'flip' }, { scale: 2, bin: true }]) {
+      const pc = prepRegion(card, NR, opt); if (!pc) continue;
+      const { text, conf } = await ocr(pc, 7, SC.nameChars || '');
+      const t = text.replace(/\s+/g, ' ').trim(), letters = t.replace(/[^A-Za-z]/g, '').length;
+      if (letters >= 3) names.push({ t, conf, letters });
+      if (letters >= 4 && conf > 75) break;
+    }
+  }
+  names.sort((a, b) => b.conf - a.conf);
+  const nameTexts = names.map(n => n.t), nameText = nameTexts[0] || '';
+  return { codeTexts, nameText, nameTexts };
+}
+
+/* ── the scan flow UI ── */
+const SCAN = { photos: [], cur: 0, abort: false };
+function scanInputs() {
+  if ($('#scanCam')) return;
+  document.body.append(el(`<input type="file" id="scanCam" accept="image/*" capture="environment" hidden>`), el(`<input type="file" id="scanPick" accept="image/*" multiple hidden>`));
+  ['#scanCam', '#scanPick'].forEach(id => { $(id).onchange = e => { const f = [...e.target.files].filter(f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name)); e.target.value = ''; if (f.length) addScanPhotos(f); }; });
+}
+/** Entry point: on phones choose camera or library, on desktop open the file picker. */
+function openScan() {
+  if (!SC) return;
+  scanInputs();
+  loadOCR().catch(() => {});        // start downloading the reader while he frames the photo
+  SC.prepare && Promise.resolve(SC.prepare()).catch(() => {});
+  if (!isPhone()) { $('#scanPick').click(); return; }
+  const sh = sheet(`<div class="sh-head"><h3>${esc(SC.label || 'Scan binder page')}</h3><button class="btn ghost" data-close>Cancel</button></div>
+    <p class="sh-note">Lay the page flat in good light, fill the frame with the cards and avoid glare on the sleeves.</p><div class="sh-list">
+    <button data-s="cam">${ICON.camera}<span>Take a photo<small>Use the camera</small></span></button>
+    <button data-s="lib">${ICON.image}<span>Choose photos<small>One or more pages from your library</small></span></button></div>`);
+  $$('[data-s]', sh.node).forEach(b => b.onclick = () => { sh.close(); $(b.dataset.s === 'cam' ? '#scanCam' : '#scanPick').click(); });
+}
+async function loadPhoto(file) {
+  let bmp; try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); } catch { bmp = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Unsupported image')); i.src = URL.createObjectURL(file); }); }
+  const max = 3200, sc = Math.min(1, max / Math.max(bmp.width, bmp.height)), cv = document.createElement('canvas');
+  cv.width = Math.round(bmp.width * sc); cv.height = Math.round(bmp.height * sc); ctx2d(cv).drawImage(bmp, 0, 0, cv.width, cv.height); bmp.close?.();
+  const a = autoQuad(cv);
+  return { name: file.name, cv, quad: a.quad, auto: a.auto, layout: SCAN_LAYOUTS[0].key };
+}
+async function addScanPhotos(files) {
+  const t = toast('Opening photo' + (files.length > 1 ? 's' : '') + '…', 0);
+  try {
+    for (const f of files) { try { SCAN.photos.push(await loadPhoto(f)); } catch (e) { toast(`Couldn't open ${esc(f.name)}: ${esc(e.message)}`, 5000); } }
+  } finally { t.dismiss(); }
+  if (!SCAN.photos.length) return;
+  if (SCAN.modal && !SCAN.modal.closed) { SCAN.cur = SCAN.photos.length - 1; renderFrame(); } else openFrame();
+}
+const layoutOf = p => SCAN_LAYOUTS.find(l => l.key === p.layout) || SCAN_LAYOUTS[0];
+function openFrame() {
+  SCAN.cur = 0; SCAN.abort = false;
+  const m = modal(`<div class="m-head"><h2>${esc(SC.label || 'Scan binder page')}</h2><p id="scHint">Line the grid up with the cards: drag the corners (or the whole grid), then scan.</p></div>
+    <div class="m-body scan-body" id="scBody"></div>
+    <div class="m-foot" id="scFoot"></div>`, 'scan');
+  SCAN.modal = m; m.onclose = () => { SCAN.abort = true; SCAN.photos = []; };
+  renderFrame();
+}
+function renderFrame() {
+  const m = SCAN.modal, p = SCAN.photos[SCAN.cur], L = layoutOf(p), total = SCAN.photos.reduce((a, q) => a + layoutOf(q).cols * layoutOf(q).rows, 0);
+  $('#scBody', m.node).innerHTML = `
+    ${SCAN.photos.length > 1 ? `<div class="sc-tabs">${SCAN.photos.map((q, i) => `<button class="chip ${i === SCAN.cur ? 'on' : ''}" data-ph="${i}">Photo ${i + 1}</button>`).join('')}</div>` : ''}
+    <div class="sc-stage" id="scStage"><canvas id="scCanvas"></canvas><svg id="scOv" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <div class="sc-tools">
+      <div class="seg sc-layouts" role="radiogroup" aria-label="Layout">${SCAN_LAYOUTS.map(l => `<button data-l="${l.key}" class="${l.key === L.key ? 'on' : ''}" role="radio" aria-checked="${l.key === L.key}">${esc(l.label)}</button>`).join('')}</div>
+      <div class="sc-btns"><button class="btn" id="scAuto">${ICON.sparkle}<span>Auto-fit</span></button><button class="btn" id="scFull">${ICON.image}<span>Whole photo</span></button><button class="btn" id="scRot">${ICON.restore}<span>Rotate</span></button><button class="btn" id="scMore">${ICON.plus}<span>Add photo</span></button></div>
+    </div>`;
+  $('#scFoot', m.node).innerHTML = `<span class="muted grow" id="scStatus">${p.auto ? 'Grid placed automatically. Adjust if needed.' : 'Couldn\'t find the cards automatically. Drag the corners to them.'}</span>
+    <button class="btn" data-x>Cancel</button><button class="btn primary" id="scGo">Scan ${total} card${total > 1 ? 's' : ''}</button>`;
+  $('[data-x]', m.node).onclick = () => { m.onclose(); m.close(); };
+  $('#scGo', m.node).onclick = () => runScan();
+  $$('[data-ph]', m.node).forEach(b => b.onclick = () => { SCAN.cur = +b.dataset.ph; renderFrame(); });
+  $$('[data-l]', m.node).forEach(b => b.onclick = () => { p.layout = b.dataset.l; renderFrame(); });
+  $('#scAuto', m.node).onclick = () => { const a = autoQuad(p.cv); p.quad = a.quad; p.auto = a.auto; renderFrame(); };
+  $('#scFull', m.node).onclick = () => { const f = .01, w = p.cv.width, h = p.cv.height; p.quad = [[w * f, h * f], [w * (1 - f), h * f], [w * (1 - f), h * (1 - f)], [w * f, h * (1 - f)]]; renderFrame(); };
+  $('#scRot', m.node).onclick = () => { const o = document.createElement('canvas'); o.width = p.cv.height; o.height = p.cv.width; const x = ctx2d(o); x.translate(o.width, 0); x.rotate(Math.PI / 2); x.drawImage(p.cv, 0, 0); p.cv = o; const a = autoQuad(o); p.quad = a.quad; p.auto = a.auto; renderFrame(); };
+  $('#scMore', m.node).onclick = () => (isPhone() ? openScanMore() : $('#scanPick').click());
+  drawStage();
+}
+function openScanMore() {
+  const sh = sheet(`<div class="sh-head"><h3>Add another photo</h3><button class="btn ghost" data-close>Cancel</button></div><div class="sh-list">
+    <button data-s="cam">${ICON.camera}<span>Take a photo</span></button><button data-s="lib">${ICON.image}<span>Choose photos</span></button></div>`);
+  $$('[data-s]', sh.node).forEach(b => b.onclick = () => { sh.close(); $(b.dataset.s === 'cam' ? '#scanCam' : '#scanPick').click(); });
+}
+function drawStage() {
+  const m = SCAN.modal, p = SCAN.photos[SCAN.cur], stage = $('#scStage', m.node); if (!stage) return;
+  const cv = $('#scCanvas', m.node), svg = $('#scOv', m.node);
+  const availW = stage.clientWidth || 600, availH = Math.max(240, Math.min(window.innerHeight * (isPhone() ? .52 : .6), 760));
+  const s = Math.min(availW / p.cv.width, availH / p.cv.height), W = Math.round(p.cv.width * s), H = Math.round(p.cv.height * s);
+  cv.width = W * (devicePixelRatio || 1); cv.height = H * (devicePixelRatio || 1); cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  const x = cv.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(p.cv, 0, 0, cv.width, cv.height);
+  svg.setAttribute('viewBox', `0 0 ${p.cv.width} ${p.cv.height}`); svg.style.width = W + 'px'; svg.style.height = H + 'px';
+  const k = p.cv.width / W;   // image px per screen px
+  const draw = () => {
+    const L = layoutOf(p), H2 = homography(UNIT, p.quad); if (!H2) return;
+    const line = (u0, v0, u1, v1) => { const a = applyH(H2, u0, v0), b = applyH(H2, u1, v1); return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`; };
+    let g = ''; for (let c = 1; c < L.cols; c++) g += line(c / L.cols, 0, c / L.cols, 1); for (let r = 1; r < L.rows; r++) g += line(0, r / L.rows, 1, r / L.rows);
+    svg.innerHTML = `<polygon class="sc-shade" points="0,0 ${p.cv.width},0 ${p.cv.width},${p.cv.height} 0,${p.cv.height} 0,0 ${p.quad.map(q => q.join(',')).join(' ')} ${p.quad[0].join(',')}" fill-rule="evenodd"/>
+      <polygon class="sc-quad" data-move="1" points="${p.quad.map(q => q.join(',')).join(' ')}" style="stroke-width:${2.5 * k}px"/>
+      <g class="sc-grid" style="stroke-width:${1.5 * k}px">${g}</g>
+      ${p.quad.map((q, i) => `<g class="sc-h" data-h="${i}"><circle cx="${q[0]}" cy="${q[1]}" r="${24 * k}" class="hit"/><circle cx="${q[0]}" cy="${q[1]}" r="${11 * k}" class="dot" style="stroke-width:${3 * k}px"/></g>`).join('')}`;
+  };
+  draw();
+  svg.onpointerdown = e => {
+    const h = e.target.closest('[data-h]'), mv = e.target.closest('[data-move]'); if (!h && !mv) return;
+    e.preventDefault(); svg.setPointerCapture?.(e.pointerId);
+    const r = svg.getBoundingClientRect(), pt = ev => [(ev.clientX - r.left) * k, (ev.clientY - r.top) * k], p0 = pt(e), q0 = p.quad.map(q => [...q]);
+    const move = ev => { const c = pt(ev), dx = c[0] - p0[0], dy = c[1] - p0[1], cl = (v, mx) => Math.max(0, Math.min(mx, v));
+      if (h) { const i = +h.dataset.h; p.quad[i] = [cl(q0[i][0] + dx, p.cv.width), cl(q0[i][1] + dy, p.cv.height)]; } else p.quad = q0.map(q => [cl(q[0] + dx, p.cv.width), cl(q[1] + dy, p.cv.height)]);
+      draw(); };
+    const up = () => { svg.removeEventListener('pointermove', move); svg.removeEventListener('pointerup', up); svg.removeEventListener('pointercancel', up); };
+    svg.addEventListener('pointermove', move); svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+  };
+}
+/** Cut every pocket out of every photo into an upright card image. */
+function cutPockets(p) {
+  const L = layoutOf(p), src = ctx2d(p.cv).getImageData(0, 0, p.cv.width, p.cv.height), out = [];
+  const CH = Math.round(CARD_W * 86 / 59), pad = .045;
+  for (let r = 0; r < L.rows; r++) for (let c = 0; c < L.cols; c++) {
+    // cells of a binder page are slightly bigger than a card: crop with a margin (keeping true proportions), then find the card inside
+    const q = cellQuad(p.quad, L, r, c, pad), len = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const qw = (len(q[0], q[1]) + len(q[3], q[2])) / 2, qh = (len(q[0], q[3]) + len(q[1], q[2])) / 2;
+    const PW = 720, PH = Math.max(200, Math.min(2400, Math.round(PW * qh / Math.max(1, qw))));
+    const padded = warpQuad(src, q, PW, PH);
+    let card = refineCard(padded), refined = !!card;
+    if (!card) { card = document.createElement('canvas'); card.width = CARD_W; card.height = CH; const fx = pad / (1 + 2 * pad); card.box = null; ctx2d(card).drawImage(padded, PW * fx, PH * fx, PW * (1 - 2 * fx), PH * (1 - 2 * fx), 0, 0, CARD_W, CH); }
+    // where the card sits in the photo (for the review screen and for testing)
+    const fx = pad / (1 + 2 * pad), [bl, br, bt, bb] = card.box || [PW * fx, PW * (1 - fx), PH * fx, PH * (1 - fx)], Hm = homography([[0, 0], [PW, 0], [PW, PH], [0, PH]], q);
+    const quad = [[bl, bt], [br, bt], [br, bb], [bl, bb]].map(([x, y]) => applyH(Hm, x, y));
+    const g = grayOf(card); let mean = 0; for (const v of g) mean += v; mean /= g.length; let vr = 0; for (let i = 0; i < g.length; i += 7) vr += (g[i] - mean) ** 2; const sd = Math.sqrt(vr / (g.length / 7));
+    // texture: an empty pocket is smooth (maybe a gradient or glare); a card has art, text and frame edges everywhere
+    const sm = document.createElement('canvas'); sm.width = 110; sm.height = 160; ctx2d(sm).drawImage(card, 0, 0, 110, 160);
+    const sg = grayOf(sm); let tex = 0; for (let y = 1; y < 159; y++) for (let x = 1; x < 109; x++) { const i = y * 110 + x; tex += Math.abs(sg[i + 1] - sg[i - 1]) + Math.abs(sg[i + 110] - sg[i - 110]); } tex /= 108 * 158;
+    out.push({ r, c, card, refined, quad, tex, empty: sd < 14 || tex < 12 });
+  }
+  return out;
+}
+async function runScan() {
+  const m = SCAN.modal; if (!m) return;
+  if (!navigator.onLine) { scanOffline(); return; }
+  SCAN.abort = false;
+  const jobs = []; SCAN.photos.forEach((p, pi) => cutPockets(p).forEach(c => jobs.push({ ...c, photo: pi, label: SCAN.photos.length > 1 ? `Photo ${pi + 1}, row ${c.r + 1}, card ${c.c + 1}` : `Row ${c.r + 1}, card ${c.c + 1}` })));
+  for (const j of jobs) j.thumb = j.card.toDataURL('image/jpeg', .7);
+  $('#scHint', m.node).textContent = 'Reading each card. Keep this screen open.';
+  $('#scBody', m.node).innerHTML = `<div class="sc-prog"><div class="sc-pt" id="scPt">Getting ready…</div><div class="sc-bar"><i id="scBar"></i></div>
+    <div class="sc-cells" style="--cols:${Math.min(4, layoutOf(SCAN.photos[0]).cols)}">${jobs.map((j, i) => `<div class="sc-cell ${j.empty ? 'empty' : ''}" data-j="${i}"><img src="${j.thumb}" alt=""><span></span></div>`).join('')}</div></div>`;
+  $('#scFoot', m.node).innerHTML = `<span class="grow"></span><button class="btn" id="scStop">Cancel</button>`;
+  $('#scStop', m.node).onclick = () => { SCAN.abort = true; m.close(); };
+  const pt = $('#scPt', m.node), bar = $('#scBar', m.node), set = (t, f) => { pt.textContent = t; if (f != null) bar.style.width = Math.round(f * 100) + '%'; };
+  try {
+    await Promise.all([loadOCR((t, f) => set(t, f)), SC.prepare && SC.prepare()]);
+  } catch (e) { console.warn(e); scanOffline(e); return; }
+  const todo = jobs.filter(j => !j.empty), lookups = [];
+  let k = 0;
+  for (const j of todo) {
+    if (SCAN.abort) return;
+    k++; set(`Scanning card ${k} of ${todo.length}…`, (k - 1) / todo.length);
+    const cell = $(`[data-j="${jobs.indexOf(j)}"]`, m.node); cell?.classList.add('busy');
+    try {
+      j.read = await readCard(j.card, false);
+      j.result = await withTimeout(SC.identify(j.read), 20000).catch(e => ({ error: e }));
+      if (!j.result.error && (j.result.confidence === 'none' || j.result.confidence === 'low')) {       // try harder: more regions, and upside-down
+        const deep = await readCard(j.card, true), flip = await readCard(rotate180(j.card), false);
+        const read2 = { codeTexts: [...j.read.codeTexts, ...deep.codeTexts, ...flip.codeTexts], nameText: j.read.nameText || flip.nameText, nameTexts: [...(j.read.nameTexts || []), ...(flip.nameTexts || [])] };
+        const r2 = await withTimeout(SC.identify(read2), 20000).catch(e => ({ error: e }));
+        if (!r2.error && rankConf(r2.confidence) > rankConf(j.result.confidence)) { j.result = r2; j.read = read2; }
+      }
+    } catch (e) { console.warn('scan card failed', e); j.result = { error: e }; }
+    if (cell) { cell.classList.remove('busy'); cell.classList.add(j.result?.error ? 'err' : 'c-' + (j.result?.confidence || 'none')); $('span', cell).textContent = j.result?.match?.name || (j.result?.error ? 'Lookup failed' : 'No match'); }
+  }
+  set('Done', 1);
+  if (SCAN.abort) return;
+  const failed = todo.filter(j => j.result?.error).length;
+  if (failed && failed === todo.length) { scanOffline(todo[0].result.error); return; }
+  renderReview(jobs);
+}
+const rankConf = c => ({ high: 3, medium: 2, low: 1, none: 0 })[c] ?? 0;
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('Timed out')), ms))]);
+function scanOffline(err) {
+  const m = SCAN.modal; if (!m || m.closed) return;
+  const msg = String(err?.message || err || ''), off = !navigator.onLine, net = off || /failed to fetch|networkerror|load failed|timed out/i.test(msg);
+  $('#scHint', m.node).textContent = '';
+  $('#scBody', m.node).innerHTML = `<div class="sc-off">${ICON.phone}<h3>${off ? 'You\'re offline' : net ? 'Couldn\'t reach the internet' : 'Scanning hit a problem'}</h3>
+    <p>${net ? 'Scanning needs an internet connection to look cards up' + (OCR.worker ? '' : ' (and to download the text reader the first time, about 7 MB)') + '. Your photos are still here, so try again when you\'re back online.' : esc(String(err?.message || err))}</p></div>`;
+  $('#scFoot', m.node).innerHTML = `<span class="grow"></span><button class="btn" data-x>Close</button><button class="btn" id="scBack">Back to photo</button><button class="btn primary" id="scRetry">Try again</button>`;
+  $('[data-x]', m.node).onclick = () => { m.onclose(); m.close(); };
+  $('#scBack', m.node).onclick = () => renderFrame();
+  $('#scRetry', m.node).onclick = () => runScan();
+}
+const CONF_LABEL = { high: 'Sure', medium: 'Likely', low: 'Check', none: 'No match' };
+function renderReview(jobs) {
+  const m = SCAN.modal; SCAN.jobs = jobs;
+  for (const j of jobs) { j.use = !j.empty && !!j.result?.match && j.result.confidence !== 'none'; j.qty = 1; }
+  const conds = CONFIG.conditions || [], eds = (F.edition?.suggest && Array.isArray(F.edition.suggest)) ? F.edition.suggest : [];
+  $('#scHint', m.node).textContent = 'Check each match. Nothing is added until you tap Add.';
+  $('#scBody', m.node).innerHTML = `<div class="sc-defs">
+      ${conds.length ? `<label><span>Condition</span><select id="scCond">${conds.map(c => `<option ${c === 'Near Mint' ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></label>` : ''}
+      ${eds.length ? `<label><span>${esc(F.edition?.label || 'Edition')}</span><select id="scEd"><option value="">Not set</option>${eds.map(c => `<option>${esc(c)}</option>`).join('')}</select></label>` : ''}
+      <label class="sc-chk"><input type="checkbox" id="scPhoto" checked><span>Save the pocket photo on new cards that have no photo</span></label>
+    </div>
+    <div class="sc-list">${jobs.map((j, i) => reviewRow(j, i)).join('')}</div>`;
+  const update = () => { const n = jobs.filter(j => j.use && j.result?.match).reduce((a, j) => a + (j.qty || 1), 0); const b = $('#scAdd', m.node); b.textContent = `Add ${n} card${n === 1 ? '' : 's'}`; b.disabled = !n; };
+  $('#scFoot', m.node).innerHTML = `<span class="muted grow" id="scSum">${summaryText(jobs)}</span><button class="btn" id="scBack">Back</button><button class="btn primary" id="scAdd">Add</button>`;
+  $('#scBack', m.node).onclick = () => renderFrame();
+  $('#scAdd', m.node).onclick = () => addScanned(jobs);
+  const list = $('.sc-list', m.node);
+  list.onchange = e => {
+    const row = e.target.closest('[data-row]'); if (!row) return; const j = jobs[+row.dataset.row];
+    if (e.target.matches('[data-use]')) { j.use = e.target.checked; row.classList.toggle('off', !j.use); }
+    if (e.target.matches('[data-pr]')) { j.result.match.printing = +e.target.value; row.outerHTML = reviewRow(j, +row.dataset.row); }
+    if (e.target.matches('[data-q]')) j.qty = Math.max(1, Math.round(num(e.target.value) || 1));
+    update();
+  };
+  list.onclick = async e => {
+    const row = e.target.closest('[data-row]'); if (!row) return; const j = jobs[+row.dataset.row], i = +row.dataset.row;
+    if (e.target.closest('[data-find]')) { const box = $('.sc-find', row); box.hidden = !box.hidden; if (!box.hidden) $('input', box).focus(); }
+    if (e.target.closest('[data-go]')) doSearch(row, j);
+    const pick = e.target.closest('[data-pick]');
+    if (pick) { j.result = { ...(j.result || {}), match: SCAN.found[+pick.dataset.pick], confidence: 'high', via: 'search', manual: true }; j.use = true; row.outerHTML = reviewRow(j, i); update(); }
+  };
+  list.onkeydown = e => { if (e.key === 'Enter' && e.target.matches('.sc-find input')) { e.preventDefault(); const row = e.target.closest('[data-row]'); doSearch(row, jobs[+row.dataset.row]); } };
+  update();
+}
+function summaryText(jobs) {
+  const c = k => jobs.filter(j => !j.empty && (j.result?.confidence || 'none') === k).length, e = jobs.filter(j => j.empty).length;
+  return [c('high') && `${c('high')} sure`, c('medium') && `${c('medium')} likely`, c('low') && `${c('low')} to check`, c('none') && `${c('none')} not found`, e && `${e} empty`].filter(Boolean).join(' · ');
+}
+function reviewRow(j, i) {
+  const r = j.result || {}, mt = r.match, conf = j.empty ? 'empty' : r.error ? 'err' : (r.confidence || 'none'), p = mt?.printings?.[mt.printing];
+  const read = [j.read?.codeTexts?.length ? 'Code: ' + (r.read || j.read.codeTexts[0]) : '', j.read?.nameText ? 'Name: “' + j.read.nameText + '”' : ''].filter(Boolean).join(' · ');
+  const opts = mt ? mt.printings.map((q, k) => `<option value="${k}" ${k === mt.printing ? 'selected' : ''}>${esc(q.code)} · ${esc(q.rarity || '?')}${q.set ? ' · ' + esc(q.set) : ''}</option>`).join('') : '';
+  return `<div class="sc-row ${j.use ? '' : 'off'}" data-row="${i}" data-conf="${conf}" data-name="${esc(mt?.name || '')}" data-code="${esc(p?.code || '')}" data-read="${esc(r.read || '')}">
+    <label class="sc-use"><input type="checkbox" data-use ${j.use ? 'checked' : ''} ${mt ? '' : 'disabled'} aria-label="Add this card"></label>
+    <img class="sc-crop" src="${j.thumb}" alt="Pocket ${esc(j.label)}">
+    <div class="sc-match">${mt?.image ? `<img src="${esc(mt.image)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : `<div class="sc-noimg">${j.empty ? 'Empty' : '?'}</div>`}</div>
+    <div class="sc-info">
+      <div class="sc-top"><b>${mt ? esc(mt.name) : j.empty ? 'Empty pocket' : r.error ? 'Couldn\'t look this up' : 'No match found'}</b><span class="sc-conf ${conf}">${j.empty ? 'Empty' : r.error ? 'Error' : r.manual ? 'Picked' : CONF_LABEL[conf] || conf}</span></div>
+      <div class="sc-sub">${esc(j.label)}${read ? ' · <span class="mono">' + esc(read) + '</span>' : ''}</div>
+      ${mt && r.printingUnsure && !r.manual ? `<div class="sc-warn">Couldn't read the set code, so the printing is a guess. Pick the right one:</div>` : ''}
+      ${mt ? `<div class="sc-ctl"><select data-pr aria-label="Printing and rarity">${opts}</select><label class="sc-qty"><span>Qty</span><input data-q type="number" min="1" inputmode="numeric" value="${j.qty || 1}"></label></div>` : ''}
+      <button class="linkbtn" data-find>${mt ? 'Wrong card? Search' : 'Search for it'}</button>
+      <div class="sc-find" hidden><div class="sc-frow"><input type="search" placeholder="Card name or set code (e.g. LOB-EN001)" value="${esc(mt ? '' : (j.read?.nameText || ''))}"><button class="btn" data-go>Search</button></div><div class="sc-res"></div></div>
+    </div></div>`;
+}
+async function doSearch(row, j) {
+  const q = $('.sc-find input', row).value.trim(), res = $('.sc-res', row); if (!q) return;
+  res.innerHTML = '<div class="muted">Searching…</div>';
+  try {
+    const list = await SC.search(q); const base = (SCAN.found = SCAN.found || []).length; SCAN.found.push(...list);
+    res.innerHTML = list.length ? list.slice(0, 12).map((x, k) => `<button class="sc-hit" data-pick="${base + k}">${x.image ? `<img src="${esc(x.image)}" alt="" loading="lazy">` : ''}<span><b>${esc(x.name)}</b><small>${esc(x.printings[x.printing]?.code || '')} · ${x.printings.length} printing${x.printings.length > 1 ? 's' : ''}</small></span></button>`).join('') : '<div class="muted">No cards found.</div>';
+  } catch (e) { res.innerHTML = `<div class="muted">${navigator.onLine ? 'Search failed: ' + esc(e.message) : 'You\'re offline.'}</div>`; }
+}
+async function addScanned(jobs) {
+  const m = SCAN.modal, cond = $('#scCond', m.node)?.value || '', ed = $('#scEd', m.node)?.value || '', usePhoto = $('#scPhoto', m.node)?.checked;
+  const chosen = jobs.filter(j => j.use && j.result?.match);
+  const cards = chosen.map(j => { const mt = j.result.match, p = mt.printings[mt.printing] || {};
+    const c = { ...SC.toCard(mt, p), quantity: j.qty || 1, dateAdded: new Date().toISOString().slice(0, 10) }; if (cond) c.condition = cond; if (ed) c.edition = ed; return c; });
+  const before = new Set(S.cards.map(c => c.id));
+  const { added, updated } = await mergeCards(cards, 'add');
+  let photos = 0;
+  if (usePhoto) for (let i = 0; i < chosen.length; i++) {
+    const c = S.cards.find(x => identity(x) === identity(cards[i])); if (!c || c.imageId) continue;
+    const blob = await new Promise(r => chosen[i].card.toBlob(r, 'image/jpeg', .86)); if (blob) { await setCardImage(c, blob); photos++; }
+  }
+  m.close(); SCAN.photos = []; SCAN.jobs = null; SCAN.found = [];
+  renderToolbar(); renderMain(); requestPersist();
+  toast(`Added <b>${added}</b> new, <b>${updated}</b> updated${photos ? ` · ${photos} photo${photos > 1 ? 's' : ''} saved` : ''}`, 4500);
+  return { added, updated, photos, newIds: S.cards.filter(c => !before.has(c.id)).map(c => c.id) };
+}
+const Scan = { textLine, openScan, addScanPhotos, loadOCR, autoQuad, detectQuad, refineCard, warpQuad, cellQuad, cutPockets, readCard, prepRegion, ocr, state: SCAN, runScan, renderFrame, layouts: SCAN_LAYOUTS };
+
 /* Small hook for scripted tests / power users (open DevTools → Binder). */
-window.Binder = { S, CONFIG, isPhone, deliverFile, openImportSheet, openFilterSheet, openMenu, parseCSV, parseXLSX, autoMap, rowsToCards, mergeCards, identity, buildPages, grouped, sortCards, filtered, totals, DB, importTable, handleFiles, toCSV, backupJSON, restoreBackup, openDetail, closeDetail, flip, lookupAll };
+window.Binder = { S, CONFIG, Sync, isPhone, deliverFile, openImportSheet, openFilterSheet, openMenu, parseCSV, parseXLSX, autoMap, rowsToCards, mergeCards, identity, buildPages, grouped, sortCards, filtered, totals, DB, importTable, handleFiles, toCSV, backupJSON, restoreBackup, openDetail, closeDetail, flip, lookupAll, Scan: typeof Scan !== 'undefined' ? Scan : null, setCardImage };
 boot();
 </script>
 </body>
