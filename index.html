@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yu-Gi-Oh! Binder</title>
+<meta name="description" content="My Yu-Gi-Oh! card collection as a digital binder. Works offline.">
+<meta name="theme-color" content="#a8821b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="YGO Binder">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<script>window.BINDER_PWA = { sw: './sw.js' };</script>
+<style>
+:root{
+  --bg:#f4f2ec; --bg2:#ebe7dd; --surface:#ffffff; --surface2:#f8f6f1; --text:#1d1e23; --muted:#6c6f79; --faint:#a3a5ad;
+  --border:#e4dfd3; --border2:#d6d0c2; --accent:var(--accent-l,#8a6d1c); --accent-ink:#fff;
+  --cover:var(--cover-l,#262a48); --paper:#fbfaf6; --paper-line:#ece7db; --pocket:#f1eee6;
+  --shadow-sm:0 1px 2px rgba(30,25,10,.06),0 1px 1px rgba(30,25,10,.04);
+  --shadow:0 6px 24px -8px rgba(30,25,10,.18),0 2px 6px rgba(30,25,10,.06);
+  --shadow-lg:0 30px 80px -20px rgba(15,12,5,.35),0 10px 30px -10px rgba(15,12,5,.2);
+  --r:14px; --r-sm:9px; --ease:cubic-bezier(.22,.8,.25,1);
+  --sans:"Inter","SF Pro Text",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --title:Georgia,serif;
+  --card-aspect:59/86;
+  color-scheme:light;
+}
+[data-theme="dark"]{
+  --bg:#0e1015; --bg2:#14171e; --surface:#171a21; --surface2:#1c2029; --text:#eceef2; --muted:#9a9fac; --faint:#626876;
+  --border:#262a34; --border2:#323744; --accent:var(--accent-d,#e2c063); --accent-ink:#17130a;
+  --cover:var(--cover-d,#0c0e1c); --paper:#1a1d25; --paper-line:#252935; --pocket:#14161d;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow:0 8px 28px -10px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.3);
+  --shadow-lg:0 30px 80px -20px rgba(0,0,0,.8),0 10px 30px -10px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;
+  transition:background-color .35s var(--ease),color .35s var(--ease)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html.locked,html.locked body{overflow:hidden}
+::selection{background:color-mix(in srgb,var(--accent) 30%,transparent)}
+.mono{font-family:var(--mono);font-size:.92em;letter-spacing:-.01em}
+.muted{color:var(--muted)}
+.hidden{display:none!important}
+
+/* ── Header ─────────────────────────────── */
+header.top{position:sticky;top:0;z-index:30;backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);
+  background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid color-mix(in srgb,var(--border) 70%,transparent)}
+.top-inner{max-width:1400px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:20px;color:var(--accent-ink);
+  background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 85%,#fff),var(--accent));box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,.35)}
+.brand h1{font-family:var(--title);font-weight:600;font-size:21px;margin:0;letter-spacing:.2px;white-space:nowrap}
+.brand p{margin:0;font-size:12px;color:var(--muted);white-space:nowrap}
+.stats{display:flex;gap:6px;margin-left:auto}
+.stat{padding:6px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-sm);min-width:86px}
+.stat b{display:block;font-size:15px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.stat span{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.stat.value b{color:var(--accent)}
+.gain-pos{color:#2f9e63}.gain-neg{color:#d0574b}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);
+  box-shadow:var(--shadow-sm);font-weight:550;font-size:13.5px;transition:transform .15s var(--ease),background .2s,border-color .2s,box-shadow .2s;white-space:nowrap}
+.btn:hover{border-color:var(--border2);background:var(--surface2)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
+.btn.primary:hover{background:color-mix(in srgb,var(--accent) 88%,#000)}
+.btn.ghost{background:transparent;box-shadow:none;border-color:transparent}
+.btn.ghost:hover{background:var(--surface2)}
+.btn.danger{color:#d0574b}
+.btn.icon{width:36px;padding:0;justify-content:center}
+.btn svg{width:17px;height:17px;flex:none}
+.btn[disabled]{opacity:.5;pointer-events:none}
+
+/* ── Toolbar ───────────────────────────── */
+.toolbar{max-width:1400px;margin:0 auto;padding:16px 24px 6px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{position:relative;flex:1 1 260px;max-width:360px}
+.search input{width:100%;height:38px;border-radius:11px;border:1px solid var(--border);background:var(--surface);padding:0 34px 0 36px;outline:none;
+  box-shadow:var(--shadow-sm);transition:border-color .2s,box-shadow .2s}
+.search input:focus{border-color:color-mix(in srgb,var(--accent) 60%,var(--border));box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 15%,transparent)}
+.search svg{position:absolute;left:12px;top:11px;width:16px;height:16px;color:var(--muted)}
+.search kbd{position:absolute;right:10px;top:10px;font:11px var(--mono);color:var(--faint);border:1px solid var(--border);border-radius:5px;padding:0 5px}
+.chips{display:flex;gap:4px;padding:3px;border-radius:11px;background:var(--bg2);border:1px solid var(--border)}
+.chip{border:0;background:transparent;height:30px;padding:0 12px;border-radius:8px;font-weight:550;font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;
+  transition:background .2s,color .2s}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--c,var(--faint))}
+.chip:hover{color:var(--text)}
+.chip.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
+.sel{position:relative}
+.sel select{appearance:none;-webkit-appearance:none;height:38px;border-radius:11px;border:1px solid var(--border);background:var(--surface);padding:0 30px 0 12px;
+  box-shadow:var(--shadow-sm);outline:none;font-size:13.5px;max-width:200px;text-overflow:ellipsis;cursor:pointer}
+.sel select.set{border-color:color-mix(in srgb,var(--accent) 55%,var(--border));background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+.sel::after{content:"";position:absolute;right:12px;top:16px;width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);pointer-events:none}
+.sel label{position:absolute;left:12px;top:-7px;font-size:10px;padding:0 4px;background:var(--bg);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;border-radius:4px}
+.spacer{flex:1}
+.seg{display:flex;padding:3px;border-radius:11px;background:var(--bg2);border:1px solid var(--border)}
+.seg button{border:0;background:transparent;height:30px;padding:0 12px;border-radius:8px;display:flex;align-items:center;gap:6px;color:var(--muted);font-weight:550;font-size:13px;transition:all .2s var(--ease)}
+.seg button svg{width:16px;height:16px}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
+.filterbar{max-width:1400px;margin:0 auto;padding:2px 24px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sel.sm select{height:32px;font-size:12.5px;border-radius:9px;background:transparent;box-shadow:none;padding-right:28px}
+.sel.sm::after{top:13px}
+.sel.sm select.set{background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
+.subbar{flex:1;display:flex;gap:12px;align-items:center;color:var(--muted);font-size:12.5px;min-height:32px;padding-left:4px}
+.subbar .clear{border:0;background:none;color:var(--accent);font-weight:600;padding:0}
+.toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.toggle input{appearance:none;width:30px;height:18px;border-radius:20px;background:var(--border2);position:relative;transition:background .2s;margin:0;cursor:pointer}
+.toggle input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s var(--ease);box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.toggle input:checked{background:var(--accent)}.toggle input:checked::after{transform:translateX(12px)}
+
+main{max-width:1400px;margin:0 auto;padding:14px 24px 80px}
+.view{animation:fadeUp .45s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── Card face ─────────────────────────── */
+.cf{position:relative;aspect-ratio:var(--card-aspect);border-radius:5.5% / 3.8%;overflow:hidden;background:var(--surface2);isolation:isolate;
+  box-shadow:0 1px 2px rgba(0,0,0,.18),0 4px 10px -4px rgba(0,0,0,.25);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.cf img{width:100%;height:100%;object-fit:cover;display:block}
+.cf .qty{position:absolute;right:6%;bottom:4.5%;z-index:3;background:rgba(10,10,14,.78);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;
+  backdrop-filter:blur(6px);box-shadow:0 2px 6px rgba(0,0,0,.3);font-variant-numeric:tabular-nums}
+.cf.shiny::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;mix-blend-mode:color-dodge;
+  background:linear-gradient(115deg,transparent 20%,rgba(255,220,150,.35) 36%,rgba(140,220,255,.35) 46%,rgba(255,150,230,.3) 56%,transparent 72%);
+  background-size:250% 250%;background-position:var(--sx,50%) var(--sy,50%)}
+.cf.shiny:hover::after{opacity:1}
+.ph{position:absolute;inset:0;padding:7% 7% 6%;display:flex;flex-direction:column;gap:5%;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--tc) 78%,#fff) 0%,var(--tc) 45%,color-mix(in srgb,var(--tc) 70%,#000) 100%);color:#fff}
+.ph::before{content:"";position:absolute;inset:3%;border-radius:4%;border:1px solid rgba(255,255,255,.35);pointer-events:none}
+.ph-name{font-family:var(--title);font-weight:700;font-size:clamp(8px,.62em + .3vw,13px);line-height:1.15;background:rgba(255,255,255,.9);color:#1b1b1f;padding:4% 6%;border-radius:3px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.ph-name span{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ph-art{flex:1;border-radius:3px;display:grid;place-items:center;font-size:2.3em;color:rgba(255,255,255,.85);
+  background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.28),rgba(0,0,0,.2) 75%),color-mix(in srgb,var(--tc) 60%,#222);box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.25),inset 0 0 18px rgba(0,0,0,.3)}
+.ph-meta{display:flex;justify-content:space-between;gap:4px;font-size:clamp(7px,.5em + .2vw,10.5px);font-weight:650;letter-spacing:.02em;opacity:.95;white-space:nowrap;overflow:hidden}
+.ph-meta span{overflow:hidden;text-overflow:ellipsis}
+.ph-type{font-size:clamp(6.5px,.45em + .15vw,9.5px);text-transform:uppercase;letter-spacing:.12em;opacity:.85}
+
+/* ── Binder ───────────────────────────── */
+.binder-wrap{display:flex;align-items:center;gap:14px;justify-content:center;user-select:none;-webkit-user-select:none}
+.flipbtn{flex:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);display:grid;place-items:center;
+  transition:transform .2s var(--ease),opacity .2s}
+.flipbtn:hover{transform:scale(1.07)}.flipbtn:active{transform:scale(.95)}
+.flipbtn[disabled]{opacity:.25;pointer-events:none}
+.flipbtn svg{width:20px;height:20px}
+.binder{position:relative;padding:18px;border-radius:22px;background:var(--cover);
+  background-image:radial-gradient(120% 90% at 30% 0%,rgba(255,255,255,.09),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 5px);
+  box-shadow:var(--shadow-lg),inset 0 0 0 1px rgba(255,255,255,.06),inset 0 2px 0 rgba(255,255,255,.07);
+  width:100%;max-width:1180px}
+.binder.single{max-width:560px}
+.spread{position:relative;display:grid;grid-template-columns:1fr 1fr;perspective:2600px}
+.binder.single .spread{grid-template-columns:1fr}
+.spread::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:34px;transform:translateX(-50%);pointer-events:none;z-index:4;
+  background:linear-gradient(90deg,transparent,rgba(0,0,0,.16) 40%,rgba(0,0,0,.24) 50%,rgba(0,0,0,.16) 60%,transparent)}
+.binder.single .spread::after{display:none}
+.page{position:relative;background:var(--paper);padding:4.2% 4.2% 3%;display:flex;flex-direction:column;gap:clamp(6px,1.4vw,12px);height:100%;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.04)}
+.page.left{border-radius:10px 3px 3px 10px}.page.right{border-radius:3px 10px 10px 3px}
+.binder.single .page{border-radius:10px}
+.page.left::before,.page.right::before{content:"";position:absolute;top:0;bottom:0;width:9%;pointer-events:none}
+.page.left::before{right:0;background:linear-gradient(90deg,transparent,rgba(0,0,0,.05))}
+.page.right::before{left:0;background:linear-gradient(270deg,transparent,rgba(0,0,0,.06))}
+.page-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;min-height:18px;font-size:11.5px;color:var(--muted)}
+.page-head b{font-family:var(--title);font-size:13.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pockets{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:clamp(6px,1.8vw,14px)}
+.pocket{position:relative;aspect-ratio:var(--card-aspect);border-radius:5px;background:var(--pocket);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.09),inset 0 0 0 1px rgba(0,0,0,.05)}
+.pocket::after{content:"";position:absolute;inset:0;border-radius:5px;pointer-events:none;z-index:3;
+  background:linear-gradient(125deg,rgba(255,255,255,.28) 0%,rgba(255,255,255,0) 28%,rgba(255,255,255,0) 70%,rgba(255,255,255,.12) 100%);
+  border-top:2px solid rgba(255,255,255,.35)}
+[data-theme="dark"] .pocket::after{background:linear-gradient(125deg,rgba(255,255,255,.08) 0%,transparent 30%,transparent 70%,rgba(255,255,255,.04));border-top-color:rgba(255,255,255,.07)}
+.pocket .cf{position:absolute;inset:3.5%;cursor:pointer;aspect-ratio:auto}
+@media (hover:hover){.pocket .cf:hover{transform:translateY(-3px) scale(1.035);box-shadow:0 14px 26px -10px rgba(0,0,0,.45);z-index:2}}
+.page-foot{text-align:center;font-size:10.5px;color:var(--faint);letter-spacing:.14em;font-variant-numeric:tabular-nums}
+.leaf{position:absolute;top:0;bottom:0;width:50%;transform-style:preserve-3d;z-index:6;transition:transform .78s cubic-bezier(.55,.06,.3,1)}
+.leaf.next{left:50%;transform-origin:0 50%}.leaf.next.go{transform:rotateY(-180deg)}
+.leaf.prev{left:0;transform-origin:100% 50%}.leaf.prev.go{transform:rotateY(180deg)}
+.leaf .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.leaf .face.back{transform:rotateY(180deg)}
+.leaf .face::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .78s;border-radius:inherit}
+.leaf.next .face.front::after{background:linear-gradient(90deg,rgba(0,0,0,.25),transparent 60%)}
+.leaf.next .face.back::after{background:linear-gradient(270deg,rgba(0,0,0,.25),transparent 60%)}
+.leaf.prev .face.front::after{background:linear-gradient(270deg,rgba(0,0,0,.25),transparent 60%)}
+.leaf.prev .face.back::after{background:linear-gradient(90deg,rgba(0,0,0,.25),transparent 60%)}
+.leaf.go .face::after{opacity:1}
+.spread.slide-next{animation:slideNext .45s var(--ease)}.spread.slide-prev{animation:slidePrev .45s var(--ease)}
+@keyframes slideNext{from{opacity:0;transform:translateX(40px) rotateY(-8deg)}to{opacity:1;transform:none}}
+@keyframes slidePrev{from{opacity:0;transform:translateX(-40px) rotateY(8deg)}to{opacity:1;transform:none}}
+.pager{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.pager input[type=range]{width:min(360px,50vw);accent-color:var(--accent)}
+
+/* ── Grid ─────────────────────────────── */
+.group{margin-bottom:30px}
+.group-h{display:flex;align-items:baseline;gap:10px;margin:6px 2px 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.group-h h3{margin:0;font-family:var(--title);font-weight:600;font-size:18px}
+.group-h span{color:var(--muted);font-size:12.5px}
+.group-h .gv{margin-left:auto;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:22px 18px}
+.tile{cursor:pointer;border-radius:12px;padding:0;border:0;background:none;text-align:left;animation:pop .4s var(--ease) both;animation-delay:calc(var(--i,0) * 14ms)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@media (hover:hover){.tile:hover .cf{transform:translateY(-4px);box-shadow:0 18px 30px -14px rgba(0,0,0,.5)}}
+.tile-info{padding:9px 2px 0}
+.tile-name{font-weight:600;font-size:13.5px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile-meta{display:flex;justify-content:space-between;gap:6px;margin-top:3px;font-size:12px;color:var(--muted);white-space:nowrap}
+.tile-meta>span:first-child{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tile-meta .price{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ── List ─────────────────────────────── */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-sm);overflow:auto}
+table.list{width:100%;border-collapse:collapse;font-size:13px}
+.list th{position:sticky;top:0;background:var(--surface2);text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+.list th.sorted{color:var(--accent)}
+.list th .arr{display:inline-block;margin-left:4px;transition:transform .2s}
+.list td{padding:7px 12px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+.list tr.row{cursor:pointer;transition:background .15s}
+.list tr.row:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.list tr.grp td{background:var(--bg2);font-family:var(--title);font-weight:600;font-size:13.5px;padding:8px 12px}
+.list td.num{text-align:right;font-variant-numeric:tabular-nums}
+.list .thumb{width:28px}
+.list .thumb .cf{width:26px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.list .thumb .ph{padding:0}.list .thumb .ph>*,.list .thumb .qty{display:none}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:550}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--c,var(--faint))}
+
+/* ── Empty state ──────────────────────── */
+.empty{max-width:640px;margin:7vh auto 0;text-align:center;animation:fadeUp .6s var(--ease)}
+.drop{border:1.5px dashed var(--border2);border-radius:24px;padding:46px 30px;background:var(--surface);box-shadow:var(--shadow);transition:border-color .2s,background .2s}
+.drop .stack{position:relative;height:120px;margin:0 auto 22px;width:200px}
+.drop .stack .cf{position:absolute;width:76px;left:62px;top:0}
+.drop .stack .cf:nth-child(1){transform:rotate(-14deg) translate(-56px,10px)}
+.drop .stack .cf:nth-child(3){transform:rotate(14deg) translate(56px,10px)}
+.empty h2{font-family:var(--title);font-weight:600;font-size:26px;margin:0 0 8px}
+.empty p{color:var(--muted);margin:0 auto 22px;max-width:440px}
+.empty .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.empty small{display:block;margin-top:18px;color:var(--faint);font-size:12px}
+.noresults{text-align:center;color:var(--muted);padding:80px 0}
+
+/* ── Drawer ───────────────────────────── */
+.scrim{position:fixed;inset:0;background:rgba(10,10,15,.38);backdrop-filter:blur(2px);z-index:40;opacity:0;pointer-events:none;transition:opacity .35s var(--ease)}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100vw);z-index:41;background:var(--surface);box-shadow:var(--shadow-lg);
+  transform:translateX(104%);transition:transform .45s var(--ease);display:flex;flex-direction:column;border-left:1px solid var(--border)}
+.drawer.on{transform:none}
+.d-head{display:flex;align-items:center;gap:8px;padding:14px 16px 0}
+.d-head .grow{flex:1}
+.d-body{overflow:auto;padding:6px 26px 30px;flex:1}
+.d-hero{display:flex;gap:22px;align-items:flex-start;margin:6px 0 20px}
+.d-img{width:168px;flex:none;perspective:800px}
+.d-img .cf{transition:transform .2s ease-out,box-shadow .3s;box-shadow:0 20px 40px -16px rgba(0,0,0,.5);cursor:grab}
+.d-img.dragover .cf{outline:2px dashed var(--accent);outline-offset:4px}
+.d-img-actions{display:flex;gap:4px;margin-top:10px;justify-content:center}
+.d-img-actions .btn{height:28px;font-size:12px;padding:0 9px}
+.d-title{flex:1;min-width:0}
+.d-title input{width:100%;border:0;background:transparent;font-family:var(--title);font-size:24px;font-weight:600;line-height:1.2;padding:4px 0;outline:none;border-bottom:1px solid transparent}
+.d-title input:focus{border-bottom-color:var(--accent)}
+.d-sub{color:var(--muted);font-size:13px;margin-top:2px}
+.d-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 10px}
+.kpi span{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.kpi b{font-size:15.5px;font-variant-numeric:tabular-nums}
+.qty-step{display:flex;align-items:center;gap:0;margin-top:12px;border:1px solid var(--border);border-radius:10px;width:max-content;overflow:hidden;background:var(--surface2)}
+.qty-step button{width:34px;height:32px;border:0;background:transparent;font-size:16px}
+.qty-step button:hover{background:var(--bg2)}
+.qty-step input{width:46px;height:32px;border:0;text-align:center;background:transparent;font-weight:650;outline:none;-moz-appearance:textfield}
+.qty-step input::-webkit-inner-spin-button{display:none}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select,.field textarea{height:38px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);padding:0 11px;outline:none;width:100%;transition:border-color .2s,box-shadow .2s,background .2s}
+.field textarea{height:76px;padding:9px 11px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:color-mix(in srgb,var(--accent) 60%,var(--border));background:var(--surface);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 13%,transparent)}
+.field .money{position:relative}.field .money input{padding-left:22px}.field .money::before{content:"$";position:absolute;left:10px;top:10px;color:var(--muted)}
+.d-foot{display:flex;gap:8px;padding:14px 26px;border-top:1px solid var(--border);background:var(--surface2)}
+.d-foot .grow{flex:1}
+.saved{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;opacity:0;transition:opacity .3s}
+.saved.on{opacity:1}
+
+/* ── Modal ────────────────────────────── */
+.modal-back{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;background:rgba(10,10,15,.45);backdrop-filter:blur(4px);animation:fade .25s var(--ease)}
+@keyframes fade{from{opacity:0}}
+.modal{width:min(720px,100%);max-height:calc(100vh - 40px);display:flex;flex-direction:column;background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);
+  animation:modalIn .4s var(--ease);overflow:hidden}
+.modal.sm{width:min(440px,100%)}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}}
+.m-head{padding:22px 26px 6px}
+.m-head h2{margin:0;font-family:var(--title);font-weight:600;font-size:21px}
+.m-head p{margin:5px 0 0;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:20px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);margin-left:8px;vertical-align:3px;font-family:var(--sans)}
+.m-body{padding:14px 26px;overflow:auto}
+.m-foot{padding:16px 26px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border);background:var(--surface2);align-items:center}
+.m-foot .grow{flex:1}
+.map{display:grid;grid-template-columns:150px 1fr 1fr;gap:6px 14px;align-items:center}
+.map .h{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;padding-bottom:4px}
+.map .lbl{font-weight:550}
+.map .lbl em{color:#d0574b;font-style:normal}
+.map select{height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);padding:0 8px;width:100%;outline:none}
+.map select.auto{border-color:color-mix(in srgb,#2f9e63 45%,var(--border))}
+.map .ex{color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:18px;padding:14px;border-radius:12px;background:var(--surface2);border:1px solid var(--border)}
+.opts .radio{display:flex;gap:16px;flex-wrap:wrap}
+.opts label{display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.opts input[type=radio],.opts input[type=checkbox]{accent-color:var(--accent)}
+details.adv summary{cursor:pointer;color:var(--accent);font-weight:600;margin:4px 0 12px;list-style:none}
+details.adv summary::-webkit-details-marker{display:none}
+.imgs{display:flex;flex-direction:column;gap:10px}
+.imgrow{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--surface2)}
+.imgrow img{width:64px;aspect-ratio:var(--card-aspect);object-fit:cover;border-radius:4px;box-shadow:var(--shadow-sm)}
+.imgrow .fs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.imgrow .fs input,.imgrow select{height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);padding:0 9px;outline:none;width:100%;min-width:0}
+.imgrow select{grid-column:1/-1;margin-bottom:6px}
+
+/* ── Menu / toast / overlay ───────────── */
+.menu{position:fixed;z-index:50;min-width:250px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);padding:6px;animation:menuIn .2s var(--ease);transform-origin:top right}
+@keyframes menuIn{from{opacity:0;transform:scale(.96) translateY(-4px)}}
+.menu button{display:flex;width:100%;align-items:center;gap:10px;border:0;background:transparent;padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px}
+.menu button:hover{background:var(--surface2)}
+.menu button svg{width:16px;height:16px;color:var(--muted)}
+.menu hr{border:0;border-top:1px solid var(--border);margin:5px 4px}
+.menu .danger{color:#d0574b}.menu .danger svg{color:#d0574b}
+.toasts{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:#1d1f26;color:#f2f2f4;padding:11px 16px;border-radius:12px;box-shadow:var(--shadow-lg);font-size:13.5px;animation:toastIn .35s var(--ease);display:flex;gap:10px;align-items:center;max-width:90vw}
+[data-theme="dark"] .toast{background:#2a2e39}
+.toast.out{animation:toastOut .3s var(--ease) forwards}
+.toast b{color:var(--accent-d,#e2c063)}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px) scale(.96)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(8px)}}
+.dropover{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s}
+.dropover.on{opacity:1}
+.dropover div{border:2px dashed var(--accent);border-radius:28px;padding:60px 80px;text-align:center;background:var(--surface);box-shadow:var(--shadow-lg);transform:scale(.96);transition:transform .3s var(--ease)}
+.dropover.on div{transform:none}
+.dropover h2{font-family:var(--title);font-weight:600;margin:0 0 6px}
+
+@media (max-width:1100px){.stats .stat.paid{display:none}}
+/* ── Sheets, install hint, phone helpers (all sizes) ── */
+.mob-only{display:none!important}
+.badge-n{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px;box-shadow:0 0 0 2px var(--bg)}
+.badge-n[hidden]{display:none}
+#filtBtn{position:relative}
+.pmid{display:flex;align-items:center;gap:14px}
+.list .sub{display:none}
+.toast .tbtn{pointer-events:auto;border:0;border-radius:8px;background:var(--accent-d,#e2c063);color:#17130a;font-weight:650;padding:6px 12px;margin-left:4px}
+.sheet-back{position:fixed;inset:0;z-index:70;background:rgba(10,10,15,.42);display:flex;align-items:flex-end;justify-content:center;animation:fade .25s var(--ease)}
+.sheet-back.out{animation:fadeOut .26s var(--ease) forwards}
+@keyframes fadeOut{to{opacity:0}}
+.sheet{width:100%;max-width:560px;max-height:88vh;max-height:88dvh;overflow:auto;overscroll-behavior:contain;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:var(--shadow-lg);
+  padding:4px calc(16px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));animation:sheetIn .38s var(--ease);transition:transform .3s var(--ease)}
+.sheet.dragging,.drawer.dragging{transition:none}
+.sheet-back.out .sheet{animation:sheetOut .26s var(--ease) forwards}
+@keyframes sheetIn{from{transform:translateY(100%)}}
+@keyframes sheetOut{to{transform:translateY(100%)}}
+.grab{width:42px;height:5px;border-radius:5px;background:var(--border2);margin:8px auto 6px;touch-action:none}
+.sh-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 0 10px;touch-action:none}
+.sh-head h3{margin:0;font-family:var(--title);font-size:20px;font-weight:600}
+.sh-head .btn{height:44px}
+.sh-sec{padding:12px 0;border-top:1px solid var(--border)}
+.sh-t{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
+.sh-row{display:flex;gap:8px;align-items:center}
+.sheet .sel{flex:1;width:100%}
+.sheet .sel select{width:100%;max-width:none;height:46px;font-size:16px}
+.sheet .sel::after{top:19px}
+.sheet .chips{flex-wrap:wrap;background:none;border:0;padding:0;gap:8px}
+.sheet .chip{height:44px;padding:0 16px;border:1px solid var(--border);background:var(--surface2);font-size:14.5px}
+.sheet .chip.on{border-color:color-mix(in srgb,var(--accent) 60%,var(--border));background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
+.sheet .btn.icon{width:46px;height:46px}
+.sheet .toggle{min-height:44px}
+.sh-foot{display:flex;gap:8px;padding-top:14px}
+.sh-foot .btn{flex:1;height:50px;justify-content:center;font-size:15px}
+.sh-list{display:flex;flex-direction:column;padding-bottom:4px}
+.sh-list button{display:flex;align-items:center;gap:14px;width:100%;min-height:54px;border:0;background:none;padding:6px 8px;text-align:left;font-size:16px;border-radius:12px;color:var(--text)}
+.sh-list button:active{background:var(--surface2)}
+.sh-list button svg{width:22px;height:22px;color:var(--accent);flex:none}
+.sh-list button small{display:block;color:var(--muted);font-size:12.5px;margin-top:1px}
+.sh-list hr{border:0;border-top:1px solid var(--border);margin:4px 0;width:100%}
+.sh-list .danger,.sh-list .danger svg{color:#d0574b}
+.install-hint{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:35;display:flex;gap:12px;align-items:center;padding:12px 10px 12px 14px;border-radius:18px;
+  background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg);animation:sheetIn .5s var(--ease);max-width:520px;margin:0 auto}
+.install-hint .logo{flex:none}
+.install-hint .ih-t{flex:1;min-width:0;font-size:13.5px;line-height:1.35}
+.install-hint .ih-t b{display:block;font-size:14.5px}
+.install-hint .ih-t span{color:var(--muted)}
+.install-hint .btn{flex:none;height:44px}.install-hint .btn.icon{width:44px}
+
+/* ── Phones & small tablets ── */
+@media (max-width:860px){
+  .desk-only{display:none!important}
+  .mob-only{display:inline-flex!important;align-items:center;justify-content:center}
+  header.top{position:relative;backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--bg);border-bottom:0}
+  .top-inner{flex-wrap:wrap;gap:10px;padding:calc(10px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 2px calc(14px + env(safe-area-inset-left))}
+  .brand{flex:1;min-width:0;gap:10px}.brand>div:last-child{min-width:0}
+  .brand h1{font-size:19px;overflow:hidden;text-overflow:ellipsis}.brand p{display:none}
+  .logo{width:36px;height:36px;font-size:18px;border-radius:10px;flex:none}
+  .actions{gap:6px;margin:0}.actions .label{display:none}
+  .btn{height:44px}.btn.icon{width:44px}
+  #btnImport{width:44px;padding:0;justify-content:center}
+  #btnTheme{display:none}
+  .stats{order:3;width:100%;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .stats .stat.paid{display:block}
+  .stat{min-width:0;padding:6px 8px;border-radius:10px}
+  .stat b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat span{font-size:9.5px;letter-spacing:.05em;white-space:nowrap;display:block;overflow:hidden;text-overflow:ellipsis}
+  .toolbar{padding:10px calc(14px + env(safe-area-inset-right)) 4px calc(14px + env(safe-area-inset-left));gap:8px;flex-wrap:wrap}
+  .filterbar,main{padding-left:calc(14px + env(safe-area-inset-left));padding-right:calc(14px + env(safe-area-inset-right))}
+  .search{flex:1 1 0;max-width:none;order:1;min-width:0}.search kbd{display:none}
+  .search input{height:44px;font-size:16px;-webkit-appearance:none;appearance:none}
+  .search svg{top:14px}
+  #filtBtn{order:2}
+  .seg{order:3;flex:1 1 100%}.seg button{flex:1;height:44px;justify-content:center;font-size:14px}
+  .seg button span{display:inline}
+  .filterbar{padding-top:0}.subbar{min-height:28px;font-size:12px;padding-left:2px}.subbar .clear{min-height:44px;padding:0 6px}
+  main{padding-top:6px;padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+  /* binder */
+  .binder-wrap .flipbtn.side{display:none}
+  .binder{padding:8px;border-radius:14px;width:100%!important;max-width:520px;touch-action:pan-y}
+  .page{padding:4.5% 4% 3%}
+  .pager{justify-content:space-between;gap:10px;margin:14px auto 0;max-width:520px}
+  .pager .flipbtn{width:48px;height:48px;box-shadow:var(--shadow-sm)}
+  .pmid{flex:1;flex-direction:column;gap:6px;min-width:0}
+  .pager input[type=range]{width:100%;height:44px;margin:-8px 0}
+  /* grid & list */
+  .grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:16px 10px}
+  .tile-name{font-size:12.5px}.tile-meta{font-size:11.5px}
+  .group-h h3{font-size:16.5px}
+  .list th[data-col]:not([data-col=name]):not([data-col=quantity]):not([data-col=value]),
+  .list td[data-col]:not([data-col=name]):not([data-col=quantity]):not([data-col=value]){display:none}
+  .list td{padding:9px 8px}.list th{padding:10px 8px}
+  .list td[data-col=name]{white-space:normal;max-width:none;width:100%}
+  .list th[data-col=quantity]{font-size:0}.list th[data-col=quantity]::before{content:"Qty";font-size:11px}
+  .list .sub{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+  .list .thumb{width:44px}.list .thumb .cf{width:34px}
+  .list tr.row td{height:58px}
+  /* detail panel → bottom sheet */
+  .drawer{top:auto;left:0;right:0;width:100%;height:92vh;height:92dvh;border-left:0;border-radius:22px 22px 0 0;transform:translateY(105%)}
+  .d-head{padding:14px 12px 0;touch-action:none;position:relative;min-height:52px}
+  .d-head::before{content:"";position:absolute;left:50%;top:8px;width:42px;height:5px;border-radius:5px;background:var(--border2);transform:translateX(-50%)}
+  .d-body{padding:2px calc(18px + env(safe-area-inset-right)) 24px calc(18px + env(safe-area-inset-left));overscroll-behavior:contain}
+  .d-hero{flex-direction:row;align-items:flex-start;text-align:left;gap:14px;margin-top:0}
+  .d-img{width:112px}
+  .d-img-actions{flex-wrap:wrap}.d-img-actions .btn{height:44px;font-size:12.5px}.d-img-actions .btn.ghost{width:44px;padding:0;justify-content:center}
+  .d-title input{font-size:20px;text-align:left;min-height:44px}
+  .qty-step{margin:10px 0 0}.qty-step button{width:44px;height:44px;font-size:18px}.qty-step input{height:44px;font-size:16px}
+  .d-kpis{gap:6px;margin-top:12px}.kpi{padding:6px 8px}.kpi b{font-size:14px}
+  .form{gap:10px}
+  .field input,.field select,.field textarea{height:46px;font-size:16px}
+  .field textarea{height:96px}
+  .field .money::before{top:13px}
+  .d-foot{padding:10px calc(18px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) calc(18px + env(safe-area-inset-left))}
+  /* modals → bottom sheets */
+  .modal-back{place-items:end center;padding:0}
+  .modal,.modal.sm{width:100%;max-height:92vh;max-height:92dvh;border-radius:22px 22px 0 0;animation:sheetIn .4s var(--ease)}
+  .m-head{padding:20px 18px 4px}.m-head h2{font-size:19px}
+  .m-body{padding:12px 18px}
+  .m-foot{padding:12px 18px calc(12px + env(safe-area-inset-bottom));flex-wrap:wrap}
+  .m-foot .btn{height:46px;flex:1;justify-content:center}
+  .m-foot .grow{flex-basis:100%}.m-foot .grow:empty{display:none}
+  .map{grid-template-columns:minmax(0,110px) minmax(0,1fr)}.map .ex,.map .h.exh{display:none}
+  .map select{height:44px;font-size:16px}
+  .opts .radio{flex-direction:column;gap:8px}.opts label{min-height:32px}
+  .imgrow{grid-template-columns:56px minmax(0,1fr)}.imgrow img{width:56px}
+  .imgrow .fs{grid-template-columns:1fr}
+  .imgrow .fs input,.imgrow select{height:44px;font-size:16px}
+  .empty{margin-top:3vh}.drop{padding:30px 18px;border-radius:20px}.empty h2{font-size:23px}
+  .empty .row .btn{flex:1 1 100%;justify-content:center;height:48px}
+  .menu{display:none}
+}
+@media (max-width:600px){ .grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:340px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr))} .stat span{font-size:8.5px} }
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner">
+  <div class="brand"><div class="logo" id="logo"></div><div><h1 id="appTitle"></h1><p id="appSub"></p></div></div>
+  <div class="stats" id="stats"></div>
+  <div class="actions">
+    <button class="btn primary" id="btnImport" title="Import files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 21h14a2 2 0 0 0 2-2v-4M3 15v4a2 2 0 0 0 2 2"/></svg><span class="label">Import</span></button>
+    <button class="btn icon" id="btnTheme" title="Toggle light / dark"></button>
+    <button class="btn icon" id="btnMenu" title="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
+  </div>
+</div></header>
+<div id="toolbarHost"></div>
+<main id="main"></main>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" inert></aside>
+<div class="toasts" id="toasts"></div>
+<div class="dropover" id="dropover"><div><h2>Drop to add to your binder</h2><div class="muted">Exports, spreadsheets (CSV / XLSX), card photos, or a backup file</div></div></div>
+<input type="file" id="filePick" multiple accept=".csv,.tsv,.txt,.xlsx,.json,text/csv,text/plain,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*" hidden>
+<input type="file" id="imgPick" accept="image/*" hidden>
+<input type="file" id="camPick" accept="image/*" capture="environment" hidden>
+<input type="file" id="photoPick" accept="image/*" multiple hidden>
+<input type="file" id="dataPick" multiple accept=".csv,.tsv,.txt,.xlsx,.json,text/csv,text/comma-separated-values,text/tab-separated-values,text/plain,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+<script>
+/* ╔══════════════════════════════════════════════════════════════════════╗
+   ║                          ✦  CONFIG  ✦                                 ║
+   ║  Everything game-specific lives in this one object. To make a binder  ║
+   ║  for another card game, edit ONLY this block (see README.md).         ║
+   ╚══════════════════════════════════════════════════════════════════════╝ */
+const CONFIG = {
+  /* Storage namespace. Each binder needs its own id so collections never mix. */
+  id: 'yugioh-binder',
+  title: 'Yu-Gi-Oh! Binder',
+  subtitle: 'My digital card binder',
+  logo: '◈',                       // a glyph or emoji shown in the header and on cards without images
+  currency: 'USD',
+  locale: 'en-US',
+
+  theme: {
+    accentLight: '#a8821b',        // accent in light mode
+    accentDark:  '#e2c063',        // accent in dark mode
+    coverLight:  '#24284a',        // binder cover colour (light mode)
+    coverDark:   '#0c0e1c',        // binder cover colour (dark mode)
+    titleFont:   '"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif',
+  },
+
+  /* Physical card shape (width / height) and pockets per binder page. */
+  cardAspect: '59 / 86',
+  binder: { cols: 3, rows: 3 },
+
+  /* Fields stored for every card.
+     type: text | number | money | select | textarea
+     aliases: spreadsheet headers that map to this field (case/punctuation-insensitive).
+     suggest: list used for autocomplete in the editor ('rarities' | 'conditions' | 'subtypes' | array).
+     hidden: kept on import/export but not shown in the editor. */
+  fields: [
+    { key: 'name',          label: 'Card name',      type: 'text',   required: true, aliases: ['Product Name', 'Name', 'Card Name', 'Card', 'Title', 'Item', 'Product'] },
+    { key: 'set',           label: 'Set',            type: 'text',   aliases: ['Set', 'Set Name', 'Expansion', 'Booster', 'Pack', 'Release'] },
+    { key: 'number',        label: 'Set code',       type: 'text',   mono: true, placeholder: 'LOB-EN001', aliases: ['Card Number', 'Set Code', 'Number', 'Card No', 'Card #', 'No', 'Code', 'Collector Number', 'Print Tag'] },
+    { key: 'rarity',        label: 'Rarity',         type: 'text',   suggest: 'rarities', aliases: ['Rarity', 'Set Rarity', 'Printing Rarity'] },
+    { key: 'edition',       label: 'Edition',        type: 'text',   suggest: ['1st Edition', 'Unlimited', 'Limited'], aliases: ['Variance', 'Edition', 'Printing', 'Variant', 'Print', 'Version'] },
+    { key: 'cardType',      label: 'Card type',      type: 'select', aliases: ['Card Type', 'Type', 'Frame Type', 'Kind'] },
+    { key: 'subtype',       label: 'Subtype',        type: 'text',   suggest: 'subtypes', aliases: ['Subtype', 'Sub Type', 'Monster Type', 'Property', 'Card Subtype', 'Spell Type', 'Trap Type'] },
+    { key: 'condition',     label: 'Condition',      type: 'text',   suggest: 'conditions', aliases: ['Card Condition', 'Condition', 'Cond'] },
+    { key: 'grade',         label: 'Grade',          type: 'text',   placeholder: 'Ungraded', aliases: ['Grade', 'Graded', 'Grading', 'Slab'] },
+    { key: 'quantity',      label: 'Quantity',       type: 'number', default: 1, aliases: ['Quantity', 'Qty', 'Count', 'Copies', 'Total Quantity', 'Amount', 'Owned'] },
+    { key: 'marketPrice',   label: 'Market price',   type: 'money',  aliases: ['Market Price', 'Market Value', 'Price', 'Value', 'TCG Market Price', 'Current Price', 'Market'] },
+    { key: 'priceOverride', label: 'Price override', type: 'money',  aliases: ['Price Override', 'Custom Price', 'My Price', 'Override'] },
+    { key: 'pricePaid',     label: 'Price paid',     type: 'money',  aliases: ['Average Cost Paid', 'Price Paid', 'Cost Paid', 'Cost', 'Purchase Price', 'Paid', 'Cost Basis', 'Buy Price'] },
+    { key: 'portfolio',     label: 'Portfolio',      type: 'text',   aliases: ['Portfolio Name', 'Portfolio', 'Binder', 'Collection', 'Folder', 'Location'] },
+    { key: 'category',      label: 'Game',           type: 'text',   hidden: true, aliases: ['Category', 'Game', 'Product Line', 'TCG'] },
+    { key: 'dateAdded',     label: 'Date added',     type: 'text',   aliases: ['Date Added', 'Added', 'Date', 'Acquired', 'Added On'] },
+    { key: 'notes',         label: 'Notes',          type: 'textarea', aliases: ['Notes', 'Note', 'Comments', 'Comment'] },
+  ],
+
+  /* Fields that decide "same card" when re-importing (duplicates merge, quantities update). */
+  identity: ['name', 'set', 'number', 'edition', 'condition', 'grade'],
+
+  /* Which field holds the card type, and the types with their colours and subtypes. */
+  typeField: 'cardType',
+  subtypeField: 'subtype',
+  cardTypes: [
+    { value: 'Monster', color: '#c27a2c', subtypes: ['Normal', 'Effect', 'Ritual', 'Fusion', 'Synchro', 'Xyz', 'Pendulum', 'Link', 'Token'] },
+    { value: 'Spell',   color: '#1c9a8a', subtypes: ['Normal', 'Quick-Play', 'Continuous', 'Equip', 'Field', 'Ritual'] },
+    { value: 'Trap',    color: '#b4457e', subtypes: ['Normal', 'Continuous', 'Counter'] },
+  ],
+
+  /* Low → high. Used for sorting and grouping by rarity. */
+  rarities: ['Common', 'Short Print', 'Rare', 'Super Rare', 'Ultra Rare', 'Ultimate Rare', 'Secret Rare', 'Prismatic Secret Rare',
+             'Platinum Secret Rare', 'Gold Rare', 'Premium Gold Rare', 'Ghost Rare', "Collector's Rare", 'Starlight Rare', 'Quarter Century Secret Rare'],
+  rarityShort: { 'Common': 'C', 'Short Print': 'SP', 'Rare': 'R', 'Super Rare': 'SR', 'Ultra Rare': 'UR', 'Ultimate Rare': 'UtR', 'Secret Rare': 'ScR',
+                 'Prismatic Secret Rare': 'PScR', 'Platinum Secret Rare': 'PlScR', 'Gold Rare': 'GR', 'Premium Gold Rare': 'PGR', 'Ghost Rare': 'GhR',
+                 "Collector's Rare": 'CR', 'Starlight Rare': 'StR', 'Quarter Century Secret Rare': 'QCScR' },
+  shinyRarities: /super|ultra|ultimate|secret|ghost|gold|starlight|collector|platinum|prismatic|quarter/i,
+
+  /* Best → worst. */
+  conditions: ['Mint', 'Near Mint', 'Lightly Played', 'Moderately Played', 'Heavily Played', 'Damaged'],
+
+  /* Sort menu. kind: text | number | value | order (order: 'rarities' | 'conditions' | 'types'). */
+  sortOptions: [
+    { key: 'name',      label: 'Name (A–Z)',   field: 'name' },
+    { key: 'number',    label: 'Set code',     field: 'number' },
+    { key: 'set',       label: 'Set',          field: 'set' },
+    { key: 'type',      label: 'Card type',    field: 'cardType', kind: 'order', order: 'types' },
+    { key: 'rarity',    label: 'Rarity',       field: 'rarity',   kind: 'order', order: 'rarities', defaultDir: -1 },
+    { key: 'value',     label: 'Value',        kind: 'value', defaultDir: -1 },
+    { key: 'quantity',  label: 'Quantity',     field: 'quantity', kind: 'number', defaultDir: -1 },
+    { key: 'condition', label: 'Condition',    field: 'condition', kind: 'order', order: 'conditions' },
+    { key: 'added',     label: 'Date added',   field: 'dateAdded', defaultDir: -1 },
+  ],
+  /* Group menu (binder view can start each group on a fresh page). */
+  groupOptions: [
+    { key: 'none',      label: 'No grouping' },
+    { key: 'type',      label: 'Card type',  field: 'cardType', kind: 'order', order: 'types' },
+    { key: 'set',       label: 'Set',        field: 'set' },
+    { key: 'rarity',    label: 'Rarity',     field: 'rarity', kind: 'order', order: 'rarities' },
+    { key: 'letter',    label: 'First letter', field: 'name', kind: 'letter' },
+    { key: 'value',     label: 'Value band', kind: 'valueBand' },
+    { key: 'portfolio', label: 'Portfolio',  field: 'portfolio' },
+  ],
+  valueBands: [100, 25, 5, 1],
+
+  /* Dropdown filters in the toolbar (type chips are automatic). */
+  filters: [
+    { field: 'set',       label: 'All sets' },
+    { field: 'rarity',    label: 'All rarities' },
+    { field: 'condition', label: 'All conditions' },
+    { field: 'portfolio', label: 'All portfolios' },
+  ],
+  searchFields: ['name', 'set', 'number', 'rarity', 'cardType', 'subtype', 'edition', 'notes'],
+  listColumns: ['name', 'number', 'set', 'rarity', 'cardType', 'edition', 'condition', 'quantity', 'value'],
+
+  /* What a card shows when it has no image, and the small line under grid tiles. */
+  face: { title: 'name', code: 'number', badge: 'edition' },
+  tileMeta: ['number', 'rarity'],
+
+  /* Value used for totals: price override if set, otherwise market price. */
+  cardValue: c => (Number(c.priceOverride) > 0 ? Number(c.priceOverride) : Number(c.marketPrice) || 0),
+
+  /* Recognise known export formats by their headers (purely cosmetic: shows a badge). */
+  sources: [
+    { name: 'Collectr', headers: ['Portfolio Name', 'Category', 'Variance'] },
+    { name: 'TCGplayer', headers: ['TCGplayer Id', 'Product Line'] },
+  ],
+  /* Multi-game exports: offer to import only matching rows. */
+  importFilter: { field: 'category', match: /yu-?gi-?oh|ygo/i, label: 'Only import Yu-Gi-Oh! rows' },
+
+  /* Helps match photo filenames to cards (e.g. "LOB-EN001 blue eyes.jpg"). */
+  numberPattern: /\b[A-Z0-9]{2,5}-[A-Z]{0,2}\d{2,3}\b/i,
+
+  /* Optional online enrichment (card type, subtype and artwork) from the free YGOPRODeck API.
+     The binder works fully offline without it. Set to null to remove the feature. */
+  lookup: {
+    label: 'Fill card types & art (YGOPRODeck)',
+    note: 'Looks up each card by name on db.ygoprodeck.com. Art is linked from YGOPRODeck, so it needs internet to display; your own photos are stored offline.',
+    needs: c => !c.cardType || (!c.imageId && !c.imageUrl),
+    async fetch(card) {
+      const api = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?';
+      let r = await fetch(api + 'name=' + encodeURIComponent(card.name));
+      if (!r.ok) r = await fetch(api + 'fname=' + encodeURIComponent(card.name));
+      if (!r.ok) return null;
+      const d = (await r.json()).data?.[0];
+      if (!d) return null;
+      const t = d.type || '';
+      const out = {};
+      out.cardType = /monster/i.test(t) ? 'Monster' : /^spell/i.test(t) ? 'Spell' : /^trap/i.test(t) ? 'Trap' : (t || '');
+      if (out.cardType === 'Monster') {
+        const ft = (d.frameType || '').replace(/_pendulum/, '');
+        out.subtype = /pendulum/i.test(t) ? 'Pendulum' : ({ normal: 'Normal', effect: 'Effect', fusion: 'Fusion', ritual: 'Ritual', synchro: 'Synchro', xyz: 'Xyz', link: 'Link', token: 'Token' })[ft] || '';
+      } else if (d.race) out.subtype = d.race;
+      if (d.card_images?.[0]) out.imageUrl = d.card_images[0].image_url_small || d.card_images[0].image_url;
+      const s = (d.card_sets || []).find(s => card.number && s.set_code.toLowerCase() === String(card.number).toLowerCase());
+      if (s) { if (!card.set) out.set = s.set_name; if (!card.rarity) out.rarity = s.set_rarity; }
+      return out;
+    },
+  },
+
+  /* Example data for the "Try sample data" button (clearly example, not real holdings). */
+  sampleCSV: "Portfolio Name,Category,Set,Product Name,Card Number,Rarity,Variance,Grade,Card Condition,Average Cost Paid,Quantity,Market Price (As of 2026-10-24),Price Override,Watchlist,Date Added\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Blue-Eyes White Dragon,LOB-EN001,Ultra Rare,Unlimited,Ungraded,Lightly Played,45.00,1,62.40,70.00,false,2025-01-12\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Dark Magician,LOB-EN005,Ultra Rare,Unlimited,Ungraded,Moderately Played,20.00,1,28.75,,false,2025-01-12\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Red-Eyes B. Dragon,LOB-EN070,Ultra Rare,Unlimited,Ungraded,Near Mint,18.00,1,24.10,,false,2025-01-12\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Exodia the Forbidden One,LOB-EN124,Ultra Rare,Unlimited,Ungraded,Lightly Played,30.00,1,41.99,,false,2025-01-15\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Monster Reborn,LOB-EN118,Ultra Rare,Unlimited,Ungraded,Near Mint,6.50,2,9.80,,false,2025-01-15\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Pot of Greed,LOB-EN119,Rare,Unlimited,Ungraded,Near Mint,2.00,3,3.15,,false,2025-01-15\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Raigeki,LOB-EN053,Super Rare,Unlimited,Ungraded,Lightly Played,4.00,1,6.40,,false,2025-02-02\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Swords of Revealing Light,LOB-EN101,Super Rare,Unlimited,Ungraded,Near Mint,1.50,1,2.20,,false,2025-02-02\nMain Binder,Yu-Gi-Oh!,Legend of Blue Eyes White Dragon,Trap Hole,LOB-EN092,Common,1st Edition,Ungraded,Near Mint,3.00,2,4.50,,false,2025-02-02\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Summoned Skull,MRD-EN003,Ultra Rare,Unlimited,Ungraded,Lightly Played,10.00,1,14.30,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Mirror Force,MRD-EN138,Ultra Rare,Unlimited,Ungraded,Near Mint,25.00,1,33.50,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Time Wizard,MRD-EN065,Ultra Rare,Unlimited,Ungraded,Near Mint,8.00,1,11.25,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Kuriboh,MRD-EN071,Common,Unlimited,Ungraded,Near Mint,0.50,4,0.85,,false,2025-02-20\nMain Binder,Yu-Gi-Oh!,Metal Raiders,Change of Heart,MRD-EN060,Ultra Rare,Unlimited,Ungraded,Lightly Played,7.00,1,9.60,,false,2025-03-01\nMain Binder,Yu-Gi-Oh!,Magician's Force,Dark Magician Girl,MFC-EN000,Secret Rare,Unlimited,Ungraded,Lightly Played,60.00,1,84.00,,false,2025-03-09\nMain Binder,Yu-Gi-Oh!,Magician's Force,Dark Magician Girl,MFC-EN000,Secret Rare,1st Edition,PSA 9,Near Mint,350.00,1,520.00,,true,2025-03-09\nMain Binder,Yu-Gi-Oh!,Magic Ruler,Mystical Space Typhoon,MRL-EN047,Ultra Rare,Unlimited,Ungraded,Near Mint,5.00,2,7.10,,false,2025-03-22\nMain Binder,Yu-Gi-Oh!,Invasion of Chaos,Chaos Emperor Dragon - Envoy of the End,IOC-EN000,Secret Rare,Unlimited,Ungraded,Lightly Played,22.00,1,29.40,,false,2025-04-05\nMain Binder,Yu-Gi-Oh!,Invasion of Chaos,Black Luster Soldier - Envoy of the Beginning,IOC-EN025,Ultra Rare,Unlimited,Ungraded,Near Mint,16.00,1,21.75,,false,2025-04-05\nMain Binder,Yu-Gi-Oh!,Cybernetic Revolution,Cyber End Dragon,CRV-EN036,Ultra Rare,1st Edition,Ungraded,Lightly Played,15.00,1,19.50,,false,2025-04-18\nMain Binder,Yu-Gi-Oh!,The Duelist Genesis,Stardust Dragon,TDGS-EN040,Ultra Rare,1st Edition,Ungraded,Near Mint,9.00,1,12.80,,false,2025-05-03\nMain Binder,Yu-Gi-Oh!,2016 Mega-Tins,Dark Magician,CT13-EN003,Ultra Rare,Limited,Ungraded,Near Mint,4.00,1,6.97,,false,2025-05-03\nMain Binder,Yu-Gi-Oh!,Maximum Crisis,Ash Blossom & Joyous Spring,MACR-EN036,Secret Rare,1st Edition,Ungraded,Near Mint,14.00,3,18.60,,true,2025-06-11\nMain Binder,Yu-Gi-Oh!,Flames of Destruction,Infinite Impermanence,FLOD-EN077,Secret Rare,1st Edition,Ungraded,Near Mint,12.00,2,15.40,,false,2025-06-11\nMain Binder,Yu-Gi-Oh!,Flames of Destruction,Called by the Grave,FLOD-EN065,Secret Rare,1st Edition,Ungraded,Near Mint,3.00,3,4.25,,false,2025-06-11\nMain Binder,Yu-Gi-Oh!,Eternity Code,Accesscode Talker,ETCO-EN046,Secret Rare,1st Edition,Ungraded,Near Mint,7.00,1,8.90,,false,2025-07-19\nMain Binder,Yu-Gi-Oh!,Age of Overlord,Snake-Eye Ash,AGOV-EN007,Ultra Rare,1st Edition,Ungraded,Near Mint,3.00,2,2.75,,false,2025-08-02\nTrade Binder,Yu-Gi-Oh!,Storm of Ragnarok,\"Maxx \"\"C\"\"\",STOR-EN032,Super Rare,1st Edition,Ungraded,Lightly Played,6.00,2,5.20,,false,2025-08-14\nTrade Binder,Yu-Gi-Oh!,2019 Gold Sarcophagus Tin,\"Nibiru, the Primal Being\",TN19-EN013,Prismatic Secret Rare,Limited,Ungraded,Near Mint,2.00,2,2.40,,false,2025-08-14\nTrade Binder,Yu-Gi-Oh!,Phantom Rage,Lightning Storm,PHRA-EN069,Secret Rare,1st Edition,Ungraded,Near Mint,4.50,1,3.80,,false,2025-09-01\nTrade Binder,Yu-Gi-Oh!,Structure Deck: Albaz Strike,Fallen of Albaz,SDAZ-EN001,Ultra Rare,1st Edition,Ungraded,Near Mint,0.50,3,0.35,,false,2025-09-01\nTrade Binder,Pokemon,Base Set,Charizard,4/102,Holo Rare,Unlimited,Ungraded,Lightly Played,250.00,1,340.00,,false,2025-09-10\n",
+};
+/* ═════════════════════════════ END CONFIG ═════════════════════════════ */
+
+</script>
+<script>
+/* ════════════════════════════ APP (generic; no game-specific code below) ════════════════════════════ */
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const normH = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+const el = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const num = v => { if (v == null || v === '') return null; if (typeof v === 'number') return isFinite(v) ? v : null;
+  const s = String(v).replace(/[^0-9.\-]/g, ''); if (!s || s === '-' || s === '.') return null; const n = parseFloat(s); return isFinite(n) ? n : null; };
+const fmtMoney = n => { try { return new Intl.NumberFormat(CONFIG.locale, { style: 'currency', currency: CONFIG.currency }).format(n || 0); } catch { return '$' + (n || 0).toFixed(2); } };
+const fmtInt = n => new Intl.NumberFormat(CONFIG.locale).format(n || 0);
+const coll = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const FIELDS = CONFIG.fields; const F = Object.fromEntries(FIELDS.map(f => [f.key, f]));
+const TYPEF = CONFIG.typeField, SUBF = CONFIG.subtypeField;
+const types = CONFIG.cardTypes || [];
+const typeDef = v => types.find(t => normH(t.value) === normH(v));
+const valueOf = c => (CONFIG.cardValue ? CONFIG.cardValue(c) : (num(c.marketPrice) || 0)) || 0;
+const qtyOf = c => Math.max(0, num(c.quantity) ?? 1);
+const SV = (p, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${extra}>${p}</svg>`;
+const ICON = {
+  sun: SV('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  moon: SV('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
+  binder: SV('<path d="M4 4h7v16H4zM13 4h7v16h-7z"/><path d="M6.5 8h2M6.5 12h2M15.5 8h2M15.5 12h2"/>'),
+  grid: SV('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/><rect x="14" y="15" width="7" height="6" rx="1.5"/>'),
+  list: SV('<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>'),
+  search: SV('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+  left: SV('<path d="m15 18-6-6 6-6"/>'), right: SV('<path d="m9 18 6-6-6-6"/>'),
+  up: SV('<path d="M12 19V5M5 12l7-7 7 7"/>'), down: SV('<path d="M12 5v14M5 12l7 7 7-7"/>'),
+  close: SV('<path d="M18 6 6 18M6 6l12 12"/>'),
+  file: SV('<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>'),
+  save: SV('<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'),
+  restore: SV('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
+  sparkle: SV('<path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/>'),
+  trash: SV('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
+  plus: SV('<path d="M12 5v14M5 12h14"/>'),
+  image: SV('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>'),
+  check: SV('<path d="M20 6 9 17l-5-5"/>', 'width="14" height="14"'),
+  filter: SV('<path d="M4 6h16M7 12h10M10 18h4"/>'),
+  camera: SV('<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/>'),
+  phone: SV('<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/>'),
+  shareIOS: SV('<path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11v9h12v-9"/>', 'width="15" height="15" style="vertical-align:-2px"'),
+};
+/* Phone helpers */
+const isPhone = () => matchMedia('(max-width: 860px), (hover: none) and (pointer: coarse)').matches;
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isPWA = () => !!window.BINDER_PWA && /^https?:$/.test(location.protocol);
+let scrollLocks = 0;
+const lockScroll = d => { scrollLocks = Math.max(0, scrollLocks + d); document.documentElement.classList.toggle('locked', scrollLocks > 0); };
+
+/* ───────────── Storage (IndexedDB, with in-memory fallback) ───────────── */
+const DB = {
+  db: null, mem: null,
+  async open() {
+    try {
+      this.db = await new Promise((res, rej) => {
+        const r = indexedDB.open(CONFIG.id + '-db', 1);
+        r.onupgradeneeded = () => { const d = r.result; d.createObjectStore('cards', { keyPath: 'id' }); d.createObjectStore('images'); d.createObjectStore('meta'); };
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => rej(new Error('blocked'));
+      });
+    } catch (e) { console.warn('IndexedDB unavailable, using memory', e); this.mem = { cards: new Map(), images: new Map(), meta: new Map() };
+      setTimeout(() => toast('Storage is unavailable in this browser mode, so changes won\'t persist. Use Back up to save.', 7000), 500); }
+  },
+  tx(store, mode, fn) {
+    if (this.mem) { const m = this.mem[store]; const r = fn({
+      getAll: () => ({ result: [...m.values()] }), getAllKeys: () => ({ result: [...m.keys()] }), get: k => ({ result: m.get(k) }),
+      put: (v, k) => { m.set(k ?? v.id, v); }, delete: k => { m.delete(k); }, clear: () => { m.clear(); } }); return Promise.resolve(r && r.result); }
+    return new Promise((res, rej) => {
+      const t = this.db.transaction(store, mode), s = t.objectStore(store); let req;
+      try { req = fn(s); } catch (e) { rej(e); return; }
+      t.oncomplete = () => res(req && 'result' in req ? req.result : undefined);
+      t.onerror = () => rej(t.error); t.onabort = () => rej(t.error || new Error('aborted'));
+    });
+  },
+  all: s => DB.tx(s, 'readonly', st => st.getAll()),
+  keys: s => DB.tx(s, 'readonly', st => st.getAllKeys()),
+  get: (s, k) => DB.tx(s, 'readonly', st => st.get(k)),
+  put: (s, v, k) => DB.tx(s, 'readwrite', st => (k === undefined ? st.put(v) : st.put(v, k))),
+  putMany: (s, vs) => DB.tx(s, 'readwrite', st => { vs.forEach(v => st.put(v)); }),
+  del: (s, k) => DB.tx(s, 'readwrite', st => st.delete(k)),
+  delMany: (s, ks) => DB.tx(s, 'readwrite', st => { ks.forEach(k => st.delete(k)); }),
+  clear: s => DB.tx(s, 'readwrite', st => st.clear()),
+};
+
+/* ───────────── State ───────────── */
+const S = {
+  cards: [], imgs: new Map(), pages: [], flipping: false, openId: null,
+  set: { view: 'binder', sort: CONFIG.sortOptions[0].key, dir: 1, group: 'none', q: '', type: '', f: {}, page: 0, breaks: true, theme: null },
+};
+const saveSettings = debounce(() => DB.put('meta', JSON.parse(JSON.stringify({ ...S.set, q: '' })), 'settings').catch(() => {}), 300);
+const imgSrc = c => (c.imageId && S.imgs.get(c.imageId)) || c.imageUrl || '';
+const identity = c => CONFIG.identity.map(k => normH(c[k])).join('|');
+
+/* ───────────── Ordering, filtering, grouping ───────────── */
+const orderList = o => o === 'rarities' ? CONFIG.rarities || [] : o === 'conditions' ? CONFIG.conditions || [] : o === 'types' ? types.map(t => t.value) : Array.isArray(o) ? o : [];
+function rankIn(list, v) {
+  const n = normH(v); if (!n) return 1e6;
+  const i = list.findIndex(x => normH(x) === n); if (i >= 0) return i;
+  let best = -1, bl = 0; list.forEach((x, j) => { const xn = normH(x); if (xn && n.includes(xn) && xn.length > bl) { best = j; bl = xn.length; } });
+  return best >= 0 ? best + .5 : list.length + 1;
+}
+function comparator(opt) {
+  const f = opt.field || opt.key;
+  if (opt.kind === 'value') return { blank: () => false, cmp: (a, b) => valueOf(a) - valueOf(b) };
+  if (opt.kind === 'number') return { blank: c => num(c[f]) == null, cmp: (a, b) => num(a[f]) - num(b[f]) };
+  if (opt.kind === 'order') { const L = orderList(opt.order); return { blank: c => !c[f], cmp: (a, b) => rankIn(L, a[f]) - rankIn(L, b[f]) || coll.compare(a[f] || '', b[f] || '') }; }
+  return { blank: c => !String(c[f] ?? '').trim(), cmp: (a, b) => coll.compare(String(a[f]), String(b[f])) };
+}
+const tiebreak = (a, b) => coll.compare(a.name || '', b.name || '') || coll.compare(a.number || '', b.number || '') || coll.compare(a.set || '', b.set || '');
+function sortCards(list) {
+  const opt = CONFIG.sortOptions.find(o => o.key === S.set.sort) || CONFIG.sortOptions[0];
+  const { blank, cmp } = comparator(opt), d = S.set.dir;
+  return list.sort((a, b) => { const ba = blank(a), bb = blank(b); if (ba !== bb) return ba ? 1 : -1; return (ba ? 0 : cmp(a, b) * d) || tiebreak(a, b); });
+}
+function filtered() {
+  const terms = S.set.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  return S.cards.filter(c => {
+    if (S.set.type && normH(c[TYPEF]) !== normH(S.set.type)) return false;
+    for (const fl of CONFIG.filters || []) { const v = S.set.f[fl.field]; if (v && String(c[fl.field] ?? '').trim() !== v) return false; }
+    if (terms.length) { const hay = (CONFIG.searchFields || ['name']).map(k => c[k] ?? '').join(' ').toLowerCase(); if (!terms.every(t => hay.includes(t))) return false; }
+    return true;
+  });
+}
+function groupKey(opt, c) {
+  if (opt.kind === 'letter') { const ch = String(c[opt.field] || '').trim().charAt(0).toUpperCase(); return /[A-Z]/.test(ch) ? ch : ch ? '#' : '—'; }
+  if (opt.kind === 'valueBand') { const v = valueOf(c), b = CONFIG.valueBands || [100, 25, 5, 1];
+    for (let i = 0; i < b.length; i++) if (v >= b[i]) return i === 0 ? fmtMoney(b[0]) + '+' : fmtMoney(b[i]) + ' – ' + fmtMoney(b[i - 1]);
+    return 'Under ' + fmtMoney(b[b.length - 1]); }
+  const v = String(c[opt.field] ?? '').trim(); return v || 'Unspecified';
+}
+function grouped(list) {
+  const opt = (CONFIG.groupOptions || []).find(o => o.key === S.set.group);
+  if (!opt || opt.key === 'none') return [{ label: null, cards: list }];
+  const m = new Map(); list.forEach(c => { const k = groupKey(opt, c); if (!m.has(k)) m.set(k, []); m.get(k).push(c); });
+  const keys = [...m.keys()], un = k => (k === 'Unspecified' || k === '—') ? 1 : 0;
+  if (opt.kind === 'order') { const L = orderList(opt.order); keys.sort((a, b) => un(a) - un(b) || rankIn(L, a) - rankIn(L, b) || coll.compare(a, b)); }
+  else if (opt.kind === 'valueBand') { keys.sort((a, b) => Math.max(...m.get(b).map(valueOf)) - Math.max(...m.get(a).map(valueOf))); }
+  else keys.sort((a, b) => un(a) - un(b) || coll.compare(a, b));
+  const so = CONFIG.sortOptions.find(o => o.key === S.set.sort) || {};
+  if (opt.field && so.field === opt.field && S.set.dir < 0) keys.reverse();
+  return keys.map(k => ({ label: k, cards: m.get(k) }));
+}
+function totals(list) {
+  let cards = 0, value = 0, paid = 0;
+  list.forEach(c => { const q = qtyOf(c); cards += q; value += valueOf(c) * q; paid += (num(c.pricePaid) || 0) * q; });
+  return { cards, unique: list.length, value, paid };
+}
+
+/* ───────────── Rendering ───────────── */
+function rarityShort(r) { if (!r) return ''; return (CONFIG.rarityShort || {})[r] || r.split(/\s+/).map(w => w[0]).join('').toUpperCase(); }
+function cardFace(c, extra = '') {
+  const src = imgSrc(c), td = typeDef(c[TYPEF]), qty = qtyOf(c);
+  const shiny = CONFIG.shinyRarities && CONFIG.shinyRarities.test(c.rarity || '') ? ' shiny' : '';
+  const fc = CONFIG.face || { title: 'name', code: 'number' };
+  const sub = [c[TYPEF], c[SUBF]].filter(Boolean).join(' · ') || (fc.badge ? c[fc.badge] : '') || '';
+  const ph = `<div class="ph"><div class="ph-name"><span>${esc(c[fc.title] || 'Untitled')}</span></div><div class="ph-type">${esc(sub)}</div>
+    <div class="ph-art">${esc(CONFIG.logo || '✦')}</div><div class="ph-meta"><span class="mono">${esc(c[fc.code] || '')}</span><span>${esc(rarityShort(c.rarity))}</span></div></div>`;
+  return `<div class="cf${shiny}" data-id="${esc(c.id)}" style="--tc:${td ? td.color : (CONFIG.theme?.unknownTypeColor || '#5a6283')}" ${extra}>${ph}${src ? `<img loading="lazy" decoding="async" src="${esc(src)}" alt="${esc(c.name)}" style="position:absolute;inset:0" onerror="this.remove()">` : ''}${qty > 1 ? `<span class="qty">×${qty}</span>` : ''}</div>`;
+}
+function renderHeader() {
+  $('#appTitle').textContent = CONFIG.title; $('#appSub').textContent = CONFIG.subtitle || ''; $('#logo').textContent = CONFIG.logo || '✦';
+  const t = totals(S.cards), gain = t.value - t.paid;
+  $('#stats').innerHTML = `
+    <div class="stat"><b>${fmtInt(t.cards)}</b><span>Cards</span></div>
+    <div class="stat"><b>${fmtInt(t.unique)}</b><span>Unique</span></div>
+    <div class="stat value" title="Collection market value"><b>${fmtMoney(t.value)}</b><span>Value</span></div>
+    <div class="stat paid" title="Total paid ${fmtMoney(t.paid)}"><b class="${gain >= 0 ? 'gain-pos' : 'gain-neg'}">${t.paid ? (gain >= 0 ? '+' : '−') + fmtMoney(Math.abs(gain)) : '—'}</b><span>Gain / loss</span></div>`;
+  $('#btnTheme').innerHTML = document.documentElement.dataset.theme === 'dark' ? ICON.sun : ICON.moon;
+  $('#stats').style.visibility = S.cards.length ? '' : 'hidden';
+}
+function distinct(field) { return [...new Set(S.cards.map(c => String(c[field] ?? '').trim()).filter(Boolean))].sort(coll.compare); }
+const cap = s => s[0].toUpperCase() + s.slice(1);
+const sortOptsHTML = () => CONFIG.sortOptions.map(o => `<option value="${o.key}" ${o.key === S.set.sort ? 'selected' : ''}>${esc(o.label)}</option>`).join('');
+const groupOptsHTML = () => (CONFIG.groupOptions || []).map(o => `<option value="${o.key}" ${o.key === S.set.group ? 'selected' : ''}>${esc(o.label)}</option>`).join('');
+const presentTypes = () => types.filter(t => S.cards.some(c => normH(c[TYPEF]) === normH(t.value)));
+const chipsHTML = () => { const pt = presentTypes(); return pt.length ? `<button class="chip ${!S.set.type ? 'on' : ''}" data-t="">All</button>${pt.map(t => `<button class="chip ${S.set.type === t.value ? 'on' : ''}" data-t="${esc(t.value)}" style="--c:${t.color}"><span class="dot"></span>${esc(t.value)}</button>`).join('')}` : ''; };
+const filterSelHTML = (fl, cls = '') => { const vals = distinct(fl.field); if (vals.length < 2 && !S.set.f[fl.field]) return '';
+  return `<div class="sel ${cls}"><select data-filter="${esc(fl.field)}" class="${S.set.f[fl.field] ? 'set' : ''}" aria-label="${esc(fl.label)}"><option value="">${esc(fl.label)}</option>${vals.map(v => `<option ${S.set.f[fl.field] === v ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select></div>`; };
+const activeFilterCount = () => (S.set.type ? 1 : 0) + Object.values(S.set.f).filter(Boolean).length;
+const setSort = k => { S.set.sort = k; S.set.dir = (CONFIG.sortOptions.find(o => o.key === k) || {}).defaultDir || 1; S.set.page = 0; };
+const changed = () => { saveSettings(); renderToolbar(); renderMain(); };
+function updateFilterBadge() { const b = $('#filtBtn .badge-n'); if (!b) return; const n = activeFilterCount(); b.textContent = n; b.hidden = !n; }
+function renderToolbar() {
+  const host = $('#toolbarHost');
+  if (!S.cards.length) { host.innerHTML = ''; return; }
+  if (document.activeElement && document.activeElement.id === 'q') { updateFilterBadge(); return; } // don't steal focus while typing
+  const chips = chipsHTML(), nf = activeFilterCount();
+  host.innerHTML = `<div class="toolbar">
+    <div class="search">${ICON.search}<input id="q" type="search" placeholder="Search name, set, code…" value="${esc(S.set.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"><kbd>/</kbd></div>
+    <button class="btn icon mob-only" id="filtBtn" aria-label="Sort and filter" title="Sort &amp; filter">${ICON.filter}<span class="badge-n" ${nf ? '' : 'hidden'}>${nf}</span></button>
+    ${chips ? `<div class="chips desk-only" id="typeChips">${chips}</div>` : ''}
+    <div class="spacer desk-only"></div>
+    <div class="sel desk-only"><label>Sort</label><select id="sortSel">${sortOptsHTML()}</select></div>
+    <button class="btn icon desk-only" id="dirBtn" title="${S.set.dir > 0 ? 'Ascending' : 'Descending'}">${S.set.dir > 0 ? ICON.up : ICON.down}</button>
+    <div class="sel desk-only"><label>Group</label><select id="groupSel">${groupOptsHTML()}</select></div>
+    <div class="seg" id="viewSeg">${['binder', 'grid', 'list'].map(v => `<button data-v="${v}" class="${S.set.view === v ? 'on' : ''}" title="${cap(v)} view">${ICON[v]}<span>${cap(v)}</span></button>`).join('')}</div>
+  </div><div class="filterbar">${(CONFIG.filters || []).map(fl => filterSelHTML(fl, 'sm desk-only')).join('')}<div class="subbar" id="subbar"></div></div>`;
+  const q = $('#q'); q.addEventListener('input', debounce(() => { S.set.q = q.value; S.set.page = 0; renderMain(); }, 120));
+  q.addEventListener('keydown', e => { if (e.key === 'Enter') q.blur(); });
+  $('#filtBtn').onclick = openFilterSheet;
+  $$('#typeChips .chip').forEach(b => b.onclick = () => { S.set.type = b.dataset.t; S.set.page = 0; $$('#typeChips .chip').forEach(x => x.classList.toggle('on', x === b)); saveSettings(); updateFilterBadge(); renderMain(); });
+  $$('.filterbar [data-filter]').forEach(s => s.onchange = () => { S.set.f[s.dataset.filter] = s.value; s.classList.toggle('set', !!s.value); S.set.page = 0; saveSettings(); updateFilterBadge(); renderMain(); });
+  $('#sortSel').onchange = e => { setSort(e.target.value); changed(); };
+  $('#dirBtn').onclick = () => { S.set.dir *= -1; S.set.page = 0; changed(); };
+  $('#groupSel').onchange = e => { S.set.group = e.target.value; S.set.page = 0; saveSettings(); renderMain(); };
+  $$('#viewSeg button').forEach(b => b.onclick = () => { S.set.view = b.dataset.v; $$('#viewSeg button').forEach(x => x.classList.toggle('on', x === b)); saveSettings(); renderMain(); });
+}
+function openFilterSheet() {
+  const sh = sheet(`<div class="sh-head"><h3>Sort &amp; filter</h3><button class="btn ghost" data-close>Done</button></div><div id="fsBody"></div>`);
+  const draw = () => {
+    const chips = chipsHTML(), n = filtered().length, b = $('#fsBody', sh.node);
+    b.innerHTML = `${chips ? `<div class="sh-sec"><div class="sh-t">${esc(F[TYPEF]?.label || 'Type')}</div><div class="chips">${chips}</div></div>` : ''}
+      <div class="sh-sec"><div class="sh-t">Sort by</div><div class="sh-row"><div class="sel"><select data-c="sort" aria-label="Sort by">${sortOptsHTML()}</select></div><button class="btn icon" data-c="dir" aria-label="${S.set.dir > 0 ? 'Ascending' : 'Descending'}">${S.set.dir > 0 ? ICON.up : ICON.down}</button></div></div>
+      <div class="sh-sec"><div class="sh-t">Group by</div><div class="sel"><select data-c="group" aria-label="Group by">${groupOptsHTML()}</select></div>
+        ${S.set.group !== 'none' ? `<label class="toggle" style="margin-top:8px"><input type="checkbox" data-c="breaks" ${S.set.breaks ? 'checked' : ''}>Start each group on a new binder page</label>` : ''}</div>
+      ${(CONFIG.filters || []).map(fl => { const h = filterSelHTML(fl); return h ? `<div class="sh-sec"><div class="sh-t">${esc(F[fl.field]?.label || fl.field)}</div>${h}</div>` : ''; }).join('')}
+      <div class="sh-foot"><button class="btn" data-c="clear" ${activeFilterCount() ? '' : 'disabled'}>Clear filters</button><button class="btn primary" data-close>Show ${fmtInt(n)} card${n === 1 ? '' : 's'}</button></div>`;
+    $$('.chip', b).forEach(x => x.onclick = () => { S.set.type = x.dataset.t; S.set.page = 0; changed(); draw(); });
+    $('[data-c=sort]', b).onchange = e => { setSort(e.target.value); changed(); draw(); };
+    $('[data-c=dir]', b).onclick = () => { S.set.dir *= -1; S.set.page = 0; changed(); draw(); };
+    $('[data-c=group]', b).onchange = e => { S.set.group = e.target.value; S.set.page = 0; changed(); draw(); };
+    const br = $('[data-c=breaks]', b); if (br) br.onchange = e => { S.set.breaks = e.target.checked; S.set.page = 0; changed(); };
+    $$('[data-filter]', b).forEach(s => s.onchange = () => { S.set.f[s.dataset.filter] = s.value; S.set.page = 0; changed(); draw(); });
+    $('[data-c=clear]', b).onclick = () => { S.set.type = ''; S.set.f = {}; S.set.page = 0; changed(); draw(); };
+  };
+  draw();
+}
+function renderSubbar(list) {
+  const sb = $('#subbar'); if (!sb) return;
+  const t = totals(list), isF = list.length !== S.cards.length;
+  sb.innerHTML = `<span>${isF ? `Showing <b>${fmtInt(t.unique)}</b> of ${fmtInt(S.cards.length)} · ${fmtMoney(t.value)}` : `${fmtInt(t.unique)} unique · ${fmtInt(t.cards)} cards in total`}</span>
+    ${isF ? '<button class="clear" id="clearF">Clear filters</button>' : ''}<span class="spacer"></span>
+    ${S.set.view === 'binder' && S.set.group !== 'none' ? `<label class="toggle desk-only"><input type="checkbox" id="breaks" ${S.set.breaks ? 'checked' : ''}>New page per group</label>` : ''}`;
+  $('#clearF') && ($('#clearF').onclick = () => { S.set.q = ''; S.set.type = ''; S.set.f = {}; S.set.page = 0; const q = $('#q'); if (q) { q.value = ''; q.blur(); } changed(); });
+  $('#breaks') && ($('#breaks').onchange = e => { S.set.breaks = e.target.checked; S.set.page = 0; saveSettings(); renderMain(); });
+}
+function renderMain() {
+  renderHeader();
+  const main = $('#main');
+  if (!S.cards.length) { renderEmpty(); return; }
+  if (!$('#toolbarHost').innerHTML) renderToolbar();
+  const list = sortCards(filtered()); const groups = grouped(list);
+  renderSubbar(list);
+  if (!list.length) { main.innerHTML = `<div class="noresults view"><div style="font-size:30px;margin-bottom:8px">${esc(CONFIG.logo)}</div>No cards match these filters.</div>`; return; }
+  if (S.set.view === 'grid') renderGrid(groups);
+  else if (S.set.view === 'list') renderList(groups);
+  else renderBinder(groups);
+}
+function renderEmpty() {
+  const demo = ['Your cards', 'In one place', 'Beautifully'].map((name, i) => ({ id: 'demo' + i, name, [TYPEF]: types[i % Math.max(1, types.length)]?.value }));
+  $('#main').innerHTML = `<div class="empty"><div class="drop" id="dropZone">
+    <div class="stack">${demo.map(c => cardFace(c)).join('')}</div>
+    <h2>Start your binder</h2>
+    <p>${isPhone() ? 'Import a Collectr export or spreadsheet, or snap photos of your cards.' : 'Drop in a Collectr export, any CSV or Excel spreadsheet, or photos of your cards.'} Everything stays on this device.</p>
+    <div class="row"><button class="btn primary" id="emptyPick">${ICON.file}${isPhone() ? 'Import or take photos' : 'Choose files'}</button>${CONFIG.sampleCSV ? `<button class="btn" id="emptySample">${ICON.sparkle}Try sample data</button>` : ''}<button class="btn" id="emptyAdd">${ICON.plus}Add a card</button></div>
+    <small>CSV · TSV · XLSX · JPG / PNG / WEBP · Backup JSON</small></div></div>`;
+  $('#emptyPick').onclick = () => (isPhone() ? openImportSheet() : $('#filePick').click());
+  $('#emptyAdd').onclick = () => addBlankCard();
+  $('#emptySample') && ($('#emptySample').onclick = () => importTable('sample-data.csv', parseCSV(CONFIG.sampleCSV)));
+}
+function renderGrid(groups) {
+  const meta = CONFIG.tileMeta || ['number'];
+  let i = 0;
+  $('#main').innerHTML = `<div class="view">${groups.map(g => `<section class="group">${g.label != null ? `<div class="group-h"><h3>${esc(g.label)}</h3><span>${g.cards.length} card${g.cards.length > 1 ? 's' : ''}</span><span class="gv">${fmtMoney(totals(g.cards).value)}</span></div>` : ''}
+    <div class="grid">${g.cards.map(c => `<button class="tile" data-open="${esc(c.id)}" style="--i:${Math.min(i++, 40)}">${cardFace(c)}<div class="tile-info"><div class="tile-name" title="${esc(c.name)}">${esc(c.name)}</div>
+      <div class="tile-meta"><span>${meta.map(k => esc(c[k] || '')).filter(Boolean).join(' · ')}</span><span class="price">${valueOf(c) ? fmtMoney(valueOf(c)) : ''}</span></div></div></button>`).join('')}</div></section>`).join('')}</div>`;
+}
+function renderList(groups) {
+  const cols = CONFIG.listColumns || ['name', 'number', 'set', 'quantity', 'value'];
+  const sortFor = k => CONFIG.sortOptions.find(o => (k === 'value' ? o.kind === 'value' : (o.field || o.key) === k));
+  const label = k => k === 'value' ? 'Value' : (F[k]?.label || k);
+  const isNum = k => k === 'value' || ['number', 'money'].includes(F[k]?.type);
+  const cell = (c, k) => {
+    if (k === 'value') return fmtMoney(valueOf(c));
+    if (k === TYPEF) { const td = typeDef(c[k]); return c[k] ? `<span class="pill" style="--c:${td?.color || ''}"><i></i>${esc(c[k])}${c[SUBF] ? ` <span class="muted">· ${esc(c[SUBF])}</span>` : ''}</span>` : '<span class="muted">—</span>'; }
+    if (F[k]?.type === 'money') return c[k] != null && c[k] !== '' ? fmtMoney(num(c[k])) : '';
+    if (k === 'quantity') return qtyOf(c);
+    if (k === 'name') return `<b style="font-weight:600">${esc(c.name)}</b>`;
+    return `<span class="${F[k]?.mono ? 'mono' : ''}">${esc(c[k] ?? '')}</span>`;
+  };
+  const cur = CONFIG.sortOptions.find(o => o.key === S.set.sort);
+  $('#main').innerHTML = `<div class="view table-wrap"><table class="list"><thead><tr><th class="thumb"></th>${cols.map(k => { const so = sortFor(k); const on = so && cur && so.key === cur.key;
+      return `<th data-col="${k}" data-sort="${so ? so.key : ''}" class="${on ? 'sorted' : ''}" style="${isNum(k) ? 'text-align:right' : ''}">${esc(label(k))}${on ? `<span class="arr">${S.set.dir > 0 ? '↑' : '↓'}</span>` : ''}</th>`; }).join('')}</tr></thead>
+    <tbody>${groups.map(g => (g.label != null ? `<tr class="grp"><td colspan="${cols.length + 1}">${esc(g.label)} <span class="muted" style="font-family:var(--sans);font-weight:500;font-size:12px">· ${g.cards.length}</span></td></tr>` : '') +
+      g.cards.map(c => `<tr class="row" data-open="${esc(c.id)}"><td class="thumb">${cardFace(c)}</td>${cols.map(k => `<td data-col="${k}" class="${isNum(k) ? 'num' : ''}">${cell(c, k)}${k === 'name' ? `<div class="sub">${(CONFIG.tileMeta || []).map(m => esc(c[m] || '')).filter(Boolean).join(' · ')}</div>` : ''}</td>`).join('')}</tr>`).join('')).join('')}</tbody></table></div>`;
+  $$('th[data-sort]').forEach(th => th.onclick = () => { const k = th.dataset.sort; if (!k) return;
+    if (S.set.sort === k) S.set.dir *= -1; else { S.set.sort = k; S.set.dir = (CONFIG.sortOptions.find(o => o.key === k) || {}).defaultDir || 1; }
+    saveSettings(); renderToolbar(); renderMain(); });
+}
+
+/* ───────────── Binder view ───────────── */
+const per = () => (CONFIG.binder?.cols || 3) * (CONFIG.binder?.rows || 3);
+const twoUp = () => window.innerWidth >= 980;
+function buildPages(groups) {
+  const pages = [], P = per(); let cur = null;
+  const open = () => { cur = { labels: [], slots: [] }; pages.push(cur); };
+  for (const g of groups) {
+    if (!cur || (S.set.breaks && g.label != null && cur.slots.length)) open();
+    for (const c of g.cards) { if (cur.slots.length >= P) open(); if (g.label != null && !cur.labels.includes(g.label)) cur.labels.push(g.label); cur.slots.push(c); }
+  }
+  if (!pages.length) open();
+  return pages;
+}
+function pageEl(i, side) {
+  const p = S.pages[i], P = per(), cols = CONFIG.binder?.cols || 3;
+  const node = el(`<div class="page ${side}"></div>`);
+  if (!p) { node.classList.add('blank'); node.innerHTML = `<div class="page-head"></div><div class="pockets" style="--cols:${cols}">${'<div class="pocket"></div>'.repeat(P)}</div><div class="page-foot">&nbsp;</div>`; return node; }
+  const label = p.labels.join(' · ');
+  node.innerHTML = `<div class="page-head"><b title="${esc(label)}">${esc(label)}</b><span>${fmtMoney(totals(p.slots).value)}</span></div>
+    <div class="pockets" style="--cols:${cols}">${Array.from({ length: P }, (_, k) => `<div class="pocket">${p.slots[k] ? cardFace(p.slots[k], `data-open="${esc(p.slots[k].id)}" title="${esc(p.slots[k].name)}"`) : ''}</div>`).join('')}</div>
+    <div class="page-foot">${i + 1}</div>`;
+  return node;
+}
+function renderBinder(groups) {
+  S.pages = buildPages(groups);
+  const two = twoUp(), step = two ? 2 : 1, n = S.pages.length;
+  S.set.page = Math.max(0, Math.min(S.set.page, n - 1)); if (two) S.set.page -= S.set.page % 2;
+  const p = S.set.page, last = Math.ceil(n / step) - 1, cur = p / step;
+  const shownTotal = two ? n + (n % 2) : n;
+  const dPrev = cur <= 0 ? 'disabled' : '', dNext = cur >= last ? 'disabled' : '';
+  $('#main').innerHTML = `<div class="view"><div class="binder-wrap">
+    <button class="flipbtn side prev" id="prevP" data-flip="-1" ${dPrev} aria-label="Previous page">${ICON.left}</button>
+    <div class="binder ${two ? '' : 'single'}" id="binder" style="--cols:${CONFIG.binder?.cols || 3}"><div class="spread" id="spread"></div></div>
+    <button class="flipbtn side next" id="nextP" data-flip="1" ${dNext} aria-label="Next page">${ICON.right}</button></div>
+    <div class="pager"><button class="flipbtn mob-only" data-flip="-1" ${dPrev} aria-label="Previous page">${ICON.left}</button>
+      <div class="pmid"><span>${two ? `Pages ${p + 1}–${p + 2}` : `Page ${p + 1}`} of ${shownTotal}</span>${last > 0 ? `<input type="range" id="pageRange" min="0" max="${last}" value="${cur}" aria-label="Jump to page">` : ''}</div>
+      <span class="muted desk-only">← → to flip</span>
+      <button class="flipbtn mob-only" data-flip="1" ${dNext} aria-label="Next page">${ICON.right}</button></div></div>`;
+  const sp = $('#spread'); sp.append(pageEl(p, two ? 'left' : '')); if (two) sp.append(pageEl(p + 1, 'right'));
+  fitBinder();
+  $$('[data-flip]').forEach(b => b.onclick = () => flip(+b.dataset.flip));
+  const r = $('#pageRange'); if (r) r.oninput = () => { S.set.page = +r.value * step; saveSettings(); renderMain(); };
+  /* Swipe to flip (touch, pen or mouse drag). The binder has touch-action: pan-y, so vertical scrolling still works. */
+  const b = $('#binder'); let sw = null;
+  b.addEventListener('pointerdown', e => { if (S.flipping || (e.pointerType === 'mouse' && e.button !== 0)) return; sw = { x: e.clientX, y: e.clientY, dx: 0, on: false, id: e.pointerId }; });
+  b.addEventListener('pointermove', e => {
+    if (!sw || e.pointerId !== sw.id) return; const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+    if (!sw.on && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.2) { sw.on = true; try { b.setPointerCapture(e.pointerId); } catch {} }
+    if (!sw.on) return; sw.dx = dx;
+    if (!two) { const edge = (dx > 0 && cur <= 0) || (dx < 0 && cur >= last), k = edge ? .25 : .85;
+      sp.style.transition = 'none'; sp.style.transform = `translateX(${dx * k}px) rotateY(${dx * k / 45}deg)`; sp.style.opacity = String(1 - Math.min(.35, Math.abs(dx * k) / 900)); }
+  });
+  const end = () => { if (!sw) return; const { dx, on } = sw; sw = null;
+    sp.style.transition = 'transform .3s var(--ease), opacity .3s'; sp.style.transform = ''; sp.style.opacity = '';
+    if (on) S.swiped = Date.now();
+    if (on && Math.abs(dx) > 50) flip(dx < 0 ? 1 : -1); };
+  b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
+}
+function fitBinder() {   // shrink the binder so a whole spread fits on screen
+  const b = $('#binder'); if (!b || !twoUp()) return;
+  b.style.width = ''; const r = b.getBoundingClientRect(), avail = window.innerHeight - (r.top + window.scrollY) - 78;
+  if (r.height > avail && avail > 320) b.style.width = Math.max(560, r.width * avail / r.height) + 'px';
+}
+function flip(delta) {
+  if (S.flipping || S.set.view !== 'binder') return;
+  const two = twoUp(), step = two ? 2 : 1, n = S.pages.length, from = S.set.page, to = from + delta * step;
+  if (to < 0 || to > n - 1) return;
+  const sp = $('#spread'); if (!sp) return;
+  if (!two || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    S.set.page = to; saveSettings(); renderMain(); const s2 = $('#spread'); s2 && s2.classList.add(delta > 0 ? 'slide-next' : 'slide-prev'); return;
+  }
+  S.flipping = true;
+  const leaf = el(`<div class="leaf ${delta > 0 ? 'next' : 'prev'}"><div class="face front"></div><div class="face back"></div></div>`);
+  if (delta > 0) { sp.children[1].replaceWith(pageEl(to + 1, 'right')); leaf.children[0].append(pageEl(from + 1, 'right')); leaf.children[1].append(pageEl(to, 'left')); }
+  else { sp.children[0].replaceWith(pageEl(to, 'left')); leaf.children[0].append(pageEl(from, 'left')); leaf.children[1].append(pageEl(to + 1, 'right')); }
+  sp.append(leaf);
+  let fin = false; const end = () => { if (fin) return; fin = true; S.flipping = false; S.set.page = to; saveSettings(); renderMain(); };
+  leaf.addEventListener('transitionend', e => { if (e.target === leaf) end(); });
+  setTimeout(end, 1100);
+  requestAnimationFrame(() => requestAnimationFrame(() => leaf.classList.add('go')));
+}
+
+/* ───────────── Detail drawer ───────────── */
+function suggestions(f, c) {
+  if (Array.isArray(f.suggest)) return [...new Set([...f.suggest, ...distinct(f.key)])];
+  if (f.suggest === 'rarities') return [...new Set([...(CONFIG.rarities || []), ...distinct(f.key)])];
+  if (f.suggest === 'conditions') return [...new Set([...(CONFIG.conditions || []), ...distinct(f.key)])];
+  if (f.suggest === 'subtypes') return typeDef(c?.[TYPEF])?.subtypes || [...new Set(types.flatMap(t => t.subtypes || []))];
+  return distinct(f.key).slice(0, 300);
+}
+function fieldInput(f, c) {
+  const v = c[f.key] ?? '';
+  if (f.key === TYPEF && types.length) return `<select data-k="${f.key}"><option value="">—</option>${types.map(t => `<option ${normH(t.value) === normH(v) ? 'selected' : ''}>${esc(t.value)}</option>`).join('')}${v && !typeDef(v) ? `<option selected>${esc(v)}</option>` : ''}</select>`;
+  if (f.type === 'select' && Array.isArray(f.options)) return `<select data-k="${f.key}"><option value="">—</option>${f.options.map(o => `<option ${o === v ? 'selected' : ''}>${esc(o)}</option>`).join('')}${v && !f.options.includes(v) ? `<option selected>${esc(v)}</option>` : ''}</select>`;
+  if (f.type === 'textarea') return `<textarea data-k="${f.key}" placeholder="${esc(f.placeholder || '')}">${esc(v)}</textarea>`;
+  if (f.type === 'money') return `<div class="money"><input data-k="${f.key}" type="number" step="0.01" min="0" inputmode="decimal" value="${v === null ? '' : esc(v)}" placeholder="0.00"></div>`;
+  if (f.type === 'number') return `<input data-k="${f.key}" type="number" step="1" min="0" value="${esc(v)}">`;
+  const sug = suggestions(f, c);
+  return `<input data-k="${f.key}" class="${f.mono ? 'mono' : ''}" value="${esc(v)}" placeholder="${esc(f.placeholder || '')}" ${sug.length ? `list="dl-${f.key}"` : ''} autocomplete="off">${sug.length ? `<datalist id="dl-${f.key}">${sug.map(s => `<option value="${esc(s)}">`).join('')}</datalist>` : ''}`;
+}
+function openDetail(id) {
+  const c = S.cards.find(x => x.id === id); if (!c) return;
+  S.openId = id;
+  const d = $('#drawer'), wasOpen = d.classList.contains('on'), scroll = $('.d-body', d)?.scrollTop || 0;
+  const editable = FIELDS.filter(f => !f.hidden && f.key !== 'name' && f.key !== 'quantity');
+  const val = valueOf(c), q = qtyOf(c), paid = num(c.pricePaid);
+  const sub = [c.set, c.number].filter(Boolean).map(esc).join(' · ');
+  d.innerHTML = `<div class="d-head"><span class="saved" id="savedTag">${ICON.check} Saved</span><span class="grow"></span><button class="btn icon ghost" id="dClose" title="Close (Esc)">${ICON.close}</button></div>
+  <div class="d-body">
+    <div class="d-hero"><div class="d-img" id="dImg">${cardFace(c)}<div class="d-img-actions"><button class="btn" id="dPhoto">${ICON.image}${imgSrc(c) ? 'Replace' : 'Add photo'}</button>${c.imageId || c.imageUrl ? `<button class="btn ghost" id="dRmPhoto" title="Remove image">${ICON.trash}</button>` : ''}</div></div>
+      <div class="d-title"><input data-k="name" value="${esc(c.name || '')}" placeholder="Card name" aria-label="Card name"><div class="d-sub">${sub || '&nbsp;'}</div>
+        <div class="qty-step"><button id="qMinus" aria-label="Decrease">−</button><input id="qInput" data-k="quantity" type="number" min="0" value="${q}" aria-label="Quantity"><button id="qPlus" aria-label="Increase">+</button></div>
+        <div class="d-kpis"><div class="kpi"><span>Value each</span><b>${fmtMoney(val)}</b></div><div class="kpi"><span>Total (×${q})</span><b>${fmtMoney(val * q)}</b></div>
+          ${paid != null ? `<div class="kpi"><span>Paid each</span><b>${fmtMoney(paid)}</b></div><div class="kpi"><span>Gain</span><b class="${val - paid >= 0 ? 'gain-pos' : 'gain-neg'}">${val - paid >= 0 ? '+' : '−'}${fmtMoney(Math.abs((val - paid) * q))}</b></div>` : ''}</div>
+      </div></div>
+    <div class="form">${editable.map(f => `<div class="field ${f.type === 'textarea' ? 'full' : ''}"><label>${esc(f.label)}</label>${fieldInput(f, c)}</div>`).join('')}</div>
+  </div>
+  <div class="d-foot">${CONFIG.lookup ? `<button class="btn" id="dLookup" title="${esc(CONFIG.lookup.note || '')}">${ICON.sparkle}Look up online</button>` : ''}<span class="grow"></span><button class="btn danger" id="dDelete">${ICON.trash}Delete</button></div>`;
+  if (wasOpen) $('.d-body', d).scrollTop = scroll;
+  d.classList.add('on'); d.setAttribute('aria-hidden', 'false'); d.inert = false; $('#scrim').classList.add('on');
+  if (!S.drawerLock) { S.drawerLock = true; lockScroll(1); }
+  if (isPhone()) dragToClose(d, [$('.d-head', d)], closeDetail);
+  const save = async refresh => {
+    $$('[data-k]', d).forEach(inp => { const f = F[inp.dataset.k]; if (!f) return; let v = inp.value;
+      if (f.type === 'money' || f.type === 'number') v = v === '' ? null : num(v); else v = v.trim();
+      c[f.key] = v; });
+    c.updatedAt = Date.now(); await DB.put('cards', c);
+    renderToolbar(); renderMain();
+    if (refresh) openDetail(id);
+    const t = $('#savedTag'); t.classList.add('on'); clearTimeout(S.savedT); S.savedT = setTimeout(() => t.classList.remove('on'), 1400);
+  };
+  $$('[data-k]', d).forEach(inp => inp.addEventListener('change', () => save(true)));
+  $('#qMinus').onclick = () => { $('#qInput').value = Math.max(0, (+$('#qInput').value || 0) - 1); save(true); };
+  $('#qPlus').onclick = () => { $('#qInput').value = (+$('#qInput').value || 0) + 1; save(true); };
+  $('#dClose').onclick = closeDetail;
+  $('#dDelete').onclick = async () => { if (await ask('Delete card?', `Remove “${esc(c.name)}” from your binder? This can't be undone.`, [{ label: 'Cancel' }, { label: 'Delete', value: true, cls: 'primary' }])) { closeDetail(); await deleteCards([c]); toast(`Deleted <b>${esc(c.name)}</b>`); } };
+  $('#dPhoto').onclick = () => { const p = $('#imgPick'); p.onchange = async () => { if (p.files[0]) { await setCardImage(c, p.files[0]); openDetail(id); } p.value = ''; }; p.click(); };
+  $('#dRmPhoto') && ($('#dRmPhoto').onclick = async () => { if (c.imageId) { await DB.del('images', c.imageId); URL.revokeObjectURL(S.imgs.get(c.imageId)); S.imgs.delete(c.imageId); } c.imageId = null; c.imageUrl = null; await DB.put('cards', c); renderMain(); openDetail(id); });
+  $('#dLookup') && ($('#dLookup').onclick = async () => { const b = $('#dLookup'); b.disabled = true; b.innerHTML = ICON.sparkle + 'Looking up…';
+    const ok = await lookupOne(c, true); toast(ok ? `Updated <b>${esc(c.name)}</b>` : `No online match for <b>${esc(c.name)}</b>`); renderToolbar(); renderMain(); if (S.openId === id) openDetail(id); });
+  const di = $('#dImg'), cf = $('.cf', di);
+  di.addEventListener('mousemove', e => { const r = cf.getBoundingClientRect(); if (e.clientY > r.bottom) { cf.style.transform = ''; return; } const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    cf.style.transform = `rotateY(${x * 16}deg) rotateX(${-y * 16}deg) scale(1.03)`; cf.style.setProperty('--sx', (x + .5) * 100 + '%'); cf.style.setProperty('--sy', (y + .5) * 100 + '%'); });
+  di.addEventListener('mouseleave', () => { cf.style.transform = ''; });
+  di.addEventListener('dragover', e => { e.preventDefault(); e.stopPropagation(); di.classList.add('dragover'); });
+  di.addEventListener('dragleave', () => di.classList.remove('dragover'));
+  di.addEventListener('drop', async e => { e.preventDefault(); e.stopPropagation(); di.classList.remove('dragover'); hideDrop(); const f = [...e.dataTransfer.files].find(f => f.type.startsWith('image/')); if (f) { await setCardImage(c, f); openDetail(id); } });
+}
+function closeDetail() { if (S.drawerLock) { S.drawerLock = false; lockScroll(-1); } S.openId = null; $('#drawer').classList.remove('on'); $('#drawer').setAttribute('aria-hidden', 'true'); $('#drawer').inert = true; $('#scrim').classList.remove('on'); }
+async function deleteCards(list) {
+  const ids = new Set(list.map(c => c.id)); S.cards = S.cards.filter(c => !ids.has(c.id));
+  await DB.delMany('cards', [...ids]); const imgIds = list.map(c => c.imageId).filter(Boolean);
+  if (imgIds.length) { await DB.delMany('images', imgIds); imgIds.forEach(i => { URL.revokeObjectURL(S.imgs.get(i)); S.imgs.delete(i); }); }
+  renderToolbar(); renderMain();
+}
+async function addBlankCard(init = {}) {
+  const c = { id: uid(), name: 'New card', quantity: 1, createdAt: Date.now(), updatedAt: Date.now(), ...init };
+  S.cards.push(c); await DB.put('cards', c); renderToolbar(); renderMain(); openDetail(c.id);
+  setTimeout(() => { const i = $('#drawer [data-k=name]'); i && (i.focus(), i.select()); }, 300);
+}
+
+/* ───────────── Images ───────────── */
+async function shrinkImage(file) {
+  const max = CONFIG.imageMaxSize || 1100;
+  try {
+    const bmp = await createImageBitmap(file); const sc = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    if (sc === 1 && file.size < 700e3) return file;
+    const cv = document.createElement('canvas'); cv.width = Math.round(bmp.width * sc); cv.height = Math.round(bmp.height * sc);
+    cv.getContext('2d').drawImage(bmp, 0, 0, cv.width, cv.height);
+    return await new Promise(r => cv.toBlob(b => r(b || file), 'image/jpeg', .88));
+  } catch { return file; }
+}
+async function setCardImage(c, file) {
+  const blob = await shrinkImage(file);
+  if (c.imageId) URL.revokeObjectURL(S.imgs.get(c.imageId)); else c.imageId = uid();
+  await DB.put('images', blob, c.imageId); S.imgs.set(c.imageId, URL.createObjectURL(blob));
+  c.updatedAt = Date.now(); await DB.put('cards', c); renderMain();
+}
+function guessFromFilename(name) {
+  let base = name.replace(/\.[a-z0-9]+$/i, ''), number = '';
+  const m = CONFIG.numberPattern && base.match(CONFIG.numberPattern); if (m) { number = m[0].toUpperCase(); base = base.replace(m[0], ' '); }
+  const nm = base.replace(/_+/g, ' ').replace(/\s+-\s+|^\s*-|-\s*$/g, ' ').replace(/\s+/g, ' ').trim();
+  return { name: nm.replace(/(^|\s)[a-z]/g, ch => ch.toUpperCase()), number };
+}
+function matchCardForImage(g) {
+  if (g.number) { const hits = S.cards.filter(c => normH(c.number) === normH(g.number)); if (hits.length) return hits.find(c => !imgSrc(c)) || hits[0]; }
+  if (g.name) return S.cards.find(c => normH(c.name) === normH(g.name)) || null;
+  return null;
+}
+async function importImages(files) {
+  const items = files.map(f => { const g = guessFromFilename(f.name), m = matchCardForImage(g); return { file: f, url: URL.createObjectURL(f), g, target: m ? m.id : '' }; });
+  const opts = S.cards.slice().sort((a, b) => coll.compare(a.name || '', b.name || '') || coll.compare(a.number || '', b.number || ''));
+  const desc = c => esc(c.name) + (c.number ? ' — ' + esc(c.number) : '') + (c[(CONFIG.face || {}).badge] ? ' (' + esc(c[CONFIG.face.badge]) + ')' : '') + (c.condition ? ', ' + esc(c.condition) : '');
+  const body = `<div class="imgs">${items.map((it, i) => `<div class="imgrow" data-i="${i}"><img src="${it.url}" alt="">
+    <div><select data-r="target" aria-label="Attach to"><option value="">＋ Add as a new card</option>${opts.map(c => `<option value="${esc(c.id)}" ${c.id === it.target ? 'selected' : ''}>Attach to: ${desc(c)}</option>`).join('')}</select>
+    <div class="fs" ${it.target ? 'style="display:none"' : ''}><input data-r="name" placeholder="${esc(F.name?.label || 'Name')}" value="${esc(it.g.name)}"><input data-r="set" placeholder="${esc(F.set?.label || 'Set')}"><input data-r="number" class="mono" placeholder="${esc(F.number?.label || 'Number')}" value="${esc(it.g.number)}"></div></div></div>`).join('')}</div>`;
+  const m = modal(`<div class="m-head"><h2>Add ${items.length} photo${items.length > 1 ? 's' : ''}</h2><p>Attach each photo to a card already in your binder, or add it as a new card.</p></div>
+    <div class="m-body">${body}</div><div class="m-foot"><span class="grow"></span><button class="btn" data-x>Cancel</button><button class="btn primary" data-go>Add photos</button></div>`);
+  $$('.imgrow', m.node).forEach(row => { const s = $('[data-r=target]', row); s.onchange = () => { $('.fs', row).style.display = s.value ? 'none' : ''; }; });
+  const ok = await new Promise(res => { $('[data-x]', m.node).onclick = () => res(false); $('[data-go]', m.node).onclick = () => res(true); m.onclose = () => res(false); });
+  if (ok) {
+    let a = 0, n = 0;
+    for (const row of $$('.imgrow', m.node)) {
+      const it = items[+row.dataset.i], tid = $('[data-r=target]', row).value;
+      if (tid) { const c = S.cards.find(x => x.id === tid); if (c) { await setCardImage(c, it.file); a++; } }
+      else { const c = { id: uid(), quantity: 1, createdAt: Date.now(), updatedAt: Date.now(), name: $('[data-r=name]', row).value.trim() || 'Untitled', set: $('[data-r=set]', row).value.trim(), number: $('[data-r=number]', row).value.trim() };
+        S.cards.push(c); await DB.put('cards', c); await setCardImage(c, it.file); n++; }
+    }
+    renderToolbar(); renderMain();
+    toast([a ? `Attached <b>${a}</b> photo${a > 1 ? 's' : ''}` : '', n ? `Added <b>${n}</b> new card${n > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ') || 'Nothing added');
+  }
+  m.close(); items.forEach(it => URL.revokeObjectURL(it.url));
+}
+
+/* ───────────── Parsing: CSV + XLSX (no libraries) ───────────── */
+function parseCSV(text) {
+  text = String(text).replace(/^\uFEFF/, '');
+  const nl = text.indexOf('\n'), firstLine = nl > -1 ? text.slice(0, nl) : text;
+  const delim = [',', ';', '\t', '|'].map(d => [d, firstLine.split(d).length]).sort((a, b) => b[1] - a[1])[0][0];
+  const rows = []; let row = [], fld = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { fld += '"'; i++; } else q = false; } else fld += ch; continue; }
+    if (ch === '"' && fld.trim() === '') { q = true; fld = ''; continue; }
+    if (ch === delim) { row.push(fld); fld = ''; continue; }
+    if (ch === '\r') continue;
+    if (ch === '\n') { row.push(fld); rows.push(row); row = []; fld = ''; continue; }
+    fld += ch;
+  }
+  if (fld !== '' || row.length) { row.push(fld); rows.push(row); }
+  return rows.filter(r => r.some(v => String(v).trim() !== ''));
+}
+async function unzip(buf) {
+  const dv = new DataView(buf), u8 = new Uint8Array(buf), files = {};
+  let eocd = -1; for (let i = u8.length - 22; i >= Math.max(0, u8.length - 70000); i--) if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error('not a valid .xlsx file');
+  const cnt = dv.getUint16(eocd + 10, true); let p = dv.getUint32(eocd + 16, true);
+  for (let k = 0; k < cnt; k++) {
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true), off = dv.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nlen)); p += 46 + nlen + xlen + clen;
+    files[name] = { method, csize, off };
+  }
+  return async name => {
+    const f = files[name]; if (!f) return null;
+    const start = f.off + 30 + dv.getUint16(f.off + 26, true) + dv.getUint16(f.off + 28, true), data = u8.subarray(start, start + f.csize);
+    if (f.method === 0) return new TextDecoder().decode(data);
+    if (typeof DecompressionStream === 'undefined') throw new Error('this browser cannot read .xlsx, so save the sheet as CSV instead');
+    return await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+  };
+}
+async function parseXLSX(buf) {
+  const read = await unzip(buf), X = s => new DOMParser().parseFromString(s, 'application/xml');
+  const ss = [], sst = await read('xl/sharedStrings.xml');
+  if (sst) [...X(sst).getElementsByTagName('si')].forEach(si => ss.push([...si.getElementsByTagName('t')].map(t => t.textContent).join('')));
+  let sheetPath = 'xl/worksheets/sheet1.xml';
+  try { const wb = X(await read('xl/workbook.xml')), rels = X(await read('xl/_rels/workbook.xml.rels'));
+    const sh = wb.getElementsByTagName('sheet')[0], rid = sh.getAttribute('r:id') || sh.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id');
+    const rel = [...rels.getElementsByTagName('Relationship')].find(r => r.getAttribute('Id') === rid);
+    if (rel) { const t = rel.getAttribute('Target'); sheetPath = t.startsWith('/') ? t.slice(1) : 'xl/' + t.replace(/^\.\//, ''); } } catch {}
+  const sx = await read(sheetPath); if (!sx) throw new Error('no worksheet found');
+  const colIdx = ref => { const m = /^([A-Z]+)/.exec(ref || ''); if (!m) return -1; let n = 0; for (const ch of m[1]) n = n * 26 + ch.charCodeAt(0) - 64; return n - 1; };
+  const rows = [];
+  [...X(sx).getElementsByTagName('row')].forEach(r => { const row = []; let auto = 0;
+    [...r.getElementsByTagName('c')].forEach(c => { const ref = c.getAttribute('r'), i = ref ? colIdx(ref) : auto; auto = i + 1; const t = c.getAttribute('t'); let v;
+      if (t === 's') v = ss[+(c.getElementsByTagName('v')[0]?.textContent)] ?? '';
+      else if (t === 'inlineStr') v = [...c.getElementsByTagName('t')].map(x => x.textContent).join('');
+      else v = c.getElementsByTagName('v')[0]?.textContent ?? '';
+      row[i] = v; });
+    rows.push(Array.from(row, v => v ?? '')); });
+  return rows.filter(r => r.some(v => String(v).trim() !== ''));
+}
+
+/* ───────────── Import: column mapping + duplicate merge ───────────── */
+const aliasesOf = f => [f.key, f.label, ...(f.aliases || [])].map(normH).filter(Boolean);
+function headerRowIndex(rows) {
+  const all = new Set(FIELDS.flatMap(aliasesOf));
+  let best = 0, bs = -1; rows.slice(0, 12).forEach((r, i) => { const s = r.filter(h => all.has(normH(h)) || [...all].some(a => a.length >= 8 && normH(h).startsWith(a))).length; if (s > bs) { bs = s; best = i; } });
+  return best;
+}
+function autoMap(headers) {
+  const nh = headers.map(normH), map = {}, used = new Set();
+  for (const f of FIELDS) for (const a of aliasesOf(f)) { const i = nh.findIndex((h, j) => !used.has(j) && h === a); if (i >= 0) { map[f.key] = i; used.add(i); break; } }
+  for (const f of FIELDS) { if (map[f.key] != null) continue;   // prefix match, e.g. "Market Price (As of 2026-10-24)"
+    for (const a of aliasesOf(f).filter(a => a.length >= 8)) { const i = nh.findIndex((h, j) => !used.has(j) && h.startsWith(a)); if (i >= 0) { map[f.key] = i; used.add(i); break; } } }
+  return map;
+}
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function normalizeType(raw) {
+  const s = String(raw || '').trim(); if (!s) return { t: '', sub: '' };
+  const td = typeDef(s); if (td) return { t: td.value, sub: '' };
+  const hit = types.find(t => new RegExp('\\b' + reEsc(t.value) + '\\b', 'i').test(s));
+  if (hit) return { t: hit.value, sub: s.replace(new RegExp('\\b' + reEsc(hit.value) + '(\\s*card)?\\b', 'i'), '').replace(/\s+/g, ' ').trim() };
+  return { t: s, sub: '' };
+}
+function rowsToCards(rows, map, hIdx) {
+  const out = [];
+  for (const r of rows.slice(hIdx + 1)) {
+    const c = {};
+    for (const f of FIELDS) { const i = map[f.key]; if (i == null || i === '') continue; let v = r[i]; if (v == null) continue; v = String(v).trim();
+      if (f.type === 'money' || f.type === 'number') { const n = num(v); if (n != null) c[f.key] = n; } else if (v) c[f.key] = v; }
+    if (!c.name) continue;
+    if (c.quantity == null) c.quantity = F.quantity?.default ?? 1;
+    if (TYPEF && c[TYPEF]) { const { t, sub } = normalizeType(c[TYPEF]); c[TYPEF] = t; if (sub && SUBF && !c[SUBF]) c[SUBF] = sub; }
+    out.push(c);
+  }
+  return out;
+}
+async function mergeCards(incoming, mode) {
+  const idx = new Map(S.cards.map(c => [identity(c), c])), agg = new Map();
+  for (const c of incoming) { const k = identity(c), e = agg.get(k); if (e) e.quantity = (num(e.quantity) || 0) + (num(c.quantity) || 0); else agg.set(k, { ...c }); }
+  let added = 0, updated = 0; const changed = [];
+  for (const [k, c] of agg) {
+    const ex = idx.get(k);
+    if (ex) { for (const f of FIELDS) { if (f.key === 'quantity') continue; const v = c[f.key]; if (v !== undefined && v !== null && v !== '') ex[f.key] = v; }
+      ex.quantity = mode === 'add' ? qtyOf(ex) + (num(c.quantity) || 0) : (num(c.quantity) ?? qtyOf(ex)); ex.updatedAt = Date.now(); changed.push(ex); updated++; }
+    else { const n = { id: uid(), ...c, createdAt: Date.now(), updatedAt: Date.now() }; S.cards.push(n); idx.set(k, n); changed.push(n); added++; }
+  }
+  await DB.putMany('cards', changed);
+  return { added, updated };
+}
+async function importTable(fileName, rows) {
+  if (!rows.length) { toast('That file looks empty.'); return; }
+  const hIdx = headerRowIndex(rows), headers = rows[hIdx].map(h => String(h ?? '').trim()), body = rows.slice(hIdx + 1);
+  const map = autoMap(headers);
+  const src = (CONFIG.sources || []).find(s => s.headers.every(h => headers.some(x => normH(x) === normH(h))));
+  const sample = i => { for (const r of body.slice(0, 40)) if (r[i] != null && String(r[i]).trim()) return String(r[i]).trim(); return ''; };
+  const opts = `<option value="">— skip —</option>` + headers.map((h, i) => `<option value="${i}">${esc(h || `Column ${i + 1}`)}</option>`).join('');
+  const flt = CONFIG.importFilter;
+  const fltCount = m => (!flt || m[flt.field] == null) ? 0 : body.filter(r => { const v = String(r[m[flt.field]] ?? '').trim(); return v && !flt.match.test(v); }).length;
+  const unmapped = headers.filter((h, i) => h && !Object.values(map).includes(i));
+  const mapping = `<div class="map"><div class="h">Binder field</div><div class="h">Column in your file</div><div class="h exh">Example value</div>
+    ${FIELDS.map(f => `<div class="lbl">${esc(f.label)}${f.required ? ' <em>*</em>' : ''}</div><select data-f="${f.key}">${opts}</select><div class="ex" data-ex="${f.key}"></div>`).join('')}</div>`;
+  const m = modal(`<div class="m-head"><h2>Import ${esc(fileName)}${src ? `<span class="badge">${ICON.check} ${esc(src.name)} export</span>` : ''}</h2>
+    <p>${fmtInt(body.length)} rows · ${headers.length} columns · ${Object.keys(map).length} matched automatically${unmapped.length ? ` · ${unmapped.length} unused (${unmapped.slice(0, 4).map(esc).join(', ')}${unmapped.length > 4 ? '…' : ''})` : ''}</p></div>
+    <div class="m-body"><details class="adv" ${map.name != null && src ? '' : 'open'}><summary>▸ Review column mapping</summary>${mapping}</details>
+      <div class="opts">
+        <div><b>Cards already in your binder</b> <span class="muted">(matched by ${CONFIG.identity.map(k => (F[k]?.label || k).toLowerCase()).join(' + ')})</span></div>
+        <div class="radio"><label><input type="radio" name="qm" value="replace" checked>Update quantity to match this file</label><label><input type="radio" name="qm" value="add">Add to existing quantity</label></div>
+        <label id="fltRow"><input type="checkbox" id="fltChk" checked><span>${esc(flt?.label || '')} <span class="muted" id="fltN"></span></span></label>
+      </div></div>
+    <div class="m-foot"><span class="muted grow" id="mWarn"></span><button class="btn" data-x>Cancel</button><button class="btn primary" data-go>Import ${fmtInt(body.length)} rows</button></div>`);
+  const sels = $$('select[data-f]', m.node);
+  const refresh = () => { const cur = {}; sels.forEach(s => { if (s.value !== '') cur[s.dataset.f] = +s.value; s.classList.toggle('auto', s.value !== ''); $(`[data-ex="${s.dataset.f}"]`, m.node).textContent = s.value !== '' ? sample(+s.value) : ''; });
+    const nm = fltCount(cur); $('#fltRow', m.node).style.display = nm ? '' : 'none'; $('#fltN', m.node).textContent = `(skips ${nm} other row${nm > 1 ? 's' : ''})`;
+    const ok = cur.name != null; $('[data-go]', m.node).disabled = !ok; $('#mWarn', m.node).textContent = ok ? '' : `Choose which column holds the ${(F.name?.label || 'name').toLowerCase()}.`; return cur; };
+  sels.forEach(s => { s.value = map[s.dataset.f] ?? ''; s.onchange = refresh; }); refresh();
+  const go = await new Promise(res => { $('[data-x]', m.node).onclick = () => res(false); $('[data-go]', m.node).onclick = () => res(true); m.onclose = () => res(false); });
+  if (!go) { m.close(); return; }
+  const cur = refresh(), mode = $('input[name=qm]:checked', m.node).value, useF = flt && $('#fltChk', m.node).checked && cur[flt.field] != null;
+  m.close();
+  let cards = rowsToCards(rows, cur, hIdx), skipped = 0;
+  if (useF) { const before = cards.length; cards = cards.filter(c => !c[flt.field] || flt.match.test(c[flt.field])); skipped = before - cards.length; }
+  const { added, updated } = await mergeCards(cards, mode);
+  renderToolbar(); renderMain();
+  toast(`Imported <b>${added}</b> new, <b>${updated}</b> updated${skipped ? ` · ${skipped} skipped` : ''}`);
+  requestPersist();
+  if (CONFIG.lookup && added && S.cards.some(c => CONFIG.lookup.needs(c))) setTimeout(() => toast(`Tip: <b>⋯ → ${esc(CONFIG.lookup.label)}</b> adds card types &amp; art`, 6000), 900);
+  return { added, updated, skipped };
+}
+async function handleFiles(fileList) {
+  const files = [...fileList], isImg = f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|avif)$/i.test(f.name);
+  for (const f of files.filter(f => !isImg(f))) {
+    try {
+      if (/\.json$/i.test(f.name)) await restoreBackup(f);
+      else if (/\.xlsx$/i.test(f.name)) await importTable(f.name, await parseXLSX(await f.arrayBuffer()));
+      else if (/\.(xls|numbers)$/i.test(f.name)) toast('That format isn\'t supported. Save it as .xlsx or .csv.', 5000);
+      else { const txt = await f.text();   // sniff: a backup renamed/shared as .txt still restores
+        if (/^\s*\{/.test(txt) && txt.includes('"cards"')) await restoreBackup(txt); else await importTable(f.name, parseCSV(txt)); }
+    } catch (e) { console.error(e); toast(`Couldn't read <b>${esc(f.name)}</b>: ${esc(e.message)}`, 6000); }
+  }
+  const imgs = files.filter(isImg); if (imgs.length) await importImages(imgs);
+}
+
+/* ───────────── Backup / export ───────────── */
+function download(name, data, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([data], { type })); a.download = name; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const blobToDataURL = b => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); });
+const stamp = () => new Date().toISOString().slice(0, 10);
+async function backupJSON() {
+  const images = {}, keys = await DB.keys('images');
+  for (const k of keys) { const b = await DB.get('images', k); if (b) images[k] = await blobToDataURL(b); }
+  return JSON.stringify({ app: CONFIG.id, version: 1, exportedAt: new Date().toISOString(), settings: S.set, cards: S.cards, images });
+}
+/* On phones, hand files to the share sheet (Files, AirDrop, Drive, email…); otherwise download. */
+async function deliverFile(name, data, type, title) {
+  if (isPhone() && navigator.canShare && navigator.share) {
+    let file = null;
+    for (const t of [type, 'text/plain']) { try { const f = new File([data], name, { type: t }); if (navigator.canShare({ files: [f] })) { file = f; break; } } catch {} }
+    if (file) {
+      const tryShare = async () => { try { await navigator.share({ files: [file], title }); return 'shared'; }
+        catch (e) { return e.name === 'AbortError' ? 'cancelled' : e.name === 'NotAllowedError' ? 'retry' : 'fail'; } };
+      let r = await tryShare();
+      if (r === 'retry') {   // the tap "expired" while the file was being prepared, so ask for a fresh tap
+        const v = await ask(title, 'Your file is ready. Share it to Files, AirDrop, Google Drive, email or another app, or download it.', [{ label: 'Download', value: 'dl' }, { label: 'Share…', value: 'share', cls: 'primary' }]);
+        r = v === 'share' ? await tryShare() : v === 'dl' ? 'fail' : 'cancelled';
+      }
+      if (r === 'shared' || r === 'cancelled') return r;
+    }
+  }
+  download(name, data, type); return 'downloaded';
+}
+async function exportBackup() {
+  const t = S.cards.length > 60 ? toast('Preparing backup…', 0) : null;
+  const json = await backupJSON(), n = (await DB.keys('images')).length; t && t.dismiss();
+  const r = await deliverFile(`${CONFIG.id}-backup-${stamp()}.json`, json, 'application/json', `${CONFIG.title} backup`);
+  if (r !== 'cancelled') toast(`Backup ${r === 'shared' ? 'shared' : 'saved'} · <b>${S.cards.length}</b> cards, ${n} photo${n === 1 ? '' : 's'}`);
+}
+async function restoreBackup(file, forced) {
+  const data = JSON.parse(typeof file === 'string' ? file : await file.text()); if (!Array.isArray(data.cards)) throw new Error('not a binder backup');
+  const choice = forced || await ask('Restore backup', `${data.cards.length} cards from ${data.exportedAt ? new Date(data.exportedAt).toLocaleString() : 'a backup'}${data.app && data.app !== CONFIG.id ? ` (made by “${esc(data.app)}”)` : ''}. Replace your current binder, or merge into it?`,
+    [{ label: 'Cancel' }, { label: 'Merge', value: 'merge' }, { label: 'Replace', value: 'replace', cls: 'primary' }]);
+  if (!choice) return;
+  if (choice === 'replace') { await DB.clear('cards'); await DB.clear('images'); S.imgs.forEach(u => URL.revokeObjectURL(u)); S.imgs.clear(); S.cards = []; }
+  for (const [k, d] of Object.entries(data.images || {})) { const b = await (await fetch(d)).blob(); await DB.put('images', b, k); if (S.imgs.has(k)) URL.revokeObjectURL(S.imgs.get(k)); S.imgs.set(k, URL.createObjectURL(b)); }
+  const byId = new Map(S.cards.map(c => [c.id, c])), changed = [];
+  for (const c of data.cards) { if (!c.id) c.id = uid(); const ex = byId.get(c.id); if (ex) Object.assign(ex, c); else { S.cards.push(c); byId.set(c.id, c); } changed.push(byId.get(c.id)); }
+  await DB.putMany('cards', changed);
+  renderToolbar(); renderMain(); toast(`Restored <b>${data.cards.length}</b> cards`); requestPersist();
+}
+function toCSV() {
+  const list = sortCards(filtered()), cols = FIELDS.filter(f => f.export !== false);
+  const q = v => { const s = String(v ?? ''); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const lines = [[...cols.map(f => f.label), 'Value', 'Total Value', 'Image'].map(q).join(',')];
+  list.forEach(c => lines.push([...cols.map(f => c[f.key]), valueOf(c).toFixed(2), (valueOf(c) * qtyOf(c)).toFixed(2), c.imageUrl || (c.imageId ? '(photo stored in binder)' : '')].map(q).join(',')));
+  return { csv: '\uFEFF' + lines.join('\r\n'), count: list.length };
+}
+async function exportCSV() {
+  const { csv, count } = toCSV();
+  const r = await deliverFile(`${CONFIG.id}-${stamp()}.csv`, csv, 'text/csv', `${CONFIG.title} (CSV)`);
+  if (r !== 'cancelled') toast(`Exported <b>${count}</b> cards to CSV${count !== S.cards.length ? ' (current filters)' : ''}`);
+}
+
+/* ───────────── Optional online lookup ───────────── */
+async function lookupOne(c, force) {
+  try { const r = await CONFIG.lookup.fetch(c); if (!r) return false;
+    for (const [k, v] of Object.entries(r)) if (v && (force || !c[k] || k === 'imageUrl')) c[k] = v;
+    c.updatedAt = Date.now(); await DB.put('cards', c); return true; } catch (e) { console.warn('lookup failed', c.name, e); return false; }
+}
+async function lookupAll(skipAsk) {
+  const todo = S.cards.filter(c => CONFIG.lookup.needs(c));
+  if (!todo.length) { toast('Every card already has its info.'); return; }
+  if (!skipAsk && !await ask(CONFIG.lookup.label, `${esc(CONFIG.lookup.note || '')}<br><br>${todo.length} card${todo.length > 1 ? 's' : ''} need info. Continue?`, [{ label: 'Cancel' }, { label: 'Look up', value: true, cls: 'primary' }])) return;
+  const t = toast(`Looking up… 0 / ${todo.length}`, 0); let ok = 0, i = 0, done = 0;
+  const cache = new Map();
+  const worker = async () => { while (i < todo.length) { const c = todo[i++]; if (await lookupOne(c)) ok++; done++; t.firstChild.textContent = `Looking up… ${done} / ${todo.length}`; await sleep(120); } };
+  await Promise.all([worker(), worker(), worker()]);
+  t.dismiss(); renderToolbar(); renderMain(); toast(ok ? `Updated <b>${ok}</b> of ${todo.length} cards` : 'Couldn\'t reach the lookup service. Are you online?', 4500);
+}
+
+/* ───────────── UI helpers: modal, sheet, ask, toast, menu ───────────── */
+function modal(inner, cls = '') {
+  const back = el(`<div class="modal-back"><div class="modal ${cls}" role="dialog" aria-modal="true">${inner}</div></div>`); document.body.append(back); lockScroll(1);
+  const api = { node: back, onclose: null, closed: false, close() { if (api.closed) return; api.closed = true; lockScroll(-1); back.remove(); document.removeEventListener('keydown', key, true); } };
+  const key = e => { if (e.key === 'Escape') { e.stopPropagation(); api.onclose && api.onclose(); api.close(); } };
+  document.addEventListener('keydown', key, true);
+  back.addEventListener('mousedown', e => { if (e.target === back) { api.onclose && api.onclose(); api.close(); } });
+  if (isPhone()) dragToClose($('.modal', back), [$('.m-head', back)].filter(Boolean), () => { api.onclose && api.onclose(); api.close(); });
+  return api;
+}
+function sheet(inner) {
+  const back = el(`<div class="sheet-back"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div></div>`);
+  document.body.append(back); lockScroll(1);
+  const panel = $('.sheet', back);
+  const api = { node: back, closed: false, close() { if (api.closed) return; api.closed = true; lockScroll(-1); document.removeEventListener('keydown', key, true);
+    back.classList.add('out'); setTimeout(() => back.remove(), 280); } };
+  const key = e => { if (e.key === 'Escape') { e.stopPropagation(); api.close(); } };
+  document.addEventListener('keydown', key, true);
+  back.addEventListener('click', e => { if (e.target === back || e.target.closest('[data-close]')) api.close(); });
+  dragToClose(panel, $$('.grab, .sh-head', panel), () => api.close());
+  return api;
+}
+function dragToClose(panel, handles, onClose) {
+  handles.forEach(h => {
+    h.style.touchAction = 'none';
+    h.addEventListener('pointerdown', e => {
+      if (e.target.closest('button,select,input,a,textarea')) return;
+      const y0 = e.clientY; let dy = 0; panel.classList.add('dragging'); try { h.setPointerCapture(e.pointerId); } catch {}
+      const mv = ev => { dy = Math.max(0, ev.clientY - y0); panel.style.transform = `translateY(${dy}px)`; };
+      const up = () => { h.removeEventListener('pointermove', mv); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up);
+        panel.classList.remove('dragging'); panel.style.transform = ''; if (dy > 90) onClose(); };
+      h.addEventListener('pointermove', mv); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
+    });
+  });
+}
+function ask(title, html, buttons) {
+  return new Promise(res => { const m = modal(`<div class="m-head"><h2>${esc(title)}</h2></div><div class="m-body"><p style="margin:0;color:var(--muted)">${html}</p></div>
+    <div class="m-foot">${buttons.map((b, i) => `<button class="btn ${b.cls || ''}" data-b="${i}">${esc(b.label)}</button>`).join('')}</div>`, 'sm');
+    m.onclose = () => res(undefined); $$('[data-b]', m.node).forEach(b => b.onclick = () => { m.close(); res(buttons[+b.dataset.b].value); });
+    setTimeout(() => $$('[data-b]', m.node).pop()?.focus(), 50); });
+}
+function toast(html, ms = 3200) {
+  const t = el(`<div class="toast"><span>${html}</span></div>`); $('#toasts').append(t);
+  t.dismiss = () => { t.classList.add('out'); setTimeout(() => t.remove(), 300); };
+  if (ms) setTimeout(t.dismiss, ms); return t;
+}
+function pickFiles(accept) { const p = $('#filePick'), def = p.accept; p.accept = accept; p.click(); setTimeout(() => { p.accept = def; }, 800); }
+function openImportSheet() {
+  const sh = sheet(`<div class="sh-head"><h3>Add to your binder</h3><button class="btn ghost" data-close>Cancel</button></div><div class="sh-list">
+    <button data-i="cam">${ICON.camera}<span>Take a photo<small>Snap a card with the camera</small></span></button>
+    <button data-i="photos">${ICON.image}<span>Choose photos<small>From your photo library</small></span></button>
+    <button data-i="file">${ICON.file}<span>Import a file<small>Collectr export (CSV), spreadsheet (CSV / XLSX) or a backup (JSON)</small></span></button>
+    <hr><button data-i="add">${ICON.plus}<span>Add a card by hand</span></button>
+    ${!S.cards.length && CONFIG.sampleCSV ? `<button data-i="sample">${ICON.sparkle}<span>Try sample data</span></button>` : ''}</div>`);
+  $$('[data-i]', sh.node).forEach(b => b.onclick = () => { const a = b.dataset.i; sh.close();
+    if (a === 'cam') $('#camPick').click(); if (a === 'photos') $('#photoPick').click(); if (a === 'file') $('#dataPick').click();
+    if (a === 'add') addBlankCard(); if (a === 'sample') importTable('sample-data.csv', parseCSV(CONFIG.sampleCSV)); });
+}
+function menuItems() {
+  const dark = document.documentElement.dataset.theme === 'dark', phone = isPhone();
+  return [
+    ['add', ICON.plus, 'Add a card manually'], ['photos', ICON.image, phone ? 'Add card photos' : 'Add card photos…'],
+    CONFIG.lookup && ['lookup', ICON.sparkle, CONFIG.lookup.label], '-',
+    ['csv', ICON.file, 'Export CSV'], ['backup', ICON.save, phone ? 'Back up / send to another device' : 'Back up (JSON, includes photos)'], ['restore', ICON.restore, 'Restore from backup…'], '-',
+    phone && ['theme', dark ? ICON.sun : ICON.moon, dark ? 'Light mode' : 'Dark mode'],
+    !isStandalone() && ['install', ICON.phone, 'Install on your phone'],
+    CONFIG.sampleCSV && ['sample', ICON.sparkle, 'Load sample data'], '-', ['clear', ICON.trash, 'Clear binder…', 'danger'],
+  ].filter(Boolean).filter((x, i, a) => x !== '-' || (i > 0 && a[i - 1] !== '-'));
+}
+function openMenu() {
+  if ($('.menu')) { $('.menu').remove(); return; }
+  const items = menuItems().map(x => x === '-' ? '<hr>' : `<button data-a="${x[0]}" class="${x[3] || ''}">${x[1]}<span>${esc(x[2])}</span></button>`).join('');
+  if (isPhone()) {
+    const sh = sheet(`<div class="sh-head"><h3>${esc(CONFIG.title)}</h3><button class="btn ghost" data-close>Close</button></div><div class="sh-list">${items}</div>`);
+    $('.sh-list', sh.node).onclick = e => { const b = e.target.closest('[data-a]'); if (!b) return; sh.close(); runMenu(b.dataset.a); };
+    return;
+  }
+  const r = $('#btnMenu').getBoundingClientRect();
+  const m = el(`<div class="menu" style="top:${r.bottom + 8}px;right:${Math.max(12, window.innerWidth - r.right)}px">${items}</div>`);
+  document.body.append(m);
+  const off = e => { if (!m.contains(e.target) && !$('#btnMenu').contains(e.target)) { m.remove(); document.removeEventListener('mousedown', off); } };
+  setTimeout(() => document.addEventListener('mousedown', off));
+  m.onclick = e => { const b = e.target.closest('[data-a]'); if (!b) return; m.remove(); document.removeEventListener('mousedown', off); runMenu(b.dataset.a); };
+}
+async function runMenu(a) {
+  if (a === 'add') addBlankCard();
+  if (a === 'photos') isPhone() ? $('#photoPick').click() : pickFiles('image/*');
+  if (a === 'lookup') lookupAll();
+  if (a === 'csv') exportCSV();
+  if (a === 'backup') exportBackup();
+  if (a === 'restore') isPhone() ? $('#dataPick').click() : pickFiles('.json,application/json');
+  if (a === 'theme') setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  if (a === 'install') showInstallHelp();
+  if (a === 'sample') importTable('sample-data.csv', parseCSV(CONFIG.sampleCSV));
+  if (a === 'clear') { const v = await ask('Clear binder?', `This removes all ${S.cards.length} cards and photos from this ${isPhone() ? 'device' : 'browser'}. Make a backup first if you might want them back.`, [{ label: 'Cancel' }, { label: 'Back up first', value: 'backup' }, { label: 'Clear everything', value: 'clear', cls: 'primary' }]);
+    if (v === 'backup') exportBackup();
+    if (v === 'clear') { await DB.clear('cards'); await DB.clear('images'); S.imgs.forEach(u => URL.revokeObjectURL(u)); S.imgs.clear(); S.cards = []; S.set.page = 0; closeDetail(); renderToolbar(); renderMain(); toast('Binder cleared'); } }
+}
+function setTheme(t) { document.documentElement.dataset.theme = t; S.set.theme = t; try { localStorage.setItem(CONFIG.id + '-theme', t); } catch {} saveSettings(); renderHeader(); }
+let dragDepth = 0; const hideDrop = () => { dragDepth = 0; $('#dropover').classList.remove('on'); };
+
+/* ───────────── Installable app (PWA): install hint, service worker, storage ───────────── */
+async function showInstallHelp() {
+  if (S.installEvt) { const ev = S.installEvt; S.installEvt = null; ev.prompt(); const r = await ev.userChoice.catch(() => null); if (r && r.outcome === 'accepted') toast('Installed. Find it on your home screen.'); return; }
+  if (isStandalone()) { toast('You\'re already using the installed app.'); return; }
+  const msg = !isPWA() ? `This single-file copy can't be installed. Put the <b>binder-web</b> folder on a free static host (see the README), open that link on your phone, and install it from there.`
+    : isIOS() ? `In Safari, tap <b>Share</b> ${ICON.shareIOS} and then <b>Add to Home Screen</b>. The binder will open full-screen and work offline.`
+    : `Open the browser menu <b>⋮</b> and choose <b>Install app</b> (or <b>Add to Home screen</b>). The binder will open like an app and work offline.`;
+  await ask('Install on your phone', `${msg}<br><br><span style="font-size:12.5px">Each device keeps its own copy of your collection. To move cards between devices, use <b>⋯ → Back up</b> on one and <b>Restore</b> on the other.</span>`, [{ label: 'Got it', cls: 'primary' }]);
+}
+function maybeShowInstallHint() {
+  if (!isPWA() || isStandalone() || !isPhone() || $('.install-hint')) return;
+  let dismissed = false; try { dismissed = !!localStorage.getItem(CONFIG.id + '-install-hint'); } catch {}
+  if (dismissed || (!isIOS() && !S.installEvt)) return;
+  const h = el(`<div class="install-hint" role="status"><div class="logo">${esc(CONFIG.logo || '✦')}</div>
+    <div class="ih-t"><b>Install on your phone</b><span>${isIOS() ? `Tap Share ${ICON.shareIOS} then “Add to Home Screen”` : 'Opens full-screen and works offline'}</span></div>
+    ${S.installEvt ? '<button class="btn primary" data-act="install">Install</button>' : ''}<button class="btn icon ghost" data-act="x" aria-label="Dismiss">${ICON.close}</button></div>`);
+  document.body.append(h);
+  h.onclick = e => { const a = e.target.closest('[data-act]')?.dataset.act; if (!a) return; if (a === 'install') showInstallHelp();
+    try { localStorage.setItem(CONFIG.id + '-install-hint', '1'); } catch {} h.remove(); };
+}
+function registerSW() {
+  if (!isPWA() || !('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.register(window.BINDER_PWA.sw || './sw.js').then(reg => {
+    S.swReg = reg;
+    const notify = () => { if ($('.toast .tbtn')) return; const t = toast('A new version of the binder is ready <button class="tbtn">Update</button>', 0);
+      $('.tbtn', t).onclick = () => { S.wantReload = true; (reg.waiting || reg.installing)?.postMessage('skipWaiting'); t.dismiss(); }; };
+    if (reg.waiting && navigator.serviceWorker.controller) notify();
+    reg.addEventListener('updatefound', () => { const nw = reg.installing; nw && nw.addEventListener('statechange', () => { if (nw.state === 'installed' && navigator.serviceWorker.controller) notify(); }); });
+  }).catch(e => console.warn('Service worker registration failed', e));
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (S.wantReload) { S.wantReload = false; location.reload(); } });
+}
+function requestPersist() {   // ask the browser not to evict the collection under storage pressure
+  try { navigator.storage?.persisted?.().then(p => p || navigator.storage.persist()).catch(() => {}); } catch {}
+}
+
+/* ───────────── Boot ───────────── */
+async function boot() {
+  const R = document.documentElement.style, T = CONFIG.theme || {};
+  T.accentLight && R.setProperty('--accent-l', T.accentLight); T.accentDark && R.setProperty('--accent-d', T.accentDark);
+  T.coverLight && R.setProperty('--cover-l', T.coverLight); T.coverDark && R.setProperty('--cover-d', T.coverDark);
+  T.titleFont && R.setProperty('--title', T.titleFont); CONFIG.cardAspect && R.setProperty('--card-aspect', CONFIG.cardAspect);
+  document.title = CONFIG.title;
+  let th = null; try { th = localStorage.getItem(CONFIG.id + '-theme'); } catch {}
+  document.documentElement.dataset.theme = th || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  renderHeader();
+  await DB.open();
+  try {
+    const st = await DB.get('meta', 'settings'); if (st) Object.assign(S.set, st, { q: '' });
+    if (S.set.theme && !th) document.documentElement.dataset.theme = S.set.theme;
+    S.cards = (await DB.all('cards')) || [];
+    const keys = (await DB.keys('images')) || [];
+    for (const k of keys) { const b = await DB.get('images', k); if (b) S.imgs.set(k, URL.createObjectURL(b)); }
+  } catch (e) { console.error(e); toast('Could not load saved data: ' + esc(e.message)); }
+  if (!CONFIG.sortOptions.some(o => o.key === S.set.sort)) S.set.sort = CONFIG.sortOptions[0].key;
+  if (!(CONFIG.groupOptions || []).some(o => o.key === S.set.group)) S.set.group = 'none';
+  $('#btnImport').onclick = () => (isPhone() ? openImportSheet() : $('#filePick').click());
+  ['#filePick', '#camPick', '#photoPick', '#dataPick'].forEach(id => { $(id).onchange = e => { const f = [...e.target.files]; e.target.value = ''; if (f.length) handleFiles(f); }; });
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); S.installEvt = e; maybeShowInstallHint(); });
+  window.addEventListener('appinstalled', () => { S.installEvt = null; $('.install-hint')?.remove(); });
+  registerSW(); setTimeout(maybeShowInstallHint, 2500);
+  $('#btnTheme').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  $('#btnMenu').onclick = openMenu;
+  $('#scrim').onclick = closeDetail;
+  document.addEventListener('click', e => { const o = e.target.closest('[data-open]'); if (o && !e.target.closest('.drawer') && !(S.swiped && Date.now() - S.swiped < 400)) openDetail(o.dataset.open); });
+  document.addEventListener('keydown', e => {
+    const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
+    if ($('.modal-back')) return;
+    if (e.key === 'Escape' && S.openId) { closeDetail(); return; }
+    if (typing) return;
+    if (e.key === '/' && $('#q')) { e.preventDefault(); $('#q').focus(); }
+    if (!S.openId && S.set.view === 'binder') { if (e.key === 'ArrowRight') flip(1); if (e.key === 'ArrowLeft') flip(-1); }
+  });
+  window.addEventListener('dragenter', e => { if (![...(e.dataTransfer?.types || [])].includes('Files')) return; e.preventDefault(); dragDepth++; $('#dropover').classList.add('on'); });
+  window.addEventListener('dragleave', () => { if (--dragDepth <= 0) hideDrop(); });
+  window.addEventListener('dragover', e => e.preventDefault());
+  window.addEventListener('drop', e => { e.preventDefault(); hideDrop(); if (e.dataTransfer?.files?.length) handleFiles(e.dataTransfer.files); });
+  let lastTwo = twoUp(); window.addEventListener('resize', debounce(() => { if (twoUp() !== lastTwo) { lastTwo = twoUp(); if (S.set.view === 'binder') renderMain(); } else fitBinder(); }, 150));
+  document.addEventListener('mousemove', e => { const cf = e.target.closest?.('.cf.shiny'); if (!cf || cf.closest('.d-img')) return; const r = cf.getBoundingClientRect(); cf.style.setProperty('--sx', ((e.clientX - r.left) / r.width) * 100 + '%'); cf.style.setProperty('--sy', ((e.clientY - r.top) / r.height) * 100 + '%'); });
+  renderToolbar(); renderMain();
+  S.ready = true;
+}
+/* Small hook for scripted tests / power users (open DevTools → Binder). */
+window.Binder = { S, CONFIG, isPhone, deliverFile, openImportSheet, openFilterSheet, openMenu, parseCSV, parseXLSX, autoMap, rowsToCards, mergeCards, identity, buildPages, grouped, sortCards, filtered, totals, DB, importTable, handleFiles, toCSV, backupJSON, restoreBackup, openDetail, closeDetail, flip, lookupAll };
+boot();
+</script>
+</body>
+</html>
