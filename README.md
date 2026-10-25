@@ -5,7 +5,7 @@ This folder is a complete static web app (PWA). You don't need a server-side bac
 ```
 index.html            the app (same code as the single-file version)
 manifest.webmanifest  name, colours, icons → makes it installable
-sw.js                 service worker: offline app shell + card-art cache
+sw.js                 service worker: offline app shell + card-art cache + text-reader (OCR) cache
 icons/                192/512 icons, maskable icons, apple-touch-icon (180)
 ```
 
@@ -14,6 +14,12 @@ icons/                192/512 icons, maskable icons, apple-touch-icon (180)
 - **Android (Chrome):** tap **Install** in the bottom hint, or use the ⋯ menu, then **Install app**.
 
 After the first visit it works fully offline.
+
+## Scanning binder pages
+**Import → Scan binder page** photographs a 9-pocket page (or 12-pocket, 2 × 2, a single card). The app reads each card's set
+code and name, looks up the exact printing on db.ygoprodeck.com and shows a review screen. Nothing is added until you tap
+**Add**. The first scan downloads the text reader (~7 MB, Tesseract.js from cdn.jsdelivr.net). The service worker caches it,
+so later scans only need internet for the card lookups.
 
 ## Your data
 Your cards are stored **on the device** in the browser's IndexedDB, and each phone or computer has its own copy. To move or back up your collection, use ⋯ → **Backup (JSON)**. On phones this opens the share sheet. Then use ⋯ → **Restore backup** on the other device.
