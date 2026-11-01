@@ -548,6 +548,371 @@ details.adv summary::-webkit-details-marker{display:none}
 
 .sc-warn{font-size:12px;color:var(--warn,#b45309);margin:4px 0 0}
 .sc-find[hidden],.sc-warn[hidden]{display:none!important}
+/* ════════════════════════════════════════════════════════════════════════════════════════════════
+   "Royal" design layer (loaded after the base styles): the same look as Deck Lab — deep indigo chrome with a gold
+   hairline, gray harlequin backdrop, white layered panels, gold primary buttons, type-coloured sleeved card frames —
+   plus the binder itself: leather cover, 3-ring spine, plastic pocket pages, page edges, holo foils.
+   Chrome colours come from --cover (CONFIG.theme.cover*) and --gold, so other games can re-tint it.
+   ════════════════════════════════════════════════════════════════════════════════════════════════ */
+:root{
+  --gold:#9c6c08; --gold-hi:#f5d06a; --gold-lo:#c8901c;
+  --bg:#c6c8cd; --bg2:#e4e8f3; --surface:#ffffff; --surface2:#f1f3fa; --surface3:#e4e8f3;
+  --text:#12162f; --muted:#575e80; --faint:#8b91ad;
+  --border:rgba(28,36,96,.13); --border2:rgba(28,36,96,.22);
+  --accent:var(--accent-l,#3a44cf); --accent-ink:#fff; --accent-soft:color-mix(in srgb,var(--accent) 11%,transparent);
+  --cover:var(--cover-l,#1c2361);
+  --pane:linear-gradient(180deg,#ffffff 0%,#fafbfe 60%,#f5f7fc 100%);
+  --well:linear-gradient(180deg,#e9ecf5,#f1f3f9 40%,#f4f6fb);
+  --shadow-sm:inset 0 1px 0 #fff,0 1px 2px rgba(20,26,70,.1);
+  --shadow:inset 0 1px 0 #fff,0 0 0 1px rgba(28,36,96,.03),0 1px 2px rgba(20,26,70,.08),0 10px 28px -12px rgba(20,26,70,.28);
+  --shadow-lg:0 30px 80px -20px rgba(14,18,52,.45),0 10px 30px -10px rgba(14,18,52,.25);
+  --sans:"SF Pro Text",-apple-system,BlinkMacSystemFont,Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --paper:#f4f6fb; --pocket:#e6e9f2; --sheet:#eef0f6;
+  --chrome-a:color-mix(in srgb,var(--cover) 82%,#6b78ff 18%); --chrome-b:var(--cover); --chrome-c:color-mix(in srgb,var(--cover) 85%,#000);
+}
+[data-theme="dark"]{
+  --gold:#e9b949; --gold-hi:#f0c45a; --gold-lo:#c48a22;
+  --bg:#0c0c11; --bg2:#1a1a23; --surface:#14141b; --surface2:#1a1a23; --surface3:#23232e;
+  --text:#ececf3; --muted:#8e8c9e; --faint:#5f5e70;
+  --border:rgba(255,255,255,.065); --border2:rgba(255,255,255,.11);
+  --accent:var(--accent-d,#a58bff); --accent-ink:#0c0c11;
+  --cover:var(--cover-d,#141838);
+  --pane:linear-gradient(180deg,rgba(255,255,255,.022),transparent 120px),#14141b;
+  --well:rgba(0,0,0,.22);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 1px 2px rgba(0,0,0,.4),0 8px 26px rgba(0,0,0,.28);
+  --shadow-lg:0 30px 80px -20px rgba(0,0,0,.8),0 10px 30px -10px rgba(0,0,0,.5);
+  --paper:#1b1c27; --pocket:#13141c; --sheet:#1d1f2b;
+  --chrome-a:#1d1f3a; --chrome-b:#14152a; --chrome-c:#0d0e1c;
+}
+body{font-size:13.5px;letter-spacing:-.003em;
+  background:
+    radial-gradient(1200px 560px at 50% -260px,rgba(255,255,255,.55),transparent 70%),
+    radial-gradient(900px 500px at 0% -100px,rgba(70,82,225,.10),transparent 65%),
+    linear-gradient(180deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,0) 45%,rgba(30,34,48,.10) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='88' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23bcbfc4'/%3E%3Cg stroke='%23b0b3b9' stroke-width='.6'%3E%3Cpath d='M16 0L32 16L16 32L0 16Z M48 32L64 48L48 64L32 48Z' fill='%23d2d4d8'/%3E%3Cpath d='M48 0L64 16L48 32L32 16Z M16 32L32 48L16 64L0 48Z' fill='%23c7c9cd'/%3E%3C/g%3E%3Cg fill='%23858990' opacity='.35'%3E%3Ccircle cx='32' cy='32' r='1.1'/%3E%3Ccircle cx='0' cy='0' r='1.1'/%3E%3Ccircle cx='64' cy='0' r='1.1'/%3E%3Ccircle cx='0' cy='64' r='1.1'/%3E%3Ccircle cx='64' cy='64' r='1.1'/%3E%3C/g%3E%3C/svg%3E") 0 0/88px 88px,
+    #c4c6cb;
+  background-attachment:fixed}
+[data-theme="dark"] body{background:radial-gradient(1100px 520px at 10% -200px,rgba(109,74,255,.13),transparent 65%),radial-gradient(900px 480px at 100% -160px,rgba(233,185,73,.07),transparent 62%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='88' viewBox='0 0 64 64'%3E%3Cg stroke='%23ffffff' stroke-opacity='.035' stroke-width='.7' fill='none'%3E%3Cpath d='M16 0L32 16L16 32L0 16Z M48 32L64 48L48 64L32 48Z M48 0L64 16L48 32L32 16Z M16 32L32 48L16 64L0 48Z'/%3E%3C/g%3E%3C/svg%3E") 0 0/88px 88px,#0c0c11;background-attachment:fixed}
+::selection{background:color-mix(in srgb,var(--accent) 28%,transparent)}
+:focus-visible{outline:2px solid color-mix(in srgb,var(--accent) 70%,transparent);outline-offset:1px}
+
+/* ── Header: indigo bar, gold hairline ── */
+header.top{background:linear-gradient(180deg,var(--chrome-a) 0%,var(--chrome-b) 52%,var(--chrome-c) 100%);backdrop-filter:none;-webkit-backdrop-filter:none;
+  border-bottom:1px solid #0c1036;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 1px 0 rgba(232,186,72,.65),0 8px 22px -8px rgba(10,14,60,.55);color:#eef0ff}
+header.top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;pointer-events:none;opacity:.75;
+  background:linear-gradient(90deg,transparent,rgba(255,214,110,.95) 30%,rgba(255,214,110,.95) 70%,transparent)}
+.top-inner{padding:9px 20px}
+.logo{width:34px;height:34px;border-radius:10px;font-size:18px;color:#1d1405;background:linear-gradient(150deg,#fbe08e 0%,#d9a332 45%,#a8740f 80%,#e6be5a 100%);
+  box-shadow:0 0 0 1px rgba(10,13,36,.6),inset 0 1px 0 rgba(255,255,255,.6),0 2px 10px rgba(240,190,70,.45)}
+.brand h1{font-family:var(--sans);font-weight:760;font-size:17px;letter-spacing:-.01em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.brand p{color:rgba(222,227,255,.7);font-size:11.5px}
+.stats{gap:6px}
+.stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.1);border-radius:9px;padding:4px 11px;min-width:78px;color:#fff}
+.stat b{font-size:14px;color:#fff}.stat span{color:rgba(222,227,255,.68);font-size:9.5px}
+.stat.value b{color:var(--gold-hi)}
+header.top .gain-pos{color:#6be3a0}header.top .gain-neg{color:#ff8a9b}
+.gain-pos{color:#10804a}.gain-neg{color:#c0283f}
+[data-theme="dark"] .gain-pos{color:#4ade80}[data-theme="dark"] .gain-neg{color:#ff6b81}
+header.top .btn:not(.primary){background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.07));border-color:rgba(255,255,255,.2);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 1px 2px rgba(0,0,0,.3)}
+header.top .btn:not(.primary):hover{background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.11));border-color:rgba(255,255,255,.26)}
+
+/* ── Buttons & controls ── */
+.btn{height:34px;border-radius:9px;font-weight:600;font-size:13px;background:linear-gradient(180deg,#ffffff,#eef1f8);border:1px solid var(--border2);color:var(--text);
+  box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(20,26,70,.1)}
+.btn:hover{background:linear-gradient(180deg,#ffffff,#e6eaf5);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.btn.primary,header.top .btn.primary{background:linear-gradient(180deg,var(--gold-hi),var(--gold-lo));border:1px solid rgba(0,0,0,.18);color:#1d1405;font-weight:680;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(0,0,0,.25),0 6px 18px -6px rgba(233,185,73,.55)}
+.btn.primary:hover{background:linear-gradient(180deg,#f7d478,#d39b30);border-color:rgba(0,0,0,.18)}
+.btn.ghost{background:transparent;box-shadow:none;border-color:transparent}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.danger{color:#c0283f}
+.btn.icon{width:34px}
+[data-theme="dark"] .btn:not(.primary){background:linear-gradient(180deg,#22222d,#1a1a23);border-color:var(--border2);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 1px 2px rgba(0,0,0,.4)}
+[data-theme="dark"] .btn:not(.primary):hover{background:linear-gradient(180deg,#2a2a37,#20202a)}
+[data-theme="dark"] .btn.ghost{background:transparent;box-shadow:none}
+.toolbar{margin-top:14px;padding:8px 10px;border:1px solid var(--border2);border-radius:14px;background:var(--pane);box-shadow:var(--shadow);max-width:calc(1400px - 48px)}
+.filterbar{margin-top:6px}
+.search input,.sel select{height:34px;border-radius:9px;border:1px solid var(--border2);background:var(--surface);box-shadow:inset 0 1px 2px rgba(20,26,70,.08)}
+.search svg{top:9px}.search kbd{top:8px}
+.search input:focus{border-color:color-mix(in srgb,var(--accent) 60%,transparent);box-shadow:0 0 0 3px var(--accent-soft)}
+.sel::after{top:14px}
+.sel label{background:var(--surface);color:var(--muted);top:-7px;border-radius:4px}
+.chips,.seg{background:linear-gradient(180deg,#e2e6f1,#eaedf5);border:1px solid var(--border2);box-shadow:inset 0 1px 2px rgba(20,26,70,.1);border-radius:10px}
+.chip,.seg button{height:28px;font-weight:600;color:var(--muted)}
+.chip.on,.seg button.on{background:linear-gradient(180deg,#fff,#f6f7fc);color:var(--cover);box-shadow:0 1px 2px rgba(20,26,70,.18),0 0 0 1px rgba(28,36,96,.1)}
+.seg button.on svg{color:var(--gold-lo)}
+[data-theme="dark"] .chips,[data-theme="dark"] .seg{background:rgba(0,0,0,.25);box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+[data-theme="dark"] .chip.on,[data-theme="dark"] .seg button.on{background:var(--surface3);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.3),inset 0 0 0 1px var(--border2)}
+[data-theme="dark"] .search input,[data-theme="dark"] .sel select{background:var(--surface2)}
+.sel.sm select{background:rgba(255,255,255,.65);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(20,26,70,.08)}
+[data-theme="dark"] .sel.sm select{background:rgba(255,255,255,.04)}
+.subbar{color:#2c3150;font-weight:500}
+.subbar>span:first-child{padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.72);border:1px solid var(--border);box-shadow:0 1px 2px rgba(20,26,70,.08)}
+[data-theme="dark"] .subbar{color:var(--muted)}[data-theme="dark"] .subbar>span:first-child{background:rgba(255,255,255,.04)}
+.subbar .clear{color:var(--accent)}
+.toggle input:checked{background:var(--accent)}
+
+/* art progress / retry */
+.art-status:empty{display:none}
+.art-run{display:inline-flex;align-items:center;gap:8px;padding:3px 10px 3px 8px;border-radius:99px;background:rgba(255,255,255,.85);border:1px solid color-mix(in srgb,var(--gold-lo) 45%,transparent);
+  box-shadow:0 1px 2px rgba(20,26,70,.08);font-variant-numeric:tabular-nums;color:var(--text)}
+[data-theme="dark"] .art-run{background:rgba(255,255,255,.05)}
+.art-run .spin{width:12px;height:12px;border-radius:50%;border:2px solid color-mix(in srgb,var(--gold-lo) 30%,transparent);border-top-color:var(--gold-lo);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.art-bar{width:70px;height:5px;border-radius:5px;background:color-mix(in srgb,var(--gold-lo) 18%,transparent);overflow:hidden}
+.art-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi));transition:width .3s}
+.art-btn{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:99px;font-size:12px;font-weight:650;
+  border:1px solid rgba(0,0,0,.15);background:linear-gradient(180deg,var(--gold-hi),var(--gold-lo));color:#1d1405;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(0,0,0,.2)}
+.art-btn svg{width:13px;height:13px}
+.art-btn.quiet{background:rgba(255,255,255,.75);color:var(--muted);border-color:var(--border2);box-shadow:0 1px 2px rgba(20,26,70,.08)}
+[data-theme="dark"] .art-btn.quiet{background:rgba(255,255,255,.05)}
+.art-btn.quiet:hover{color:var(--text);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+
+/* ── Card faces: sleeved, type-coloured frames (Deck Lab card frames) ── */
+.cf{--fa:color-mix(in srgb,var(--tc) 55%,#fff);--fb:color-mix(in srgb,var(--tc) 70%,#000);--fw:3px;--fr:7px;border-radius:var(--fr);overflow:visible;
+  background:linear-gradient(155deg,var(--fa) 0%,color-mix(in srgb,var(--fa) 55%,var(--fb)) 45%,var(--fb) 100%);
+  box-shadow:0 0 0 1px rgba(10,13,36,.62),inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(0,0,0,.28),0 1px 2px rgba(10,13,40,.28),0 6px 14px -5px rgba(10,13,40,.42)}
+.cf[data-ft^=effect]{--fa:#eaa45c;--fb:#9c4f19}.cf[data-ft^=normal]{--fa:#ecd08a;--fb:#a67b2a}.cf[data-ft^=ritual]{--fa:#86b0f0;--fb:#2c5299}
+.cf[data-ft^=fusion]{--fa:#bf93e4;--fb:#5b2c88}.cf[data-ft^=synchro]{--fa:#ffffff;--fb:#9aa0b0}.cf[data-ft^=xyz]{--fa:#6b6f80;--fb:#15161e}
+.cf[data-ft=link]{--fa:#6aa2e8;--fb:#1b4688}.cf[data-ft=spell]{--fa:#48c9ae;--fb:#0c6e5d}.cf[data-ft=trap]{--fa:#e07db4;--fb:#86245d}
+.cf[data-ft$=_pendulum]{--fb:#128a74}.cf[data-ft=token],.cf[data-ft=skill]{--fa:#c9cdd8;--fb:#6c7286}
+.cf .ph,.cf img.art{position:absolute;inset:var(--fw);width:calc(100% - var(--fw) * 2);height:calc(100% - var(--fw) * 2);border-radius:calc(var(--fr) - var(--fw) + 1px);overflow:hidden}
+.cf img.art{object-fit:cover;display:block;z-index:1}
+.cf::before{content:"";position:absolute;inset:var(--fw);border-radius:calc(var(--fr) - var(--fw) + 1px);pointer-events:none;z-index:2;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.16);
+  background:linear-gradient(128deg,rgba(255,255,255,.26) 0%,rgba(255,255,255,.06) 26%,transparent 42%,transparent 78%,rgba(255,255,255,.07) 100%)}
+.cf .qty{z-index:4;right:7%;bottom:5%;background:rgba(14,18,52,.86);border:1px solid rgba(255,214,110,.45);color:#fff}
+.ph-kind .ph-art{font-size:2.6em;color:rgba(255,255,255,.9)}
+.ph-kind{background:linear-gradient(160deg,#5b6488 0%,#353c5f 55%,#1f2440 100%)}
+.ph-name{font-family:var(--sans);font-weight:700}
+
+/* holo foil: rainbow / sheen that follows the pointer, plus a glare spot */
+.cf.shiny::after{inset:var(--fw);border-radius:calc(var(--fr) - var(--fw) + 1px);z-index:3;mix-blend-mode:color-dodge;opacity:0;transition:opacity .35s;
+  background:radial-gradient(circle at var(--sx,50%) var(--sy,30%),rgba(255,255,255,.55),transparent 38%),
+    linear-gradient(115deg,transparent 18%,rgba(255,226,140,.45) 34%,rgba(255,255,255,.2) 42%,rgba(255,226,140,.35) 50%,transparent 66%);
+  background-size:100% 100%,250% 250%;background-position:0 0,var(--sx,50%) var(--sy,50%)}
+.cf[data-foil="2"]::after{background:radial-gradient(circle at var(--sx,50%) var(--sy,30%),rgba(255,255,255,.55),transparent 36%),
+    linear-gradient(115deg,transparent 14%,rgba(255,120,200,.42) 28%,rgba(255,236,120,.42) 38%,rgba(120,255,190,.42) 48%,rgba(110,190,255,.45) 58%,rgba(190,130,255,.42) 68%,transparent 84%);
+  background-size:100% 100%,260% 260%}
+@media (hover:hover){.cf.shiny:hover::after{opacity:.85}}
+
+/* ── Binder ── */
+.binder-wrap{gap:16px}
+.flipbtn{border:1px solid var(--border2);background:linear-gradient(180deg,#ffffff,#eef1f8);box-shadow:inset 0 1px 0 #fff,0 2px 6px rgba(20,26,70,.18),0 10px 22px -10px rgba(20,26,70,.4);color:var(--cover)}
+[data-theme="dark"] .flipbtn{background:linear-gradient(180deg,#22222d,#1a1a23);color:var(--text)}
+.flipbtn:hover{color:var(--gold-lo)}
+.binder{position:relative;padding:20px 22px;border-radius:20px;
+  background:
+    radial-gradient(130% 90% at 25% 0%,rgba(255,255,255,.12),transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg,color-mix(in srgb,var(--cover) 80%,#4b57e6 20%),var(--cover) 45%,color-mix(in srgb,var(--cover) 82%,#000));
+  box-shadow:var(--shadow-lg),inset 0 0 0 1px rgba(255,255,255,.08),inset 0 2px 0 rgba(255,255,255,.12),inset 0 -3px 0 rgba(0,0,0,.25)}
+/* stitched edge + gold corner guards */
+.binder::before{content:"";position:absolute;inset:7px;border-radius:15px;border:1.5px dashed rgba(245,208,106,.32);pointer-events:none}
+.binder::after{content:"";position:absolute;inset:0;border-radius:20px;pointer-events:none;z-index:9;
+  background:
+    linear-gradient(135deg,#e6be5a 0 13px,#a8740f 13px 15px,transparent 15.5px) top left/30px 30px no-repeat,
+    linear-gradient(225deg,#e6be5a 0 13px,#a8740f 13px 15px,transparent 15.5px) top right/30px 30px no-repeat,
+    linear-gradient(45deg,#d9a332 0 13px,#8f630c 13px 15px,transparent 15.5px) bottom left/30px 30px no-repeat,
+    linear-gradient(315deg,#d9a332 0 13px,#8f630c 13px 15px,transparent 15.5px) bottom right/30px 30px no-repeat}
+.spread{perspective:2400px}
+.spread::after{width:44px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.2) 35%,rgba(0,0,0,.34) 50%,rgba(0,0,0,.2) 65%,transparent);z-index:5}
+.page{background:
+    linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0) 30%),
+    var(--sheet);
+  box-shadow:inset 0 0 0 1px rgba(28,36,96,.1),0 1px 0 rgba(255,255,255,.4);padding:4.6% 4.6% 3.2%}
+[data-theme="dark"] .page{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0) 30%),var(--sheet);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.page.left{border-radius:12px 4px 4px 12px}.page.right{border-radius:4px 12px 12px 4px}.binder.single .page{border-radius:4px 12px 12px 4px}
+.page.left::before{background:linear-gradient(90deg,transparent,rgba(20,26,70,.08))}
+.page.right::before{background:linear-gradient(270deg,transparent,rgba(20,26,70,.1))}
+.binder.single .page::before{left:0;right:auto;width:9%;background:linear-gradient(270deg,transparent,rgba(20,26,70,.1))}
+/* punched holes on the spine side of each sheet */
+.holes{position:absolute;top:0;bottom:0;width:20px;pointer-events:none;z-index:1}
+.page.left .holes{right:4px}.page.right .holes,.binder.single .page .holes{left:4px}
+.holes i{position:absolute;left:4px;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#1a1f45 0 55%,rgba(26,31,69,.6) 70%,transparent 72%);
+  box-shadow:0 1px 0 rgba(255,255,255,.75)}
+.holes i:nth-child(1){top:calc(18% - 5px)}.holes i:nth-child(2){top:calc(50% - 5px)}.holes i:nth-child(3){top:calc(82% - 5px)}
+/* rings */
+.rings{position:absolute;top:0;bottom:0;left:50%;width:0;z-index:8;pointer-events:none}
+.rings i{position:absolute;left:-26px;width:52px;height:17px;border-radius:9px;
+  background:linear-gradient(180deg,#fbfcff 0%,#d9dce6 22%,#9aa0b2 50%,#6a7084 62%,#c9cdd8 82%,#f2f3f7 100%);
+  box-shadow:0 0 0 1px rgba(10,13,36,.55),0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.9)}
+.rings i::after{content:"";position:absolute;left:8px;right:8px;top:5px;height:4px;border-radius:3px;background:rgba(10,13,36,.35);box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
+.rings i:nth-child(1){top:calc(18% - 8px)}.rings i:nth-child(2){top:calc(50% - 8px)}.rings i:nth-child(3){top:calc(82% - 8px)}
+.binder.single .rings{left:0}
+.binder.single .rings i{left:-30px;width:44px}
+.binder.single{padding-left:30px}
+.binder.closed .rings{display:none}
+/* page edges: a thicker stack on the side with more pages */
+.edges{position:absolute;top:26px;bottom:26px;width:calc(var(--k,0) * 2px);z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,#fbfcff 0 1px,#b9bfcf 1px 2px);border-radius:2px;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+[data-theme="dark"] .edges{background:repeating-linear-gradient(90deg,#30324a 0 1px,#16172a 1px 2px)}
+.edges.l{left:calc(22px - var(--k,0) * 2px)}.edges.r{right:calc(22px - var(--k,0) * 2px)}
+.binder.single .edges.l{display:none}.binder.single .edges.r{right:calc(22px - var(--k,0) * 2px)}
+/* pockets: clear plastic sleeves welded into the sheet */
+.pockets{gap:clamp(6px,1.5vw,12px)}
+.pocket{border-radius:7px;background:linear-gradient(180deg,rgba(28,36,96,.07),rgba(28,36,96,.04));
+  box-shadow:inset 0 1px 3px rgba(10,13,40,.16),inset 0 0 0 1px rgba(28,36,96,.12),0 1px 0 rgba(255,255,255,.8)}
+[data-theme="dark"] .pocket{background:rgba(0,0,0,.28);box-shadow:inset 0 1px 3px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.05)}
+.pocket::after{border-radius:7px;border-top:0;z-index:5;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.55) 0,rgba(255,255,255,.18) 3px,transparent 6px),
+    linear-gradient(122deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.06) 24%,transparent 38%,transparent 68%,rgba(255,255,255,.1) 84%,rgba(255,255,255,.22) 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+[data-theme="dark"] .pocket::after{background:linear-gradient(180deg,rgba(255,255,255,.14) 0,transparent 5px),linear-gradient(122deg,rgba(255,255,255,.09) 0%,transparent 30%,transparent 70%,rgba(255,255,255,.05));box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.pocket .cf{inset:4%;--fw:2.5px;--fr:6px;transform-style:preserve-3d}
+@media (hover:hover){
+  .pocket .cf:hover,.tile:hover .cf{transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-3px) scale(1.045);
+    box-shadow:0 0 0 1px rgba(10,13,36,.62),inset 0 1px 0 rgba(255,255,255,.6),0 4px 8px rgba(10,13,40,.25),0 18px 30px -10px rgba(10,13,40,.55);transition:transform .12s ease-out,box-shadow .3s}
+}
+/* phones: foils catch the light now and then */
+@media (hover:none){
+  .pocket .cf.shiny::after{animation:foilSweep 7s var(--ease) infinite;animation-delay:var(--fd,0s)}
+  @keyframes foilSweep{0%,62%,100%{opacity:0;background-position:0 0,0% 0%}72%{opacity:.75}86%{opacity:0;background-position:0 0,100% 100%}}
+}
+.page-head{min-height:20px}
+.page-head .tab{font-family:var(--sans);font-size:11.5px;font-weight:700;color:var(--gold-hi);background:linear-gradient(180deg,color-mix(in srgb,var(--cover) 75%,#4b57e6),var(--cover));
+  padding:2px 10px;border-radius:6px;box-shadow:0 0 0 1px rgba(10,13,36,.4),inset 0 1px 0 rgba(255,255,255,.18);max-width:70%}
+.page-head .pv{font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums}
+.page-foot span{display:inline-block;min-width:26px;padding:1px 8px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);
+  background:rgba(28,36,96,.06);box-shadow:inset 0 1px 1px rgba(20,26,70,.12)}
+.sheet-back-side .pocket,.page.blank .pocket{opacity:.75}
+/* page turn: leaf with a moving shadow and a highlight along the curl */
+.leaf{transition:none;z-index:7;will-change:transform}
+.leaf.next{left:50%;transform-origin:0 50%}.leaf.prev{left:0;transform-origin:100% 50%}
+.leaf.snext,.leaf.sprev{left:0;width:100%;transform-origin:0 50%}
+.leaf .face{filter:drop-shadow(0 10px 18px rgba(0,0,0,calc(var(--shade,0) * .35)))}
+.leaf .face>.page{height:100%}
+.leaf .face::after{opacity:calc(var(--shade,0) * .95);transition:none;z-index:9}
+.leaf.next .face.front::after,.leaf.snext .face.front::after,.leaf.sprev .face.front::after{background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(0,0,0,.05) 45%,rgba(255,255,255,.22) 78%,transparent)}
+.leaf.next .face.back::after,.leaf.snext .face.back::after,.leaf.sprev .face.back::after{background:linear-gradient(270deg,rgba(0,0,0,.28),rgba(0,0,0,.05) 45%,rgba(255,255,255,.2) 78%,transparent)}
+.leaf.prev .face.front::after{background:linear-gradient(270deg,rgba(0,0,0,.28),rgba(0,0,0,.05) 45%,rgba(255,255,255,.22) 78%,transparent)}
+.leaf.prev .face.back::after{background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(0,0,0,.05) 45%,rgba(255,255,255,.2) 78%,transparent)}
+.leaf.go .face::after{opacity:calc(var(--shade,0) * .95)}
+/* ── Cover ── */
+.binder.closed{width:min(540px,calc((100vh - 230px) * .72),100%);min-width:300px;padding:0;background:none;box-shadow:none;margin:0 auto}
+.cf img.art{-webkit-user-drag:none;user-select:none}
+.binder.closed::before,.binder.closed::after{display:none}
+.binder.closed .spread{grid-template-columns:1fr;perspective:1800px}
+.binder.closed .spread::after{display:none}
+.cover{position:relative;aspect-ratio:var(--cover-aspect,.7);transform-style:preserve-3d;transform-origin:0 50%;transition:transform .62s cubic-bezier(.5,.05,.3,1),opacity .62s}
+.cover.opening{transform:rotateY(-155deg);opacity:.0}
+.cv-face{position:absolute;inset:0;border-radius:10px 20px 20px 10px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;color:#fff;
+  background:
+    radial-gradient(120% 80% at 30% 0%,rgba(255,255,255,.16),transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(90deg,rgba(0,0,0,.45) 0,rgba(0,0,0,.1) 9%,rgba(255,255,255,.08) 10%,transparent 13%),
+    linear-gradient(160deg,color-mix(in srgb,var(--cover) 72%,#5b67ff 28%),var(--cover) 50%,color-mix(in srgb,var(--cover) 75%,#000));
+  box-shadow:var(--shadow-lg),inset 0 0 0 1px rgba(255,255,255,.1),inset 0 2px 0 rgba(255,255,255,.14),inset -3px 0 0 rgba(0,0,0,.25)}
+.cv-face::before{content:"";position:absolute;inset:14px 14px 14px calc(10% + 12px);border:1.5px dashed rgba(245,208,106,.38);border-radius:12px;pointer-events:none}
+.cv-corner{position:absolute;width:44px;height:44px;background:linear-gradient(135deg,#fbe08e,#c8901c 55%,#8f630c);box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.6)}
+.cv-corner.tl{display:none}.cv-corner.bl{display:none}
+.cv-corner.tr{right:0;top:0;clip-path:polygon(0 0,100% 0,100% 100%)}
+.cv-corner.br{right:0;bottom:0;clip-path:polygon(100% 0,100% 100%,0 100%)}
+.cv-inner{position:absolute;inset:0 0 0 10%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px 28px;text-align:center}
+.cv-emblem{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font-size:44px;color:#1d1405;
+  background:radial-gradient(circle at 35% 30%,#fff3c4,#f5d06a 30%,#c8901c 70%,#8f630c);
+  box-shadow:0 0 0 3px rgba(10,13,36,.5),0 0 0 7px rgba(245,208,106,.35),0 12px 30px rgba(0,0,0,.45),inset 0 -4px 8px rgba(0,0,0,.25)}
+.cv-title{font-family:var(--title);font-size:clamp(24px,4.2vw,34px);font-weight:800;letter-spacing:.01em;line-height:1.1;margin-top:8px;
+  background:linear-gradient(180deg,#fff6d6 0%,#f5d06a 45%,#c8901c 75%,#f0c45a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.45))}
+.cv-sub{color:rgba(232,236,255,.75);font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.cv-rule{width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,214,110,.9),transparent);margin:6px 0}
+.cv-stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.cv-stats span{display:flex;flex-direction:column;align-items:center;min-width:84px;padding:7px 12px;border-radius:10px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(222,227,255,.7);
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.cv-stats b{font-size:16px;letter-spacing:-.01em;text-transform:none;color:#fff;font-variant-numeric:tabular-nums}
+.cv-stats span:last-child b{color:var(--gold-hi)}
+.cv-open{margin-top:10px;height:42px;padding:0 20px;font-size:14px}
+.cv-back{position:absolute;inset:0;border-radius:20px 10px 10px 20px;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--cover) 85%,#fff 6%),color-mix(in srgb,var(--cover) 80%,#000))}
+.binder.to-cover .cover{animation:coverClose .55s cubic-bezier(.4,.1,.3,1) both}
+@keyframes coverClose{from{transform:rotateY(-150deg);opacity:.2}to{transform:none;opacity:1}}
+.binder.from-cover{animation:fromCover .5s var(--ease) both}
+@keyframes fromCover{from{opacity:.3;transform:scale(.97) translateX(-2%)}to{opacity:1;transform:none}}
+.pager{margin-top:14px}
+.pager>.pmid>span,.kbd-hint{padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.72);border:1px solid var(--border);color:#2c3150}
+[data-theme="dark"] .pager>.pmid>span,[data-theme="dark"] .kbd-hint{background:rgba(255,255,255,.04);color:var(--muted)}
+.kbd-hint kbd{font:600 10.5px/1 var(--sans);padding:2px 5px;margin-right:2px;border-radius:5px;background:var(--surface3);border:1px solid var(--border2);color:var(--muted)}
+.pager input[type=range]{accent-color:var(--gold-lo)}
+
+/* ── Grid & list ── */
+.group-h{padding:8px 12px;margin:6px 0 14px;border:1px solid var(--border2);border-radius:12px;background:linear-gradient(90deg,color-mix(in srgb,var(--cover) 8%,transparent),transparent 60%),var(--pane);
+  box-shadow:var(--shadow);border-left:3px solid var(--gold-lo)}
+.group-h h3{font-family:var(--sans);font-weight:720;font-size:15px;color:var(--cover)}
+[data-theme="dark"] .group-h h3{color:var(--text)}
+.grid{padding:14px 12px 20px;border:1px solid var(--border2);border-radius:14px;background:var(--well);box-shadow:inset 0 1px 4px rgba(10,13,40,.12),0 1px 0 rgba(255,255,255,.7)}
+.tile-info{padding:8px 2px 0}
+.tile-name{font-weight:650;color:var(--text)}
+.table-wrap{border:1px solid var(--border2);box-shadow:var(--shadow);background:var(--pane)}
+.list th{background:var(--surface2);color:var(--muted)}
+.list th.sorted{color:var(--accent)}
+.list tr.grp td{font-family:var(--sans);font-weight:700;color:var(--cover);background:linear-gradient(90deg,color-mix(in srgb,var(--cover) 9%,transparent),transparent)}
+[data-theme="dark"] .list tr.grp td{color:var(--text)}
+.list .thumb .cf{--fw:1.5px;--fr:3px;width:28px}
+.list .thumb .cf::before,.list .thumb .cf::after{display:none}
+
+/* ── Empty state, panels, menus, toasts ── */
+.drop{background:var(--pane);border:1px solid var(--border2);box-shadow:var(--shadow);border-radius:20px}
+.empty h2,.m-head h2,.sh-head h3,.d-title input,.dropover h2{font-family:var(--sans);font-weight:740;letter-spacing:-.02em;color:var(--cover)}
+[data-theme="dark"] .empty h2,[data-theme="dark"] .m-head h2,[data-theme="dark"] .sh-head h3,[data-theme="dark"] .d-title input,[data-theme="dark"] .dropover h2{color:var(--text)}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;box-shadow:0 30px 80px rgba(14,18,52,.45)}
+.modal-back{background:rgba(14,18,52,.35);backdrop-filter:blur(6px)}
+.m-foot,.d-foot{background:var(--surface2)}
+.menu{background:rgba(250,251,255,.96);backdrop-filter:blur(20px) saturate(160%);border:1px solid var(--border2);border-radius:12px;box-shadow:0 16px 40px rgba(30,20,70,.22)}
+[data-theme="dark"] .menu{background:rgba(26,25,36,.92)}
+.menu button:hover{background:var(--accent-soft)}
+.menu button svg{color:var(--gold-lo)}
+.toast{background:rgba(20,24,64,.94);color:#eef0ff;border:1px solid rgba(255,255,255,.12);border-left:3px solid var(--gold-hi);border-radius:10px;backdrop-filter:blur(16px)}
+.toast b{color:var(--gold-hi)}
+.toast .tbtn{background:linear-gradient(180deg,var(--gold-hi),var(--gold-lo));color:#1d1405}
+.drawer{background:var(--surface);border-left:1px solid var(--border2)}
+.d-head{background:linear-gradient(180deg,color-mix(in srgb,var(--cover) 6%,transparent),transparent)}
+.d-img{width:184px;perspective:900px}
+.d-img .cf{--fw:6px;--fr:14px;box-shadow:0 0 0 1px rgba(10,13,36,.7),inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(0,0,0,.3),0 4px 8px rgba(10,13,40,.25),0 22px 40px -14px rgba(10,13,40,.6)}
+.d-img .cf.shiny::after{opacity:.7}
+.kpi{background:var(--surface2);border:1px solid var(--border2)}
+.field input,.field select,.field textarea{background:#fff;border:1px solid var(--border2);box-shadow:inset 0 1px 2px rgba(20,26,70,.08)}
+[data-theme="dark"] .field input,[data-theme="dark"] .field select,[data-theme="dark"] .field textarea{background:var(--surface2)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:color-mix(in srgb,var(--accent) 60%,transparent);box-shadow:0 0 0 3px var(--accent-soft)}
+.badge-n{background:var(--gold-lo);color:#1d1405}
+.install-hint{background:var(--pane);border:1px solid var(--border2)}
+
+/* ── Phones ── */
+@media (max-width:860px){
+  header.top{position:relative;background:linear-gradient(180deg,var(--chrome-a) 0%,var(--chrome-b) 60%,var(--chrome-c) 100%);border-bottom:1px solid #0c1036}
+  .top-inner{padding:calc(10px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 10px calc(14px + env(safe-area-inset-left))}
+  .stats{gap:5px}.stat{padding:5px 7px}
+  .btn{height:44px}.btn.icon{width:44px}
+  .toolbar{margin:10px calc(10px + env(safe-area-inset-right)) 0 calc(10px + env(safe-area-inset-left));padding:8px}
+  .seg button{height:40px}
+  .binder{padding:10px 10px 10px 26px;border-radius:14px}
+  .binder::before{inset:4px;border-radius:11px}
+  .binder.single .rings i{left:-25px;width:36px;height:14px}
+  .binder.single .rings i::after{top:4px;height:3px;left:6px;right:6px}
+  .edges{top:14px;bottom:14px}.binder.single .edges.r{right:calc(10px - var(--k,0) * 2px)}
+  .page{padding:5% 4.2% 3.4%}
+  .holes i{width:9px;height:9px;left:2px}
+  .binder.closed{padding:0}
+  .cv-emblem{width:76px;height:76px;font-size:36px}
+  .grid{padding:10px 8px 14px}
+  .d-img{width:120px}
+  .d-img .cf{--fw:4px;--fr:10px}
+}
+@media (prefers-reduced-motion:reduce){.cover,.leaf{transition:none!important}.pocket .cf.shiny::after{animation:none!important}}
+/* small-screen polish */
+.subbar{flex-wrap:wrap;row-gap:6px}
+.subbar>span:first-child,.art-btn,.art-run{white-space:nowrap}
+@media (max-width:860px){
+  .subbar>span:first-child{font-size:11.5px}
+  .cv-stats{gap:6px;flex-wrap:nowrap;width:100%}
+  .cv-stats span{min-width:0;flex:1;padding:6px 6px}
+  .cv-stats b{font-size:14px}
+  .cv-inner{padding:22px 16px;gap:10px}
+}
+@media (hover:hover){.cf.shiny:hover::after{opacity:1}}
 </style>
 </head>
 <body>
@@ -586,12 +951,13 @@ const CONFIG = {
   currency: 'USD',
   locale: 'en-US',
 
-  theme: {
-    accentLight: '#a8821b',        // accent in light mode
-    accentDark:  '#e2c063',        // accent in dark mode
-    coverLight:  '#24284a',        // binder cover colour (light mode)
-    coverDark:   '#0c0e1c',        // binder cover colour (dark mode)
-    titleFont:   '"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif',
+  theme: {                         // "Royal" look shared with Deck Lab: indigo chrome, gold highlights
+    accentLight: '#3a44cf',        // accent in light mode (links, focus, toggles)
+    accentDark:  '#a58bff',        // accent in dark mode
+    coverLight:  '#1c2361',        // binder cover colour (light mode)
+    coverDark:   '#141838',        // binder cover colour (dark mode)
+    titleFont:   '"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
+    unknownTypeColor: '#5a6283',
   },
 
   /* Physical card shape (width / height) and pockets per binder page. */
@@ -642,6 +1008,8 @@ const CONFIG = {
                  'Prismatic Secret Rare': 'PScR', 'Platinum Secret Rare': 'PlScR', 'Gold Rare': 'GR', 'Premium Gold Rare': 'PGR', 'Ghost Rare': 'GhR',
                  "Collector's Rare": 'CR', 'Starlight Rare': 'StR', 'Quarter Century Secret Rare': 'QCScR' },
   shinyRarities: /super|ultra|ultimate|secret|ghost|gold|starlight|collector|platinum|prismatic|quarter/i,
+  /* Holo shimmer in the binder: 2 = rainbow (secret-style foils), 1 = foil sheen, 0 = none. */
+  foilLevel: c => /secret|ghost|starlight|collector|quarter|prismatic|platinum/i.test(c.rarity || '') ? 2 : /super|ultra|ultimate|gold/i.test(c.rarity || '') ? 1 : 0,
 
   /* Best → worst. */
   conditions: ['Mint', 'Near Mint', 'Lightly Played', 'Moderately Played', 'Heavily Played', 'Damaged'],
@@ -698,21 +1066,25 @@ const CONFIG = {
   /* Helps match photo filenames to cards (e.g. "LOB-EN001 blue eyes.jpg"). */
   numberPattern: /\b[A-Z0-9]{2,5}-[A-Z]{0,2}\d{2,3}\b/i,
 
-  /* Optional online enrichment (card type, subtype and artwork) from the free YGOPRODeck API.
-     The binder works fully offline without it. Set to null to remove the feature. */
+  /* Card types, subtypes & artwork. Matching runs on this device against a card index that ships with the app
+     (ygo-cards.json: every card + every printing's set code, built from ONE bulk YGOPRODeck download per release),
+     so thousands of cards fill in seconds without hammering the API. Cards newer than the index fall back to a few
+     throttled, batched YGOPRODeck requests. Art images are linked from images.ygoprodeck.com (cached by the browser
+     and the app's service worker). Set to null to remove the feature. */
   lookup: {
-    label: 'Fill card types & art (YGOPRODeck)',
-    note: 'Looks up each card by name on db.ygoprodeck.com. Art is linked from YGOPRODeck, so it needs internet to display; your own photos are stored offline.',
+    label: 'Fill card types & art',
+    note: 'Matches every card by name and set code against the built-in Yu-Gi-Oh! card index (YGOPRODeck data). Art is linked from YGOPRODeck, so it needs internet the first time it shows; your own photos are stored offline.',
+    auto: true,                                     // fill automatically after imports and when the binder opens
+    overwrite: ['imageUrl', 'ygoId', 'ygoName', 'frame', 'artVia', 'altArts'],   // always refreshed; other fields only fill blanks
     needs: c => !c.cardType || (!c.imageId && !c.imageUrl),
-    async fetch(card) {
-      let d = await YGO.cardByName(card.name);
-      if (!d) { const r = await YGO.get('cardinfo.php?fname=' + encodeURIComponent(card.name)); d = r?.data?.[0]; }
-      if (!d) return null;
-      const out = YGO.fields(d);
-      const s = (d.card_sets || []).find(s => card.number && s.set_code.toLowerCase() === String(card.number).toLowerCase());
-      if (s) { if (!card.set) out.set = s.set_name; if (!card.rarity) out.rarity = s.set_rarity; }
-      return out;
-    },
+    /** Fill many cards at once: (cards, { progress, retry }) → Map(card.id → fields | null). */
+    bulk: (cards, opt) => YGO.fillMany(cards, opt),
+    fetch: card => YGO.fillMany([card], { retry: true }).then(m => m.get(card.id) || null),
+    /** Bigger art for the detail view. */
+    largeImage: c => c.ygoId ? `https://images.ygoprodeck.com/images/cards/${c.ygoId}.jpg` : '',
+    /** Things in a Collectr portfolio that aren't single cards (sealed product, tokens…) get a placeholder instead. */
+    nonCard: c => /\b(briefcase|tin|booster|box|bundle|display|case|pack|sleeves?|playmat|deck box|binder|portfolio|collection set)\b/i.test(c.name || '') && !c.number ? 'Sealed product'
+      : /^token\b|\btoken$/i.test(c.name || '') ? 'Token' : /\(oversized\)/i.test(c.name || '') ? 'Oversized card' : '',
   },
 
   /* "Scan binder page": photograph a binder page (or a few cards), the app reads each card's set code
@@ -745,10 +1117,116 @@ const CONFIG = {
 const YGO = {
   api: 'https://db.ygoprodeck.com/api/v7/',
   memo: new Map(),
+  /* ── API politeness: at most ~6 requests a second (YGOPRODeck allows 20), retry on rate limits / server hiccups ── */
+  _q: Promise.resolve(), _last: 0, gap: 160,
+  _slot() { const p = this._q.then(async () => { const w = this._last + this.gap - Date.now(); if (w > 0) await new Promise(r => setTimeout(r, w)); this._last = Date.now(); }); this._q = p.catch(() => {}); return p; },
+  async _fetchJSON(url) {
+    for (let attempt = 0; ; attempt++) {
+      await this._slot();
+      let r; try { r = await fetch(url); } catch (e) { if (attempt < 2) { await new Promise(res => setTimeout(res, 1500 * (attempt + 1))); continue; } throw e; }
+      if (r.status === 400 || r.status === 404) return null;
+      if ((r.status === 429 || r.status >= 500) && attempt < 3) { this.gap = Math.min(2000, this.gap * 2); await new Promise(res => setTimeout(res, (r.status === 429 ? 8000 : 2000) * (attempt + 1))); continue; }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }
+  },
+  /* ── The built-in card index (ygo-cards.json next to the app; the single-file copy loads it from the live site) ── */
+  indexUrls: ['ygo-cards.json', 'https://closetnerd91.github.io/cards-/ygo-cards.json'],
+  async index() {
+    if (this._ix) return this._ix;
+    if (!this._ixp) this._ixp = (async () => {
+      let raw = null;
+      for (const u of this.indexUrls) {
+        if (u.startsWith('http') === false && !/^https?:$/.test(location.protocol)) continue;
+        try { const r = await fetch(u); if (r.ok) { raw = await r.json(); break; } } catch {}
+      }
+      const key = 'ygo-index';
+      try {   // keep a copy on the device so the single-file binder also works offline
+        const kept = await DB.get('meta', key);
+        if (!raw && kept) raw = kept;
+        else if (raw && (!kept || kept.built !== raw.built)) DB.put('meta', raw, key).catch(() => {});
+      } catch {}
+      if (!raw) throw new Error('card index unavailable');
+      const byName = new Map(), byCode = new Map(), byLoose = new Map();
+      raw.c.forEach((row, i) => { const k = YGO.norm(row[1]); if (!byName.has(k)) byName.set(k, i); });
+      for (const [code, v] of Object.entries(raw.s)) { const list = Array.isArray(v) ? v : [v]; byCode.set(code, list); const l = YGO.looseCode(code); if (l) byLoose.set(l, [...(byLoose.get(l) || []), ...list]); }
+      this._ix = { raw, byName, byCode, byLoose, keys: [...byName.keys()] };
+      return this._ix;
+    })().catch(e => { this._ixp = null; throw e; });
+    return this._ixp;
+  },
+  /** Name → comparison key: case, accents, punctuation, ☆/★, <C>/[C] brackets and Ω/α/β spellings don't matter. */
+  norm(s) {
+    return String(s || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/Ω/g, 'omega').replace(/α/g, 'alpha').replace(/β/g, 'beta').replace(/γ/g, 'gamma')
+      .toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]/g, '');
+  },
+  /** Collectr-style extras: "(Starlight Rare)", "(Extended Art)", "(card)", "(SR) (DOOD-ENSP1)", "(Version 1)". */
+  stripExtras: s => { let t = String(s || '').trim(), prev; do { prev = t; t = t.replace(/\s*\([^()]*\)\s*$/, '').replace(/\s*\[[^\[\]]*\]\s*$/, '').trim(); } while (t !== prev && t); return t; },
+  /** Set code without its language letters (LOB-EN001 / LOB-E001 / LOB-001 → LOB-001). */
+  looseCode(c) { const m = String(c || '').toUpperCase().match(/^([A-Z0-9]{2,6})-([A-Z]{0,2})(\d{2,3}|[A-Z]{1,2}\d{1,3})$/); return m ? m[1] + '-' + m[3] : ''; },
+  out(ix, i, via) {
+    const [id, name, frame, sub, alts] = ix.raw.c[i], f = frame || '';
+    const cardType = f === 'spell' ? 'Spell' : f === 'trap' ? 'Trap' : f === 'skill' ? 'Skill' : 'Monster';
+    return { ygoId: id, ygoName: name, frame: f, cardType, subtype: sub || '', imageUrl: `https://images.ygoprodeck.com/images/cards_small/${id}.jpg`, artVia: via, ...(alts ? { altArts: alts.length } : {}) };
+  },
+  /** Find one card in the index: exact name → name without extras → set code (+ name check) → close spelling. */
+  resolve(ix, c) {
+    const full = this.norm(c.name), base = this.norm(this.stripExtras(c.name));
+    const code = String(c.number || '').trim().toUpperCase();
+    const pick = list => { if (list.length === 1) return list[0]; let best = list[0], bs = -1; for (const i of list) { const s = this.sim(c.name, ix.raw.c[i][1]); if (s > bs) { bs = s; best = i; } } return best; };
+    if (full && ix.byName.has(full)) return [ix.byName.get(full), 'name'];
+    if (base && ix.byName.has(base)) return [ix.byName.get(base), 'name'];
+    if (code && ix.byCode.has(code)) return [pick(ix.byCode.get(code)), 'code'];
+    const lc = this.looseCode(code);
+    if (lc && ix.byLoose.has(lc)) { const i = pick(ix.byLoose.get(lc)); if (this.sim(this.stripExtras(c.name), ix.raw.c[i][1]) >= .5) return [i, 'code']; }
+    if (base.length >= 5) {     // close spelling: same length ±3, edit distance ≤ 12%
+      let best = -1, bd = 1e9; const lim = Math.max(1, Math.floor(base.length * .12));
+      for (const k of ix.keys) { if (Math.abs(k.length - base.length) > 3) continue; const d = this.lev(base, k); if (d < bd) { bd = d; best = k; } if (d === 0) break; }
+      if (best !== -1 && bd <= lim) return [ix.byName.get(best), 'fuzzy'];
+      // the export's name is the card name plus extra words (or the other way round)
+      // names whose head matches exactly one card ('Layer 19 "…"' → 'Layer 19: "…"')
+      const head = this.norm(String(c.name).split(/[:"“(]/)[0]);
+      if (head.length >= 6 && head !== base) { const hits = ix.keys.filter(k => k.startsWith(head)); if (hits.length === 1) return [ix.byName.get(hits[0]), 'fuzzy']; }
+      if (base.length >= 10) { const hits = ix.keys.filter(k => k.length >= 8 && (base.startsWith(k) || k.startsWith(base))); if (hits.length) { hits.sort((a, b) => b.length - a.length); return [ix.byName.get(hits[0]), 'fuzzy']; } }
+    }
+    return null;
+  },
+  /** Bulk fill: the index first (instant), then batched + throttled YGOPRODeck requests for whatever is left. */
+  async fillMany(cards, { progress = () => {}, retry = false } = {}) {
+    const res = new Map(); let ix = null;
+    try { ix = await this.index(); } catch (e) { console.warn('card index', e); }
+    const left = [];
+    cards.forEach((c, n) => { const r = ix && this.resolve(ix, c); if (r) res.set(c.id, this.out(ix, r[0], r[1])); else left.push(c); if (n % 250 === 0) progress(n, cards.length); });
+    progress(cards.length - left.length, cards.length);
+    // online fallback: only for cards the index doesn't know (new releases) and only when asked or few enough
+    const online = left.filter(c => !CONFIG.lookup.nonCard(c));
+    if (online.length && (retry || online.length <= 40) && navigator.onLine !== false) {
+      const apply = (c, d, via) => { const o = YGO.fields(d); res.set(c.id, { ygoId: d.id, ygoName: d.name, frame: d.frameType || '', ...o, artVia: via }); };
+      const byKey = new Map(); online.forEach(c => { const k = this.norm(this.stripExtras(c.name)); if (!byKey.has(k)) byKey.set(k, []); byKey.get(k).push(c); });
+      const names = [...new Set(online.map(c => this.stripExtras(c.name)).filter(Boolean))];
+      let done = cards.length - left.length, fails = 0;
+      for (let i = 0; i < names.length && fails < 3; i += 20) {      // up to 20 names per request
+        try { const r = await this._fetchJSON(this.api + 'cardinfo.php?name=' + encodeURIComponent(names.slice(i, i + 20).join('|')));
+          for (const d of r?.data || []) for (const c of byKey.get(this.norm(d.name)) || []) { apply(c, d, 'online'); done++; } fails = 0; }
+        catch (e) { fails++; console.warn('lookup batch failed', e); }
+        progress(done, cards.length);
+      }
+      for (const c of online.filter(c => !res.has(c.id) && /\d/.test(c.number || '')).slice(0, 60)) {   // by set code
+        if (fails >= 3) break;
+        try { const s = await this._fetchJSON(this.api + 'cardsetsinfo.php?setcode=' + encodeURIComponent(c.number));
+          if (s?.name) { const r = await this._fetchJSON(this.api + 'cardinfo.php?name=' + encodeURIComponent(s.name)); const d = r?.data?.[0]; if (d) { apply(c, d, 'online'); done++; } } fails = 0; }
+        catch (e) { fails++; }
+        progress(done, cards.length);
+      }
+      if (fails >= 3) res.offline = true;
+    }
+    for (const c of cards) if (!res.has(c.id)) res.set(c.id, null);
+    return res;
+  },
   /** GET an API path; null when the API says "no match" (HTTP 400), throws when offline. Results are memoised. */
   async get(path) {
     if (this.memo.has(path)) return this.memo.get(path);
-    const p = fetch(this.api + path).then(async r => { if (r.status === 400 || r.status === 404) return null; if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    const p = this._fetchJSON(this.api + path);
     this.memo.set(path, p);
     try { return await p; } catch (e) { this.memo.delete(path); throw e; }
   },
@@ -761,6 +1239,7 @@ const YGO = {
       out.subtype = /pendulum/i.test(t) ? 'Pendulum' : ({ normal: 'Normal', effect: 'Effect', fusion: 'Fusion', ritual: 'Ritual', synchro: 'Synchro', xyz: 'Xyz', link: 'Link', token: 'Token' })[ft] || '';
     } else if (d.race) out.subtype = d.race;
     if (d.card_images?.[0]) out.imageUrl = d.card_images[0].image_url_small || d.card_images[0].image_url;
+    if (d.id) { out.ygoId = d.id; out.ygoName = d.name; out.frame = d.frameType || ''; }
     return out;
   },
   /** Every set-code prefix (LOB, MP23, …) → set name. Cached on the device for a week. */
@@ -1114,7 +1593,7 @@ Sync.init();
 /* ───────────── State ───────────── */
 const S = {
   cards: [], imgs: new Map(), pages: [], flipping: false, openId: null,
-  set: { view: 'binder', sort: CONFIG.sortOptions[0].key, dir: 1, group: 'none', q: '', type: '', f: {}, page: 0, breaks: true, theme: null },
+  set: { view: 'binder', sort: CONFIG.sortOptions[0].key, dir: 1, group: 'none', q: '', type: '', f: {}, page: -1, breaks: true, theme: null },
 };
 const saveSettings = debounce(() => DB.put('meta', JSON.parse(JSON.stringify({ ...S.set, q: '' })), 'settings').catch(() => {}), 300);
 const imgSrc = c => (c.imageId && S.imgs.get(c.imageId)) || c.imageUrl || '';
@@ -1177,14 +1656,21 @@ function totals(list) {
 
 /* ───────────── Rendering ───────────── */
 function rarityShort(r) { if (!r) return ''; return (CONFIG.rarityShort || {})[r] || r.split(/\s+/).map(w => w[0]).join('').toUpperCase(); }
-function cardFace(c, extra = '') {
-  const src = imgSrc(c), td = typeDef(c[TYPEF]), qty = qtyOf(c);
-  const shiny = CONFIG.shinyRarities && CONFIG.shinyRarities.test(c.rarity || '') ? ' shiny' : '';
+/* Foil level: CONFIG.foilLevel(card) → 0 none, 1 foil, 2 prismatic (falls back to CONFIG.shinyRarities → 1). */
+const foilOf = c => CONFIG.foilLevel ? CONFIG.foilLevel(c) || 0 : (CONFIG.shinyRarities && CONFIG.shinyRarities.test(c.rarity || '') ? 1 : 0);
+function cardFace(c, extra = '', opt = {}) {
+  const own = c.imageId && S.imgs.get(c.imageId), small = imgSrc(c), td = typeDef(c[TYPEF]), qty = qtyOf(c);
+  const big = !own && opt.large && CONFIG.lookup?.largeImage ? CONFIG.lookup.largeImage(c) : '';
+  const src = big || small, foil = foilOf(c);
   const fc = CONFIG.face || { title: 'name', code: 'number' };
-  const sub = [c[TYPEF], c[SUBF]].filter(Boolean).join(' · ') || (fc.badge ? c[fc.badge] : '') || '';
-  const ph = `<div class="ph"><div class="ph-name"><span>${esc(c[fc.title] || 'Untitled')}</span></div><div class="ph-type">${esc(sub)}</div>
-    <div class="ph-art">${esc(CONFIG.logo || '✦')}</div><div class="ph-meta"><span class="mono">${esc(c[fc.code] || '')}</span><span>${esc(rarityShort(c.rarity))}</span></div></div>`;
-  return `<div class="cf${shiny}" data-id="${esc(c.id)}" style="--tc:${td ? td.color : (CONFIG.theme?.unknownTypeColor || '#5a6283')}" ${extra}>${ph}${src ? `<img loading="lazy" decoding="async" src="${esc(src)}" alt="${esc(c.name)}" style="position:absolute;inset:0" onerror="this.remove()">` : ''}${qty > 1 ? `<span class="qty">×${qty}</span>` : ''}</div>`;
+  const kind = !src && CONFIG.lookup?.nonCard ? CONFIG.lookup.nonCard(c) : '';
+  const sub = kind || [c[TYPEF], c[SUBF]].filter(Boolean).join(' · ') || (fc.badge ? c[fc.badge] : '') || '';
+  const glyph = kind === 'Sealed product' ? '▣' : kind === 'Token' ? '◎' : (CONFIG.logo || '✦');
+  const ph = `<div class="ph${kind ? ' ph-kind' : ''}"><div class="ph-name"><span>${esc(c[fc.title] || 'Untitled')}</span></div><div class="ph-type">${esc(sub)}</div>
+    <div class="ph-art">${esc(glyph)}</div><div class="ph-meta"><span class="mono">${esc(c[fc.code] || '')}</span><span>${esc(rarityShort(c.rarity))}</span></div></div>`;
+  const ft = c.frame || normH(c[TYPEF]) || '';
+  const img = src ? `<img class="art" draggable="false" loading="${opt.eager ? 'eager' : 'lazy'}" decoding="async" src="${esc(src)}" ${big && small && big !== small ? `data-fb="${esc(small)}"` : ''} alt="${esc(c.name)}" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.dataset.fb=''}else{this.remove()}">` : '';
+  return `<div class="cf${foil ? ' shiny' : ''}${src ? ' has-art' : ''}" data-id="${esc(c.id)}" data-ft="${esc(ft)}" ${foil ? `data-foil="${foil}"` : ''} style="--tc:${td ? td.color : (CONFIG.theme?.unknownTypeColor || '#5a6283')}${opt.fd ? `;--fd:${opt.fd}s` : ''}" ${extra}>${ph}${img}${qty > 1 ? `<span class="qty">×${qty}</span>` : ''}</div>`;
 }
 function renderHeader() {
   $('#appTitle').textContent = CONFIG.title; $('#appSub').textContent = CONFIG.subtitle || ''; $('#logo').textContent = CONFIG.logo || '✦';
@@ -1258,10 +1744,11 @@ function renderSubbar(list) {
   const sb = $('#subbar'); if (!sb) return;
   const t = totals(list), isF = list.length !== S.cards.length;
   sb.innerHTML = `<span>${isF ? `Showing <b>${fmtInt(t.unique)}</b> of ${fmtInt(S.cards.length)} · ${fmtMoney(t.value)}` : `${fmtInt(t.unique)} unique · ${fmtInt(t.cards)} cards in total`}</span>
-    ${isF ? '<button class="clear" id="clearF">Clear filters</button>' : ''}<span class="spacer"></span>
+    ${isF ? '<button class="clear" id="clearF">Clear filters</button>' : ''}<span id="artStatus" class="art-status"></span><span class="spacer"></span>
     ${S.set.view === 'binder' && S.set.group !== 'none' ? `<label class="toggle desk-only"><input type="checkbox" id="breaks" ${S.set.breaks ? 'checked' : ''}>New page per group</label>` : ''}`;
   $('#clearF') && ($('#clearF').onclick = () => { S.set.q = ''; S.set.type = ''; S.set.f = {}; S.set.page = 0; const q = $('#q'); if (q) { q.value = ''; q.blur(); } changed(); });
   $('#breaks') && ($('#breaks').onchange = e => { S.set.breaks = e.target.checked; S.set.page = 0; saveSettings(); renderMain(); });
+  renderArtStatus();
 }
 function renderMain() {
   renderHeader();
@@ -1318,9 +1805,14 @@ function renderList(groups) {
     saveSettings(); renderToolbar(); renderMain(); });
 }
 
-/* ───────────── Binder view ───────────── */
+/* ───────────── Binder view ─────────────
+   A binder with a cover (page -1), 3-ring spine, plastic pocket pages and real page turns: on wide screens two pages
+   side by side (a leaf turns around the spine), on phones one page that turns around its left edge. Pages follow the
+   finger/mouse while dragging; arrow keys, the side buttons and the slider flip too. Reduced motion → no animation. */
 const per = () => (CONFIG.binder?.cols || 3) * (CONFIG.binder?.rows || 3);
 const twoUp = () => window.innerWidth >= 980;
+const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasCover = () => CONFIG.binder?.cover !== false;
 function buildPages(groups) {
   const pages = [], P = per(); let cur = null;
   const open = () => { cur = { labels: [], slots: [] }; pages.push(cur); };
@@ -1331,73 +1823,124 @@ function buildPages(groups) {
   if (!pages.length) open();
   return pages;
 }
+const HOLES = '<div class="holes" aria-hidden="true"><i></i><i></i><i></i></div>';
 function pageEl(i, side) {
   const p = S.pages[i], P = per(), cols = CONFIG.binder?.cols || 3;
-  const node = el(`<div class="page ${side}"></div>`);
-  if (!p) { node.classList.add('blank'); node.innerHTML = `<div class="page-head"></div><div class="pockets" style="--cols:${cols}">${'<div class="pocket"></div>'.repeat(P)}</div><div class="page-foot">&nbsp;</div>`; return node; }
+  const node = el(`<div class="page ${side}">${HOLES}</div>`);
+  if (!p) { node.classList.add('blank'); node.insertAdjacentHTML('beforeend', `<div class="page-head"></div><div class="pockets" style="--cols:${cols}">${'<div class="pocket"></div>'.repeat(P)}</div><div class="page-foot">&nbsp;</div>`); return node; }
   const label = p.labels.join(' · ');
-  node.innerHTML = `<div class="page-head"><b title="${esc(label)}">${esc(label)}</b><span>${fmtMoney(totals(p.slots).value)}</span></div>
-    <div class="pockets" style="--cols:${cols}">${Array.from({ length: P }, (_, k) => `<div class="pocket">${p.slots[k] ? cardFace(p.slots[k], `data-open="${esc(p.slots[k].id)}" title="${esc(p.slots[k].name)}"`) : ''}</div>`).join('')}</div>
-    <div class="page-foot">${i + 1}</div>`;
+  node.insertAdjacentHTML('beforeend', `<div class="page-head">${label ? `<b class="tab" title="${esc(label)}">${esc(label)}</b>` : '<span></span>'}<span class="pv">${fmtMoney(totals(p.slots).value)}</span></div>
+    <div class="pockets" style="--cols:${cols}">${Array.from({ length: P }, (_, k) => `<div class="pocket">${p.slots[k] ? cardFace(p.slots[k], `data-open="${esc(p.slots[k].id)}" title="${esc(p.slots[k].name)}"`, { fd: ((k * 1.37 + i * .61) % 7).toFixed(2) }) : ''}</div>`).join('')}</div>
+    <div class="page-foot"><span>${i + 1}</span></div>`);
   return node;
+}
+const sheetBack = side => { const n = pageEl(-1, side); n.classList.add('sheet-back-side'); return n; };
+function coverEl() {
+  const t = totals(S.cards), n = S.pages.length;
+  return el(`<div class="cover" id="cover"><div class="cv-face">
+      <div class="cv-corner tl"></div><div class="cv-corner tr"></div><div class="cv-corner bl"></div><div class="cv-corner br"></div>
+      <div class="cv-inner">
+        <div class="cv-emblem">${esc(CONFIG.logo || '✦')}</div>
+        <div class="cv-title">${esc(CONFIG.title)}</div>
+        ${CONFIG.subtitle ? `<div class="cv-sub">${esc(CONFIG.subtitle)}</div>` : ''}
+        <div class="cv-rule"></div>
+        <div class="cv-stats"><span><b>${fmtInt(t.cards)}</b>cards</span><span><b>${fmtInt(n)}</b>page${n === 1 ? '' : 's'}</span><span><b>${fmtMoney(t.value)}</b>value</span></div>
+        <button class="btn primary cv-open" data-flip="1">${ICON.binder}Open binder</button>
+      </div></div><div class="cv-back"></div></div>`);
 }
 function renderBinder(groups) {
   S.pages = buildPages(groups);
-  const two = twoUp(), step = two ? 2 : 1, n = S.pages.length;
-  S.set.page = Math.max(0, Math.min(S.set.page, n - 1)); if (two) S.set.page -= S.set.page % 2;
-  const p = S.set.page, last = Math.ceil(n / step) - 1, cur = p / step;
+  const two = twoUp(), step = two ? 2 : 1, n = S.pages.length, coverOn = hasCover();
+  S.set.page = Math.max(coverOn ? -1 : 0, Math.min(S.set.page, n - 1)); if (two && S.set.page > 0) S.set.page -= S.set.page % 2;
+  const p = S.set.page, last = Math.ceil(n / step) - 1, cur = Math.max(0, p) / step, closed = p < 0;
   const shownTotal = two ? n + (n % 2) : n;
-  const dPrev = cur <= 0 ? 'disabled' : '', dNext = cur >= last ? 'disabled' : '';
+  const dPrev = closed || (!coverOn && cur <= 0) ? 'disabled' : '', dNext = !closed && cur >= last ? 'disabled' : '';
+  const where = closed ? 'Cover' : two ? `Pages ${p + 1}–${p + 2} of ${shownTotal}` : `Page ${p + 1} of ${shownTotal}`;
   $('#main').innerHTML = `<div class="view"><div class="binder-wrap">
-    <button class="flipbtn side prev" id="prevP" data-flip="-1" ${dPrev} aria-label="Previous page">${ICON.left}</button>
-    <div class="binder ${two ? '' : 'single'}" id="binder" style="--cols:${CONFIG.binder?.cols || 3}"><div class="spread" id="spread"></div></div>
-    <button class="flipbtn side next" id="nextP" data-flip="1" ${dNext} aria-label="Next page">${ICON.right}</button></div>
+    <button class="flipbtn side prev" id="prevP" data-flip="-1" ${dPrev} aria-label="${cur <= 0 ? 'Close binder' : 'Previous page'}">${ICON.left}</button>
+    <div class="binder ${two && !closed ? '' : 'single'} ${closed ? 'closed' : ''}" id="binder" style="--cols:${CONFIG.binder?.cols || 3}">
+      ${closed ? '' : `<div class="edges l" style="--k:${Math.min(7, Math.ceil(cur * 1.5))}"></div><div class="edges r" style="--k:${Math.min(7, Math.ceil((last - cur) * 1.5))}"></div>`}
+      <div class="spread" id="spread"><div class="rings" aria-hidden="true"><i></i><i></i><i></i></div></div></div>
+    <button class="flipbtn side next" id="nextP" data-flip="1" ${dNext} aria-label="${closed ? 'Open binder' : 'Next page'}">${ICON.right}</button></div>
     <div class="pager"><button class="flipbtn mob-only" data-flip="-1" ${dPrev} aria-label="Previous page">${ICON.left}</button>
-      <div class="pmid"><span>${two ? `Pages ${p + 1}–${p + 2}` : `Page ${p + 1}`} of ${shownTotal}</span>${last > 0 ? `<input type="range" id="pageRange" min="0" max="${last}" value="${cur}" aria-label="Jump to page">` : ''}</div>
-      <span class="muted desk-only">← → to flip</span>
+      <div class="pmid"><span>${where}</span>${last > 0 || coverOn ? `<input type="range" id="pageRange" min="${coverOn ? -1 : 0}" max="${last}" value="${closed ? -1 : cur}" aria-label="Jump to page">` : ''}</div>
+      <span class="muted desk-only kbd-hint"><kbd>←</kbd><kbd>→</kbd> or drag a page</span>
       <button class="flipbtn mob-only" data-flip="1" ${dNext} aria-label="Next page">${ICON.right}</button></div></div>`;
-  const sp = $('#spread'); sp.append(pageEl(p, two ? 'left' : '')); if (two) sp.append(pageEl(p + 1, 'right'));
+  const sp = $('#spread');
+  if (closed) sp.append(coverEl()); else { sp.append(pageEl(p, two ? 'left' : '')); if (two) sp.append(pageEl(p + 1, 'right')); }
+  if (S.anim) { const a = S.anim; S.anim = null; requestAnimationFrame(() => $('#binder')?.classList.add(a)); }
   fitBinder();
-  $$('[data-flip]').forEach(b => b.onclick = () => flip(+b.dataset.flip));
-  const r = $('#pageRange'); if (r) r.oninput = () => { S.set.page = +r.value * step; saveSettings(); renderMain(); };
-  /* Swipe to flip (touch, pen or mouse drag). The binder has touch-action: pan-y, so vertical scrolling still works. */
+  $$('[data-flip]').forEach(b => b.onclick = e => { e.stopPropagation(); flip(+b.dataset.flip); });
+  const r = $('#pageRange'); if (r) r.oninput = () => { const v = +r.value; S.set.page = v < 0 ? -1 : v * step; saveSettings(); renderMain(); };
+  /* Drag a page to turn it (touch, pen or mouse). The binder has touch-action: pan-y, so vertical scrolling still works. */
   const b = $('#binder'); let sw = null;
-  b.addEventListener('pointerdown', e => { if (S.flipping || (e.pointerType === 'mouse' && e.button !== 0)) return; sw = { x: e.clientX, y: e.clientY, dx: 0, on: false, id: e.pointerId }; });
+  b.addEventListener('dragstart', e => e.preventDefault());
+  b.addEventListener('pointerdown', e => { if (S.flipping || (e.pointerType === 'mouse' && e.button !== 0) || e.target.closest('button')) return;
+    sw = { x: e.clientX, y: e.clientY, dx: 0, on: false, id: e.pointerId, t0: performance.now(), w: b.getBoundingClientRect().width / (two && !closed ? 2 : 1), p: 0 }; });
   b.addEventListener('pointermove', e => {
     if (!sw || e.pointerId !== sw.id) return; const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
-    if (!sw.on && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.2) { sw.on = true; try { b.setPointerCapture(e.pointerId); } catch {} }
+    if (!sw.on && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      sw.on = true; try { b.setPointerCapture(e.pointerId); } catch {}
+      sw.dir = dx < 0 ? 1 : -1;
+      if (!closed && !reduced() && !(sw.dir < 0 && p === 0)) { sw.t = makeTurn(sw.dir); if (sw.t) S.flipping = true; }
+    }
     if (!sw.on) return; sw.dx = dx;
-    if (!two) { const edge = (dx > 0 && cur <= 0) || (dx < 0 && cur >= last), k = edge ? .25 : .85;
-      sp.style.transition = 'none'; sp.style.transform = `translateX(${dx * k}px) rotateY(${dx * k / 45}deg)`; sp.style.opacity = String(1 - Math.min(.35, Math.abs(dx * k) / 900)); }
+    if (sw.t) { sw.p = Math.max(0, Math.min(1, (-sw.dir * dx) / (sw.w * 1.05))); sw.t.set(sw.p); }
+    else { const k = closed ? .5 : .22; sp.style.transition = 'none'; sp.style.transform = `translateX(${dx * k}px)`; }
   });
-  const end = () => { if (!sw) return; const { dx, on } = sw; sw = null;
-    sp.style.transition = 'transform .3s var(--ease), opacity .3s'; sp.style.transform = ''; sp.style.opacity = '';
-    if (on) S.swiped = Date.now();
-    if (on && Math.abs(dx) > 50) flip(dx < 0 ? 1 : -1); };
+  const end = () => { if (!sw) return; const s0 = sw; sw = null; if (s0.on) S.swiped = Date.now();
+    if (s0.t) { const fast = Math.abs(s0.dx) / Math.max(1, performance.now() - s0.t0) > .6; finishTurn(s0.t, s0.p > .32 || (fast && s0.p > .06), s0.p); return; }
+    sp.style.transition = 'transform .3s var(--ease)'; sp.style.transform = '';
+    if (s0.on && Math.abs(s0.dx) > 50) flip(s0.dx < 0 ? 1 : -1); };
   b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
 }
 function fitBinder() {   // shrink the binder so a whole spread fits on screen
-  const b = $('#binder'); if (!b || !twoUp()) return;
+  const b = $('#binder'); if (!b || !twoUp() || b.classList.contains('closed')) return;
   b.style.width = ''; const r = b.getBoundingClientRect(), avail = window.innerHeight - (r.top + window.scrollY) - 78;
   if (r.height > avail && avail > 320) b.style.width = Math.max(560, r.width * avail / r.height) + 'px';
 }
+/** Set up a page turn: the leaf (the sheet being turned) over the pages it reveals. set(p) moves it, 0 = start, 1 = turned. */
+function makeTurn(dir) {
+  const two = twoUp(), step = two ? 2 : 1, n = S.pages.length, from = S.set.page, to = from + dir * step;
+  if (from < 0 || to < 0 || to > n - 1) return null;
+  const sp = $('#spread'); if (!sp) return null; const pg = $$(':scope > .page', sp);
+  const leaf = el(`<div class="leaf ${two ? (dir > 0 ? 'next' : 'prev') : (dir > 0 ? 'snext' : 'sprev')}"><div class="face front"></div><div class="face back"></div></div>`);
+  let a0 = 0, a1;
+  if (two) {
+    if (dir > 0) { pg[1].replaceWith(pageEl(to + 1, 'right')); leaf.children[0].append(pageEl(from + 1, 'right')); leaf.children[1].append(pageEl(to, 'left')); a1 = -180; }
+    else { pg[0].replaceWith(pageEl(to, 'left')); leaf.children[0].append(pageEl(from, 'left')); leaf.children[1].append(pageEl(to + 1, 'right')); a1 = 180; }
+  } else if (dir > 0) { pg[0].replaceWith(pageEl(to, '')); leaf.children[0].append(pageEl(from, '')); leaf.children[1].append(sheetBack('')); a1 = -180; }
+  else { leaf.children[0].append(pageEl(to, '')); leaf.children[1].append(sheetBack('')); a0 = -180; a1 = 0; }
+  sp.append(leaf);
+  const set = (p, ms) => { leaf.style.transition = ms ? `transform ${ms}ms cubic-bezier(.4,.1,.25,1)` : 'none';
+    leaf.style.transform = `rotateY(${a0 + (a1 - a0) * p}deg)`; leaf.style.setProperty('--shade', Math.sin(p * Math.PI).toFixed(3)); leaf.style.setProperty('--p', p.toFixed(3)); };
+  set(0);
+  return { leaf, set, from, to };
+}
+function finishTurn(t, commit, p) {
+  S.flipping = true;
+  return new Promise(res => {
+    const ms = Math.max(180, Math.round((commit ? 1 - p : p) * 820));
+    let done = false; const end = () => { if (done) return; done = true; S.flipping = false; if (commit) { S.set.page = t.to; saveSettings(); } renderMain(); res(); };
+    t.leaf.addEventListener('transitionend', e => { if (e.target === t.leaf && e.propertyName === 'transform') end(); });
+    setTimeout(end, ms + 300);
+    requestAnimationFrame(() => requestAnimationFrame(() => t.set(commit ? 1 : 0, ms)));
+  });
+}
+function openCover() {
+  const cv = $('#cover'); S.set.page = 0; saveSettings();
+  if (!cv || reduced()) { renderMain(); return; }
+  S.flipping = true; cv.classList.add('opening');
+  setTimeout(() => { S.flipping = false; S.anim = 'from-cover'; renderMain(); }, 620);
+}
 function flip(delta) {
   if (S.flipping || S.set.view !== 'binder') return;
-  const two = twoUp(), step = two ? 2 : 1, n = S.pages.length, from = S.set.page, to = from + delta * step;
-  if (to < 0 || to > n - 1) return;
-  const sp = $('#spread'); if (!sp) return;
-  if (!two || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    S.set.page = to; saveSettings(); renderMain(); const s2 = $('#spread'); s2 && s2.classList.add(delta > 0 ? 'slide-next' : 'slide-prev'); return;
-  }
-  S.flipping = true;
-  const leaf = el(`<div class="leaf ${delta > 0 ? 'next' : 'prev'}"><div class="face front"></div><div class="face back"></div></div>`);
-  if (delta > 0) { sp.children[1].replaceWith(pageEl(to + 1, 'right')); leaf.children[0].append(pageEl(from + 1, 'right')); leaf.children[1].append(pageEl(to, 'left')); }
-  else { sp.children[0].replaceWith(pageEl(to, 'left')); leaf.children[0].append(pageEl(from, 'left')); leaf.children[1].append(pageEl(to + 1, 'right')); }
-  sp.append(leaf);
-  let fin = false; const end = () => { if (fin) return; fin = true; S.flipping = false; S.set.page = to; saveSettings(); renderMain(); };
-  leaf.addEventListener('transitionend', e => { if (e.target === leaf) end(); });
-  setTimeout(end, 1100);
-  requestAnimationFrame(() => requestAnimationFrame(() => leaf.classList.add('go')));
+  const two = twoUp(), step = two ? 2 : 1, n = S.pages.length, from = S.set.page;
+  if (from < 0) { if (delta > 0) openCover(); return; }
+  if (from + delta * step < 0) { if (hasCover() && delta < 0) { S.set.page = -1; saveSettings(); S.anim = reduced() ? null : 'to-cover'; renderMain(); } return; }
+  if (from + delta * step > n - 1) return;
+  if (reduced()) { S.set.page = from + delta * step; saveSettings(); renderMain(); return; }
+  const t = makeTurn(delta); if (t) finishTurn(t, true, 0);
 }
 
 /* ───────────── Detail drawer ───────────── */
@@ -1427,7 +1970,7 @@ function openDetail(id) {
   const sub = [c.set, c.number].filter(Boolean).map(esc).join(' · ');
   d.innerHTML = `<div class="d-head"><span class="saved" id="savedTag">${ICON.check} Saved</span><span class="grow"></span><button class="btn icon ghost" id="dClose" title="Close (Esc)">${ICON.close}</button></div>
   <div class="d-body">
-    <div class="d-hero"><div class="d-img" id="dImg">${cardFace(c)}<div class="d-img-actions"><button class="btn" id="dPhoto">${ICON.image}${imgSrc(c) ? 'Replace' : 'Add photo'}</button>${c.imageId || c.imageUrl ? `<button class="btn ghost" id="dRmPhoto" title="Remove image">${ICON.trash}</button>` : ''}</div></div>
+    <div class="d-hero"><div class="d-img" id="dImg">${cardFace(c, '', { large: true, eager: true })}<div class="d-img-actions"><button class="btn" id="dPhoto">${ICON.image}${imgSrc(c) ? 'Replace' : 'Add photo'}</button>${c.imageId || c.imageUrl ? `<button class="btn ghost" id="dRmPhoto" title="Remove image">${ICON.trash}</button>` : ''}</div></div>
       <div class="d-title"><input data-k="name" value="${esc(c.name || '')}" placeholder="Card name" aria-label="Card name"><div class="d-sub">${sub || '&nbsp;'}</div>
         <div class="qty-step"><button id="qMinus" aria-label="Decrease">−</button><input id="qInput" data-k="quantity" type="number" min="0" value="${q}" aria-label="Quantity"><button id="qPlus" aria-label="Increase">+</button></div>
         <div class="d-kpis"><div class="kpi"><span>Value each</span><b>${fmtMoney(val)}</b></div><div class="kpi"><span>Total (×${q})</span><b>${fmtMoney(val * q)}</b></div>
@@ -1674,7 +2217,9 @@ async function importTable(fileName, rows) {
   renderToolbar(); renderMain();
   toast(`Imported <b>${added}</b> new, <b>${updated}</b> updated${skipped ? ` · ${skipped} skipped` : ''}`);
   requestPersist();
-  if (CONFIG.lookup && added && S.cards.some(c => CONFIG.lookup.needs(c))) setTimeout(() => toast(`Tip: <b>⋯ → ${esc(CONFIG.lookup.label)}</b> adds card types &amp; art`, 6000), 900);
+  if (CONFIG.lookup && S.cards.some(c => CONFIG.lookup.needs(c) && !c.lookupMiss)) {
+    if (CONFIG.lookup.auto) setTimeout(() => fillArt({ silent: false }), 400);
+    else if (added) setTimeout(() => toast(`Tip: <b>⋯ → ${esc(CONFIG.lookup.label)}</b> adds card types &amp; art`, 6000), 900); }
   return { added, updated, skipped };
 }
 async function handleFiles(fileList) {
@@ -1735,6 +2280,7 @@ async function restoreBackup(file, forced) {
   for (const c of data.cards) { if (!c.id) c.id = uid(); const ex = byId.get(c.id); if (ex) Object.assign(ex, c); else { S.cards.push(c); byId.set(c.id, c); } changed.push(byId.get(c.id)); }
   await DB.putMany('cards', changed);
   renderToolbar(); renderMain(); toast(`Restored <b>${data.cards.length}</b> cards`); requestPersist();
+  if (CONFIG.lookup?.auto) setTimeout(() => fillArt({ silent: true }), 600);
 }
 function toCSV() {
   const list = sortCards(filtered()), cols = FIELDS.filter(f => f.export !== false);
@@ -1749,22 +2295,59 @@ async function exportCSV() {
   if (r !== 'cancelled') toast(`Exported <b>${count}</b> cards to CSV${count !== S.cards.length ? ' (current filters)' : ''}`);
 }
 
-/* ───────────── Optional online lookup ───────────── */
+/* ───────────── Card info & art (optional CONFIG.lookup) ─────────────
+   CONFIG.lookup.bulk(cards, { progress, retry }) → Map(id → fields | null) fills many cards at once (preferred);
+   otherwise CONFIG.lookup.fetch(card) is called one card at a time, throttled, giving up after repeated network errors.
+   Cards that found nothing get lookupMiss (a timestamp) so they aren't retried automatically; "Retry" retries them. */
+const ART = { running: false, done: 0, total: 0, queued: null };
+const ARTKEEP = () => new Set(CONFIG.lookup?.overwrite || ['imageUrl']);
+function applyLookup(c, r, force) {
+  const keep = ARTKEEP();
+  for (const [k, v] of Object.entries(r)) { if (v == null || v === '') continue;
+    if (k === 'imageUrl' && c.imageId && !force) continue;
+    if (force || keep.has(k) || c[k] == null || c[k] === '') c[k] = v; }
+  delete c.lookupMiss; c.updatedAt = Date.now();
+}
+const artMissing = () => CONFIG.lookup ? S.cards.filter(c => CONFIG.lookup.needs(c) && c.lookupMiss) : [];
+async function fillArt({ retry = false, silent = false, list = null } = {}) {
+  const L = CONFIG.lookup; if (!L) return;
+  if (ART.running) { ART.queued = { retry: retry || ART.queued?.retry, silent: silent && (ART.queued?.silent ?? true) }; return; }
+  const todo = (list || S.cards).filter(c => L.needs(c) && (retry || !c.lookupMiss));
+  if (!todo.length) { if (!silent) toast(artMissing().length ? `No new matches. ${artMissing().length} item${artMissing().length > 1 ? 's' : ''} without art (sealed product, tokens…)` : 'Every card already has its art.'); renderArtStatus(); return; }
+  ART.running = true; ART.done = 0; ART.total = todo.length; renderArtStatus();
+  let res = new Map(), offline = false;
+  const progress = (d, t) => { ART.done = d; ART.total = t; renderArtStatus(); };
+  try {
+    if (L.bulk) { res = await L.bulk(todo, { progress, retry }); offline = !!res.offline; }
+    else { let fails = 0, n = 0;
+      for (const c of todo) { if (fails >= 4) { offline = true; break; }
+        try { res.set(c.id, await L.fetch(c)); fails = 0; } catch (e) { fails++; console.warn('lookup failed', c.name, e); }
+        progress(++n, todo.length); await sleep(L.gap ?? 250); } }
+  } catch (e) { console.warn('lookup', e); offline = true; }
+  const changed = []; let ok = 0, miss = 0;
+  for (const c of todo) { if (!res.has(c.id)) continue; const r = res.get(c.id);
+    if (r) { applyLookup(c, r); ok++; } else { c.lookupMiss = Date.now(); miss++; } changed.push(c); }
+  if (changed.length) await DB.putMany('cards', changed);
+  ART.running = false;
+  if (ok) { renderToolbar(); renderMain(); if (S.openId) openDetail(S.openId); } else renderArtStatus();
+  if (!silent || ok) toast(offline && !ok ? 'Couldn\'t reach the card database. Check your connection and tap <b>Retry</b>.' :
+    `Art &amp; card types filled for <b>${fmtInt(ok)}</b> card${ok === 1 ? '' : 's'}${miss ? ` · ${fmtInt(miss)} without a match` : ''}`, 4500);
+  const q = ART.queued; ART.queued = null; if (q) fillArt(q);
+}
+function renderArtStatus() {
+  const host = $('#artStatus'); if (!host || !CONFIG.lookup) return;
+  const miss = artMissing().length, need = S.cards.filter(c => CONFIG.lookup.needs(c) && !c.lookupMiss).length;
+  if (ART.running) { const pct = ART.total ? Math.round(100 * ART.done / ART.total) : 0;
+    host.innerHTML = `<span class="art-run"><i class="spin"></i>Filling art <b>${fmtInt(ART.done)}</b> / ${fmtInt(ART.total)}<span class="art-bar"><span style="width:${pct}%"></span></span></span>`; return; }
+  host.innerHTML = need ? `<button class="art-btn" data-art="fill">${ICON.sparkle}Fill art for ${fmtInt(need)}</button>`
+    : miss ? `<button class="art-btn quiet" data-art="retry" title="Sealed product, tokens and cards the database doesn't know yet">${fmtInt(miss)} without art · Retry</button>` : '';
+  $$('[data-art]', host).forEach(b => b.onclick = () => fillArt({ retry: b.dataset.art === 'retry' }));
+}
 async function lookupOne(c, force) {
-  try { const r = await CONFIG.lookup.fetch(c); if (!r) return false;
-    for (const [k, v] of Object.entries(r)) if (v && (force || !c[k] || k === 'imageUrl')) c[k] = v;
-    c.updatedAt = Date.now(); await DB.put('cards', c); return true; } catch (e) { console.warn('lookup failed', c.name, e); return false; }
+  try { const r = await CONFIG.lookup.fetch(c); if (!r) { c.lookupMiss = Date.now(); await DB.put('cards', c); return false; }
+    applyLookup(c, r, force); await DB.put('cards', c); return true; } catch (e) { console.warn('lookup failed', c.name, e); return false; }
 }
-async function lookupAll(skipAsk) {
-  const todo = S.cards.filter(c => CONFIG.lookup.needs(c));
-  if (!todo.length) { toast('Every card already has its info.'); return; }
-  if (!skipAsk && !await ask(CONFIG.lookup.label, `${esc(CONFIG.lookup.note || '')}<br><br>${todo.length} card${todo.length > 1 ? 's' : ''} need info. Continue?`, [{ label: 'Cancel' }, { label: 'Look up', value: true, cls: 'primary' }])) return;
-  const t = toast(`Looking up… 0 / ${todo.length}`, 0); let ok = 0, i = 0, done = 0;
-  const cache = new Map();
-  const worker = async () => { while (i < todo.length) { const c = todo[i++]; if (await lookupOne(c)) ok++; done++; t.firstChild.textContent = `Looking up… ${done} / ${todo.length}`; await sleep(120); } };
-  await Promise.all([worker(), worker(), worker()]);
-  t.dismiss(); renderToolbar(); renderMain(); toast(ok ? `Updated <b>${ok}</b> of ${todo.length} cards` : 'Couldn\'t reach the lookup service. Are you online?', 4500);
-}
+async function lookupAll(skipAsk) { return fillArt({ retry: true, silent: false }); }
 
 /* ───────────── UI helpers: modal, sheet, ask, toast, menu ───────────── */
 function modal(inner, cls = '') {
@@ -1941,16 +2524,23 @@ async function boot() {
     if (e.key === 'Escape' && S.openId) { closeDetail(); return; }
     if (typing) return;
     if (e.key === '/' && $('#q')) { e.preventDefault(); $('#q').focus(); }
-    if (!S.openId && S.set.view === 'binder') { if (e.key === 'ArrowRight') flip(1); if (e.key === 'ArrowLeft') flip(-1); }
+    if (!S.openId && S.set.view === 'binder') { if (e.key === 'ArrowRight') flip(1); if (e.key === 'ArrowLeft') flip(-1);
+      if (e.key === 'Home' && hasCover()) { S.set.page = -1; saveSettings(); renderMain(); } if (e.key === 'End') { S.set.page = 1e9; saveSettings(); renderMain(); } }
   });
   window.addEventListener('dragenter', e => { if (![...(e.dataTransfer?.types || [])].includes('Files')) return; e.preventDefault(); dragDepth++; $('#dropover').classList.add('on'); });
   window.addEventListener('dragleave', () => { if (--dragDepth <= 0) hideDrop(); });
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => { e.preventDefault(); hideDrop(); if (e.dataTransfer?.files?.length) handleFiles(e.dataTransfer.files); });
   let lastTwo = twoUp(); window.addEventListener('resize', debounce(() => { if (twoUp() !== lastTwo) { lastTwo = twoUp(); if (S.set.view === 'binder') renderMain(); } else fitBinder(); }, 150));
-  document.addEventListener('mousemove', e => { const cf = e.target.closest?.('.cf.shiny'); if (!cf || cf.closest('.d-img')) return; const r = cf.getBoundingClientRect(); cf.style.setProperty('--sx', ((e.clientX - r.left) / r.width) * 100 + '%'); cf.style.setProperty('--sy', ((e.clientY - r.top) / r.height) * 100 + '%'); });
+  /* Card tilt + foil glare follow the pointer (pocket cards and grid tiles; the detail card has its own). */
+  let tiltRaf = 0, tiltEv = null;
+  document.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; tiltEv = e; if (tiltRaf) return; tiltRaf = requestAnimationFrame(() => { tiltRaf = 0; const ev = tiltEv;
+    const cf = ev.target.closest?.('.pocket .cf, .tile .cf'); if (!cf || S.flipping) return; const r = cf.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height;
+    cf.style.setProperty('--sx', x * 100 + '%'); cf.style.setProperty('--sy', y * 100 + '%');
+    cf.style.setProperty('--ry', ((x - .5) * 14).toFixed(2) + 'deg'); cf.style.setProperty('--rx', ((.5 - y) * 14).toFixed(2) + 'deg'); }); }, { passive: true });
   renderToolbar(); renderMain();
   S.ready = true;
+  if (CONFIG.lookup?.auto && S.cards.some(c => CONFIG.lookup.needs(c) && !c.lookupMiss)) setTimeout(() => fillArt({ silent: true }), 700);
 }
 /* ───────────── Scan binder page: photo → card regions → OCR → lookup → review ─────────────
    Generic engine. Everything game-specific comes from CONFIG.scan (regions to read, how to identify a
