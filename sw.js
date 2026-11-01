@@ -1,16 +1,19 @@
 /* Service worker for Yu-Gi-Oh! Binder: offline app shell + opportunistic art cache + OCR engine cache (scan feature).
    The version below is a hash of the app files; changing any file produces a new cache. */
 const APP = 'yugioh-binder';
-const VERSION = '1b870cdf22';
+const VERSION = '960332203d';
 const SHELL = `${APP}-shell-${VERSION}`;
 const ART = `${APP}-art-v1`;
 const OCR = `${APP}-ocr-v1`;
 const ART_HOSTS = ["images.ygoprodeck.com"];
-const ART_MAX = 1500;
+/* Chromium pads every cross-origin (opaque) cached response to megabytes of quota, so there the browser's own HTTP cache
+   (YGOPRODeck art is cacheable for a month) does the job; other browsers keep up to ART_MAX images here for offline use. */
+const ART_MAX = 2500;
+const PADS_OPAQUE = !!(self.navigator && self.navigator.userAgentData && self.navigator.userAgentData.brands && self.navigator.userAgentData.brands.some(b => /chrom/i.test(b.brand)));
 /* Scan feature: the OCR engine (Tesseract.js, its WASM core and English language data) is downloaded from the CDN
    only the first time a scan is opened, then served from this cache so scanning keeps working offline. */
 const OCR_PREFIXES = ["https://cdn.jsdelivr.net/npm/tesseract.js@", "https://cdn.jsdelivr.net/npm/tesseract.js-core@", "https://cdn.jsdelivr.net/npm/@tesseract.js-data/"];
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-192.png', './icons/maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-192.png', './icons/maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png', ...["./ygo-cards.json"]];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(SHELL).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))));
@@ -44,7 +47,7 @@ async function artFirst(req) {
   if (hit) return hit;
   try {
     const res = await fetch(req);
-    if (res.ok || res.type === 'opaque') { cache.put(req, res.clone()).then(() => trim(cache)).catch(() => {}); }
+    if (res.ok || (res.type === 'opaque' && !PADS_OPAQUE)) { cache.put(req, res.clone()).then(() => trim(cache)).catch(() => {}); }
     return res;
   } catch (err) { return Response.error(); }
 }
